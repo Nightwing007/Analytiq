@@ -2,7 +2,7 @@
  * Dash.jsx - Analytics Dashboard with Proper Layout
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useToast } from '../components/Toast.jsx';
@@ -199,6 +199,7 @@ function Dash() {
   const { siteId } = useParams();
   const { user, logout } = useAuth();
   const { toast } = useToast();
+  const isInitialMount = useRef(true);
   const [reportData, setReportData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -211,12 +212,13 @@ function Dash() {
 
   useEffect(() => {
     if (siteId) {
-      fetchReportData(startDate, endDate);
+      fetchReportData(startDate, endDate, isInitialMount.current);
+      isInitialMount.current = false;
     }
     injectDashboardCSS();
   }, [siteId, startDate, endDate]);
 
-  const fetchReportData = async (start = startDate, end = endDate) => {
+  const fetchReportData = async (start = startDate, end = endDate, silent = true) => {
     try {
       setLoading(true);
       const reportResponse = await API.getReport(siteId, {
@@ -224,7 +226,9 @@ function Dash() {
         end_date: end
       });
       setReportData(reportResponse);
-      toast.success('Report data loaded successfully');
+      if (!silent) {
+        toast.success('Report data loaded successfully');
+      }
     } catch (error) {
       console.error('Error fetching report data:', error);
       toast.error(`Failed to load report data: ${error.message}`);
@@ -236,7 +240,7 @@ function Dash() {
 
   const handleRefresh = async () => {
     setRefreshing(true);
-    await fetchReportData();
+    await fetchReportData(startDate, endDate, false);
     setRefreshing(false);
   };
 
