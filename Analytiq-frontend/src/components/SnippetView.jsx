@@ -1,7 +1,7 @@
 ﻿import React, { useState } from 'react';
 import { Copy, Check } from 'lucide-react';
 
-const SnippetView = ({ siteId, siteUrl, snippet: providedSnippet }) => {
+const SnippetView = ({ siteId, siteUrl, snippet: providedSnippet, verificationStatus, onVerify }) => {
   const [copied, setCopied] = useState(false);
 
   // Use provided snippet from API response, or fallback to constructed one
@@ -37,7 +37,7 @@ const SnippetView = ({ siteId, siteUrl, snippet: providedSnippet }) => {
         <pre className="bg-gray-100 p-4 rounded-lg text-sm overflow-x-auto border">
           <code>{snippet}</code>
         </pre>
-        
+
         <button
           onClick={handleCopy}
           className="absolute top-2 right-2 p-2 bg-white rounded-md shadow-sm border hover:bg-gray-50 transition-colors"
@@ -63,13 +63,38 @@ const SnippetView = ({ siteId, siteUrl, snippet: providedSnippet }) => {
 
       {siteUrl && (
         <div className="bg-gray-50 p-4 rounded-lg">
-          <h4 className="font-medium text-gray-900 mb-2">Site Information:</h4>
+          <div className="flex justify-between items-center mb-2">
+            <h4 className="font-medium text-gray-900">Site Information:</h4>
+            {verificationStatus && (
+              <div className="flex items-center space-x-2">
+                {verificationStatus.loading ? (
+                  <span className="text-xs text-blue-600 animate-pulse">Verifying...</span>
+                ) : verificationStatus.verified ? (
+                  <span className="text-xs text-green-600 flex items-center">
+                    <Check className="w-3 h-3 mr-1" /> Verified
+                  </span>
+                ) : (
+                  <button
+                    onClick={onVerify}
+                    className="text-xs px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+                  >
+                    Verify Now
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
           <p className="text-sm text-gray-600">
             <strong>Site URL:</strong> {siteUrl}
           </p>
           <p className="text-sm text-gray-600">
             <strong>Site ID:</strong> {siteId}
           </p>
+          {verificationStatus?.error && (
+            <p className="mt-2 text-xs text-red-600 bg-red-50 p-2 rounded border border-red-100">
+              <strong>Verification Error:</strong> {verificationStatus.error}
+            </p>
+          )}
         </div>
       )}
     </div>

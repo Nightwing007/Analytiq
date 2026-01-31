@@ -10,7 +10,7 @@ import { THEME_CONFIG } from '../config.js';
 import API from '../components/API.js';
 import SnippetView from '../components/SnippetView.jsx';
 import LoadingSpinner from '../components/LoadingSpinner.jsx';
-import { Plus, Globe, BarChart3, Trash2 } from 'lucide-react';
+import { Plus, Globe, BarChart3, Trash2, Check } from 'lucide-react';
 import NavLogo from '../assets/NavLogo.png';
 
 // Dark blue electric neon colors
@@ -192,7 +192,7 @@ const injectNeonBorderCSS = () => {
 
 function Manage() {
   const { user, logout } = useAuth();
-  const { showToast } = useToast();
+  const { addToast: showToast } = useToast();
   const [sites, setSites] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
@@ -202,6 +202,7 @@ function Manage() {
     url: '',
     timezone: 'UTC'
   });
+  const [verificationStatus, setVerificationStatus] = useState({}); // { siteId: { loading, verified, error } }
 
   useEffect(() => {
     fetchSites();
@@ -257,36 +258,71 @@ function Manage() {
     }
   };
 
+  const handleVerifySite = async (siteId) => {
+    try {
+      setVerificationStatus(prev => ({
+        ...prev,
+        [siteId]: { loading: true }
+      }));
+
+      const response = await API.verifySite(siteId);
+
+      if (response.verified) {
+        setVerificationStatus(prev => ({
+          ...prev,
+          [siteId]: { loading: false, verified: true }
+        }));
+        // Update sites list
+        setSites(sites.map(s => s.site_id === siteId ? { ...s, verified: true } : s));
+        showToast('Website verified successfully!', 'success');
+      } else {
+        setVerificationStatus(prev => ({
+          ...prev,
+          [siteId]: { loading: false, verified: false, error: response.message }
+        }));
+        console.warn('Verification failed for site:', siteId, response);
+        showToast(response.message, 'error');
+      }
+    } catch (error) {
+      console.error('Error verifying site:', error);
+      setVerificationStatus(prev => ({
+        ...prev,
+        [siteId]: { loading: false, verified: false, error: error.message || 'Verification failed' }
+      }));
+      showToast('Verification failed: ' + (error.message || 'Server error'), 'error');
+    }
+  };
+
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center" 
-           style={{ 
-             backgroundColor: THEME_CONFIG.COLORS.backgroundDark,
-             fontFamily: THEME_CONFIG.TYPOGRAPHY.fontFamily.primary
-           }}>
+      <div className="min-h-screen flex items-center justify-center"
+        style={{
+          backgroundColor: THEME_CONFIG.COLORS.backgroundDark,
+          fontFamily: THEME_CONFIG.TYPOGRAPHY.fontFamily.primary
+        }}>
         <LoadingSpinner />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen" 
-         style={{ 
-           backgroundColor: THEME_CONFIG.COLORS.backgroundDark,
-           fontFamily: THEME_CONFIG.TYPOGRAPHY.fontFamily.primary
-         }}>
+    <div className="min-h-screen"
+      style={{
+        backgroundColor: THEME_CONFIG.COLORS.backgroundDark,
+        fontFamily: THEME_CONFIG.TYPOGRAPHY.fontFamily.primary
+      }}>
       {/* Header with proper padding */}
-      <header className="h-16 flex items-center justify-between border-b" 
-              style={{ 
-                paddingLeft: '32px',
-                paddingRight: '32px',
-                borderColor: THEME_CONFIG.COLORS.borderPrimary,
-                backgroundColor: THEME_CONFIG.COLORS.backgroundSecondary
-              }}>
+      <header className="h-16 flex items-center justify-between border-b"
+        style={{
+          paddingLeft: '32px',
+          paddingRight: '32px',
+          borderColor: THEME_CONFIG.COLORS.borderPrimary,
+          backgroundColor: THEME_CONFIG.COLORS.backgroundSecondary
+        }}>
         <div className="flex items-center">
-          <img 
-            src={NavLogo} 
-            alt="Analytiq" 
+          <img
+            src={NavLogo}
+            alt="Analytiq"
             style={{ height: '32px', width: 'auto' }}
             onError={(e) => {
               e.target.style.display = 'none';
@@ -294,11 +330,11 @@ function Manage() {
           />
         </div>
         <div className="flex items-center space-x-4">
-          <span className="text-sm" 
-                style={{ 
-                  color: THEME_CONFIG.COLORS.textSecondary,
-                  fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall
-                }}>
+          <span className="text-sm"
+            style={{
+              color: THEME_CONFIG.COLORS.textSecondary,
+              fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall
+            }}>
             Welcome, {user?.email || 'User'}
           </span>
           <Link to="/auth-test" style={{ textDecoration: 'none' }}>
@@ -365,19 +401,19 @@ function Manage() {
       <main className="container mx-auto px-6 py-12" style={{ maxWidth: '1280px' }}>
         <div className="flex justify-between items-center mb-12">
           <div>
-            <h2 className="cool-title font-bold mb-3" 
-                style={{ 
-                  color: THEME_CONFIG.COLORS.textPrimary,
-                  fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.h1,
-                  fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.bold
-                }}>
+            <h2 className="cool-title font-bold mb-3"
+              style={{
+                color: THEME_CONFIG.COLORS.textPrimary,
+                fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.h1,
+                fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.bold
+              }}>
               Your Websites
             </h2>
-            <p className="text-lg" 
-               style={{ 
-                 color: THEME_CONFIG.COLORS.textSecondary,
-                 fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodyLarge
-               }}>
+            <p className="text-lg"
+              style={{
+                color: THEME_CONFIG.COLORS.textSecondary,
+                fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodyLarge
+              }}>
               Manage your websites and view analytics
             </p>
           </div>
@@ -419,29 +455,29 @@ function Manage() {
         {/* Add Site Form */}
         {showAddForm && (
           <div className="fixed inset-0 flex items-center justify-center z-50"
-               style={{ backgroundColor: 'rgba(0, 0, 0, 0.8)' }}>
+            style={{ backgroundColor: 'rgba(0, 0, 0, 0.8)' }}>
             <div className="border p-8 max-w-md w-full mx-4"
-                 style={{ 
-                   backgroundColor: THEME_CONFIG.COLORS.backgroundElevated,
-                   borderColor: THEME_CONFIG.COLORS.borderPrimary,
-                   borderRadius: THEME_CONFIG.BORDER_RADIUS.large
-                 }}>
-              <h3 className="font-bold mb-6" 
-                  style={{ 
-                    color: THEME_CONFIG.COLORS.textPrimary,
-                    fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.h3,
-                    fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.bold
-                  }}>
+              style={{
+                backgroundColor: THEME_CONFIG.COLORS.backgroundElevated,
+                borderColor: THEME_CONFIG.COLORS.borderPrimary,
+                borderRadius: THEME_CONFIG.BORDER_RADIUS.large
+              }}>
+              <h3 className="font-bold mb-6"
+                style={{
+                  color: THEME_CONFIG.COLORS.textPrimary,
+                  fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.h3,
+                  fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.bold
+                }}>
                 Add New Website
               </h3>
               <form onSubmit={handleAddSite}>
                 <div className="mb-6">
-                  <label className="block font-medium mb-3" 
-                         style={{ 
-                           color: THEME_CONFIG.COLORS.textPrimary,
-                           fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
-                           fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.medium
-                         }}>
+                  <label className="block font-medium mb-3"
+                    style={{
+                      color: THEME_CONFIG.COLORS.textPrimary,
+                      fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
+                      fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.medium
+                    }}>
                     Website Name *
                   </label>
                   <input
@@ -449,7 +485,7 @@ function Manage() {
                     value={newSite.name}
                     onChange={(e) => setNewSite({ ...newSite, name: e.target.value })}
                     className="w-full px-4 py-3 border transition-all duration-300 focus:outline-none"
-                    style={{ 
+                    style={{
                       borderColor: THEME_CONFIG.COLORS.borderPrimary,
                       backgroundColor: THEME_CONFIG.COLORS.backgroundSecondary,
                       color: THEME_CONFIG.COLORS.textPrimary,
@@ -467,12 +503,12 @@ function Manage() {
                   />
                 </div>
                 <div className="mb-8">
-                  <label className="block font-medium mb-3" 
-                         style={{ 
-                           color: THEME_CONFIG.COLORS.textPrimary,
-                           fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
-                           fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.medium
-                         }}>
+                  <label className="block font-medium mb-3"
+                    style={{
+                      color: THEME_CONFIG.COLORS.textPrimary,
+                      fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
+                      fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.medium
+                    }}>
                     Website URL *
                   </label>
                   <input
@@ -480,7 +516,7 @@ function Manage() {
                     value={newSite.url}
                     onChange={(e) => setNewSite({ ...newSite, url: e.target.value })}
                     className="w-full px-4 py-3 border transition-all duration-300 focus:outline-none"
-                    style={{ 
+                    style={{
                       borderColor: THEME_CONFIG.COLORS.borderPrimary,
                       backgroundColor: THEME_CONFIG.COLORS.backgroundSecondary,
                       color: THEME_CONFIG.COLORS.textPrimary,
@@ -566,81 +602,119 @@ function Manage() {
         {/* New Site Snippet Modal - Shows only once after site creation */}
         {newSiteResponse && (
           <div className="fixed inset-0 flex items-center justify-center z-50"
-               style={{ backgroundColor: 'rgba(0, 0, 0, 0.8)' }}>
+            style={{ backgroundColor: 'rgba(0, 0, 0, 0.8)' }}>
             <div className="border p-8 max-w-3xl w-full mx-4"
-                 style={{ 
-                   backgroundColor: THEME_CONFIG.COLORS.backgroundElevated,
-                   borderColor: THEME_CONFIG.COLORS.borderPrimary,
-                   borderRadius: THEME_CONFIG.BORDER_RADIUS.large
-                 }}>
+              style={{
+                backgroundColor: THEME_CONFIG.COLORS.backgroundElevated,
+                borderColor: THEME_CONFIG.COLORS.borderPrimary,
+                borderRadius: THEME_CONFIG.BORDER_RADIUS.large
+              }}>
               <div className="mb-6">
-                <h3 className="font-bold mb-3" 
-                    style={{ 
-                      color: THEME_CONFIG.COLORS.textPrimary,
-                      fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.h3,
-                      fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.bold
-                    }}>
+                <h3 className="font-bold mb-3"
+                  style={{
+                    color: THEME_CONFIG.COLORS.textPrimary,
+                    fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.h3,
+                    fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.bold
+                  }}>
                   🎉 Site Created Successfully!
                 </h3>
-                <p style={{ 
-                     color: THEME_CONFIG.COLORS.textSecondary,
-                     fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.body
-                   }}>
+                <p style={{
+                  color: THEME_CONFIG.COLORS.textSecondary,
+                  fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.body
+                }}>
                   Here's your tracking snippet. Copy and paste it into your website's HTML:
                 </p>
               </div>
-              
-              <SnippetView 
-                siteId={newSiteResponse.site_id} 
-                siteUrl={newSiteResponse.url} 
+
+              <SnippetView
+                siteId={newSiteResponse.site_id}
+                siteUrl={newSiteResponse.url}
                 snippet={newSiteResponse.snippet}
+                verificationStatus={verificationStatus[newSiteResponse.site_id]}
+                onVerify={() => handleVerifySite(newSiteResponse.site_id)}
               />
-              
-              <div className="mt-6 p-4" 
-                   style={{ 
-                     backgroundColor: THEME_CONFIG.COLORS.backgroundSecondary,
-                     borderRadius: THEME_CONFIG.BORDER_RADIUS.medium,
-                     border: `1px solid ${THEME_CONFIG.COLORS.borderPrimary}`
-                   }}>
-                <p style={{ 
-                     color: THEME_CONFIG.COLORS.textPrimary,
-                     fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall
-                   }}>
+
+              <div className="mt-6 p-4"
+                style={{
+                  backgroundColor: THEME_CONFIG.COLORS.backgroundSecondary,
+                  borderRadius: THEME_CONFIG.BORDER_RADIUS.medium,
+                  border: `1px solid ${THEME_CONFIG.COLORS.borderPrimary}`
+                }}>
+                <p style={{
+                  color: THEME_CONFIG.COLORS.textPrimary,
+                  fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall
+                }}>
                   <strong style={{ color: darkElectricBlue }}>Important:</strong> This snippet will only be shown once. Make sure to copy it now!
                 </p>
               </div>
-              
-              <button
-                onClick={() => setNewSiteResponse(null)}
-                className="w-full transition-all duration-300"
-                style={{
-                  marginTop: '24px',
-                  padding: `${THEME_CONFIG.SPACING.md} ${THEME_CONFIG.SPACING.lg}`,
-                  border: `2px solid ${darkElectricBlue}`,
-                  borderRadius: THEME_CONFIG.BORDER_RADIUS.small,
-                  backgroundColor: 'transparent',
-                  color: darkElectricBlue,
-                  fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.body,
-                  fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
-                  fontFamily: THEME_CONFIG.TYPOGRAPHY.fontFamily.primary,
-                  cursor: 'pointer',
-                  minHeight: '44px'
-                }}
-                onMouseEnter={(e) => {
-                  e.target.style.borderColor = darkerElectricBlue;
-                  e.target.style.color = darkerElectricBlue;
-                  e.target.style.backgroundColor = buttonBackground;
-                  e.target.style.transform = 'scale(0.98)';
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.borderColor = darkElectricBlue;
-                  e.target.style.color = darkElectricBlue;
-                  e.target.style.backgroundColor = 'transparent';
-                  e.target.style.transform = 'scale(1)';
-                }}
-              >
-                Got it, Close
-              </button>
+
+              {!verificationStatus[newSiteResponse.site_id]?.verified ? (
+                <button
+                  onClick={() => handleVerifySite(newSiteResponse.site_id)}
+                  disabled={verificationStatus[newSiteResponse.site_id]?.loading}
+                  className="w-full transition-all duration-300"
+                  style={{
+                    marginTop: '24px',
+                    padding: `${THEME_CONFIG.SPACING.md} ${THEME_CONFIG.SPACING.lg}`,
+                    border: `2px solid ${darkElectricBlue}`,
+                    borderRadius: THEME_CONFIG.BORDER_RADIUS.small,
+                    backgroundColor: darkElectricBlue,
+                    color: '#FFFFFF',
+                    fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.body,
+                    fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
+                    fontFamily: THEME_CONFIG.TYPOGRAPHY.fontFamily.primary,
+                    cursor: verificationStatus[newSiteResponse.site_id]?.loading ? 'not-allowed' : 'pointer',
+                    minHeight: '44px',
+                    opacity: verificationStatus[newSiteResponse.site_id]?.loading ? 0.7 : 1
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!verificationStatus[newSiteResponse.site_id]?.loading) {
+                      e.target.style.backgroundColor = darkerElectricBlue;
+                      e.target.style.borderColor = darkerElectricBlue;
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!verificationStatus[newSiteResponse.site_id]?.loading) {
+                      e.target.style.backgroundColor = darkElectricBlue;
+                      e.target.style.borderColor = darkElectricBlue;
+                    }
+                  }}
+                >
+                  {verificationStatus[newSiteResponse.site_id]?.loading ? 'Verifying...' : 'Verify Website Now'}
+                </button>
+              ) : (
+                <button
+                  onClick={() => setNewSiteResponse(null)}
+                  className="w-full transition-all duration-300"
+                  style={{
+                    marginTop: '24px',
+                    padding: `${THEME_CONFIG.SPACING.md} ${THEME_CONFIG.SPACING.lg}`,
+                    border: `2px solid ${darkElectricBlue}`,
+                    borderRadius: THEME_CONFIG.BORDER_RADIUS.small,
+                    backgroundColor: 'transparent',
+                    color: darkElectricBlue,
+                    fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.body,
+                    fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
+                    fontFamily: THEME_CONFIG.TYPOGRAPHY.fontFamily.primary,
+                    cursor: 'pointer',
+                    minHeight: '44px'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.borderColor = darkerElectricBlue;
+                    e.target.style.color = darkerElectricBlue;
+                    e.target.style.backgroundColor = buttonBackground;
+                    e.target.style.transform = 'scale(0.98)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.borderColor = darkElectricBlue;
+                    e.target.style.color = darkElectricBlue;
+                    e.target.style.backgroundColor = 'transparent';
+                    e.target.style.transform = 'scale(1)';
+                  }}
+                >
+                  Got it, Close
+                </button>
+              )}
             </div>
           </div>
         )}
@@ -648,70 +722,80 @@ function Manage() {
         {/* Sites Grid */}
         {sites.length === 0 ? (
           <div className="text-center py-20">
-            <Globe size={64} className="mx-auto mb-6" 
-                   style={{ color: THEME_CONFIG.COLORS.textMuted }} />
-            <h3 className="font-semibold mb-3" 
-                style={{ 
-                  color: THEME_CONFIG.COLORS.textPrimary,
-                  fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.h4,
-                  fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold
-                }}>
+            <Globe size={64} className="mx-auto mb-6"
+              style={{ color: THEME_CONFIG.COLORS.textMuted }} />
+            <h3 className="font-semibold mb-3"
+              style={{
+                color: THEME_CONFIG.COLORS.textPrimary,
+                fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.h4,
+                fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold
+              }}>
               No websites yet
             </h3>
-            <p style={{ 
-                 color: THEME_CONFIG.COLORS.textSecondary,
-                 fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.body
-               }}>
+            <p style={{
+              color: THEME_CONFIG.COLORS.textSecondary,
+              fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.body
+            }}>
               Add your first website to start tracking analytics
             </p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {sites.map((site, index) => (
-              <div key={site.site_id} 
-                   className="card-hover-effect card-glide-animation border transition-all duration-300"
-                   style={{ 
-                     borderColor: THEME_CONFIG.COLORS.borderPrimary,
-                     backgroundColor: THEME_CONFIG.COLORS.backgroundSecondary,
-                     borderRadius: THEME_CONFIG.BORDER_RADIUS.medium,
-                     padding: THEME_CONFIG.SPACING.lg,
-                     position: 'relative',
-                     overflow: 'hidden'
-                   }}
-                   onMouseEnter={(e) => {
-                     e.currentTarget.style.borderColor = THEME_CONFIG.COLORS.borderElectric;
-                   }}
-                   onMouseLeave={(e) => {
-                     e.currentTarget.style.borderColor = THEME_CONFIG.COLORS.borderPrimary;
-                   }}>
-                
+              <div key={site.site_id}
+                className="card-hover-effect card-glide-animation border transition-all duration-300"
+                style={{
+                  borderColor: THEME_CONFIG.COLORS.borderPrimary,
+                  backgroundColor: THEME_CONFIG.COLORS.backgroundSecondary,
+                  borderRadius: THEME_CONFIG.BORDER_RADIUS.medium,
+                  padding: THEME_CONFIG.SPACING.lg,
+                  position: 'relative',
+                  overflow: 'hidden'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = THEME_CONFIG.COLORS.borderElectric;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = THEME_CONFIG.COLORS.borderPrimary;
+                }}>
+
                 {/* Header with title and delete button */}
-                <div className="flex items-start justify-between" 
-                     style={{ marginBottom: THEME_CONFIG.SPACING.lg }}>
+                <div className="flex items-start justify-between"
+                  style={{ marginBottom: THEME_CONFIG.SPACING.lg }}>
                   <div className="flex-1" style={{ marginRight: THEME_CONFIG.SPACING.md }}>
-                    <h3 className="card-title font-semibold" 
-                        style={{ 
-                          color: THEME_CONFIG.COLORS.textPrimary,
-                          fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.h4,
-                          fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
-                          marginBottom: THEME_CONFIG.SPACING.sm,
-                          lineHeight: '1.4'
-                        }}>
+                    <h3 className="card-title font-semibold"
+                      style={{
+                        color: THEME_CONFIG.COLORS.textPrimary,
+                        fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.h4,
+                        fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
+                        marginBottom: THEME_CONFIG.SPACING.sm,
+                        lineHeight: '1.4'
+                      }}>
                       {site.name}
                     </h3>
-                    <p className="break-all" 
-                       style={{ 
-                         color: THEME_CONFIG.COLORS.textSecondary,
-                         fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
-                         lineHeight: '1.4'
-                       }}>
+                    <p className="break-all"
+                      style={{
+                        color: THEME_CONFIG.COLORS.textSecondary,
+                        fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
+                        lineHeight: '1.4'
+                      }}>
                       {site.url}
                     </p>
+                    {site.verified ? (
+                      <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 mt-2">
+                        <Check size={10} style={{ marginRight: '4px' }} />
+                        Verified
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800 mt-2">
+                        Unverified
+                      </span>
+                    )}
                   </div>
                   <button
                     onClick={() => handleDeleteSite(site.site_id)}
                     className="flex items-center justify-center transition-all duration-300"
-                    style={{ 
+                    style={{
                       width: '36px',
                       height: '36px',
                       borderRadius: THEME_CONFIG.BORDER_RADIUS.small,
@@ -742,37 +826,37 @@ function Manage() {
                     <Trash2 size={16} />
                   </button>
                 </div>
-                
+
                 {/* Site metadata */}
                 <div style={{ marginBottom: THEME_CONFIG.SPACING.lg }}>
-                  <div className="flex justify-between items-center" 
-                       style={{ marginBottom: THEME_CONFIG.SPACING.sm }}>
-                    <span style={{ 
-                           color: THEME_CONFIG.COLORS.textMuted,
-                           fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall
-                         }}>
+                  <div className="flex justify-between items-center"
+                    style={{ marginBottom: THEME_CONFIG.SPACING.sm }}>
+                    <span style={{
+                      color: THEME_CONFIG.COLORS.textMuted,
+                      fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall
+                    }}>
                       Created:
                     </span>
-                    <span style={{ 
-                           color: THEME_CONFIG.COLORS.textSecondary,
-                           fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
-                           fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.medium
-                         }}>
+                    <span style={{
+                      color: THEME_CONFIG.COLORS.textSecondary,
+                      fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
+                      fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.medium
+                    }}>
                       {new Date(site.created_at).toLocaleDateString()}
                     </span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span style={{ 
-                           color: THEME_CONFIG.COLORS.textMuted,
-                           fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall
-                         }}>
+                    <span style={{
+                      color: THEME_CONFIG.COLORS.textMuted,
+                      fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall
+                    }}>
                       Timezone:
                     </span>
-                    <span style={{ 
-                           color: THEME_CONFIG.COLORS.textSecondary,
-                           fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
-                           fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.medium
-                         }}>
+                    <span style={{
+                      color: THEME_CONFIG.COLORS.textSecondary,
+                      fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
+                      fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.medium
+                    }}>
                       {site.timezone}
                     </span>
                   </div>
@@ -822,6 +906,7 @@ function Manage() {
                     </span>
                   </button>
                 </Link>
+
               </div>
             ))}
           </div>
