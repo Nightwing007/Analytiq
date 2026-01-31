@@ -1,4 +1,22 @@
 /**
+ * Send event to a specialized endpoint (not used in current batching logic)
+ * @param {string} endpoint - The endpoint URL
+ * @param {Object} eventData - The event data to send
+ */
+export function sendToSpecializedEndpoint(endpoint, eventData) {
+  fetch(endpoint, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-site-id': Config.SITE_ID,
+      'x-site-key': Config.SITE_KEY
+    },
+    body: JSON.stringify(eventData)
+  }).catch(function(error) {
+    console.warn('Failed to send event to specialized endpoint:', error);
+  });
+}
+/**
  * API sender with batching support
  * Handles sending events to backend with intelligent batching and specialized endpoints
  */
