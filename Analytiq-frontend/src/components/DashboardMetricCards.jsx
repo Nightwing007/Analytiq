@@ -111,11 +111,11 @@ function MetricCard({ icon: Icon, label, value, delay = 0 }) {
   );
 }
 
-export default function DashboardMetricCards({ 
-  totalVisitors, 
-  totalPageviews, 
-  avgTimeOnSiteSec, 
-  bounceRatePercent 
+export default function DashboardMetricCards({
+  totalVisitors,
+  totalPageviews,
+  avgTimeOnSiteSec,
+  bounceRatePercent
 }) {
   const metrics = [
     {

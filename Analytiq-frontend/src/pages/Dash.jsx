@@ -32,6 +32,7 @@ import EventTimelineChart from '../components/dashboardComponents/charts/EventTi
 import VisitorJourneyFlow from '../components/dashboardComponents/charts/VisitorJourneyFlow.jsx';
 import ClickScrollHeatmap from '../components/dashboardComponents/charts/ClickScrollHeatmap.jsx';
 import PerformanceTimelineByPage from '../components/dashboardComponents/charts/PerformanceTimelineByPage.jsx';
+import DashboardAI from '../components/dashboardComponents/DashboardAI.jsx';
 
 const darkElectricBlue = '#0066FF';
 const darkerElectricBlue = '#0052CC';
@@ -167,8 +168,8 @@ function Dash() {
 
   if (loading) {
     return (
-      <div 
-        style={{ 
+      <div
+        style={{
           minHeight: '100vh',
           display: 'flex',
           alignItems: 'center',
@@ -183,8 +184,8 @@ function Dash() {
   }
 
   return (
-    <div 
-      style={{ 
+    <div
+      style={{
         minHeight: '100vh',
         width: '100%',
         padding: '24px 16px',
@@ -193,16 +194,16 @@ function Dash() {
         overflowX: 'hidden'
       }}
     >
-      <div 
-        className="dashboard-container" 
-        style={{ 
-          maxWidth: '1400px', 
+      <div
+        className="dashboard-container"
+        style={{
+          maxWidth: '1400px',
           width: '100%',
           margin: '0 auto',
           padding: '0'
         }}
       >
-        
+
         {/* HEADER */}
         <div style={{ marginBottom: '24px', width: '100%' }}>
           <DashboardHeader
@@ -213,6 +214,11 @@ function Dash() {
             onRefresh={handleRefresh}
             refreshing={refreshing}
           />
+        </div>
+
+        {/* AI ANALYST */}
+        <div style={{ marginBottom: '24px', width: '100%' }}>
+          <DashboardAI siteId={siteId} />
         </div>
 
         {/* METRIC CARDS */}
@@ -235,9 +241,9 @@ function Dash() {
         </div>
 
         {/* QUICK INSIGHTS - 3 Columns */}
-        <div 
+        <div
           className="dash-grid-three"
-          style={{ 
+          style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(3, 1fr)',
             gap: '24px',
@@ -256,9 +262,9 @@ function Dash() {
         </div>
 
         {/* ENGAGEMENT & BEHAVIOR - 2 Columns */}
-        <div 
+        <div
           className="dash-grid-two"
-          style={{ 
+          style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(2, 1fr)',
             gap: '24px',
@@ -271,9 +277,9 @@ function Dash() {
         </div>
 
         {/* TECHNOLOGY BREAKDOWN - 2 Columns */}
-        <div 
+        <div
           className="dash-grid-two"
-          style={{ 
+          style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(2, 1fr)',
             gap: '24px',
@@ -291,9 +297,9 @@ function Dash() {
         </div>
 
         {/* GEOGRAPHIC ANALYSIS - 1:1 Ratio (equal split) */}
-        <div 
+        <div
           className="dash-grid-geo"
-          style={{ 
+          style={{
             display: 'grid',
             gridTemplateColumns: '1fr 1fr',
             gap: '24px',
@@ -311,9 +317,9 @@ function Dash() {
         </div>
 
         {/* CAMPAIGNS & TECHNOLOGY - 2 Columns */}
-        <div 
+        <div
           className="dash-grid-two"
-          style={{ 
+          style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(2, 1fr)',
             gap: '24px',
