@@ -33,6 +33,8 @@ import VisitorJourneyFlow from '../components/dashboardComponents/charts/Visitor
 import ClickScrollHeatmap from '../components/dashboardComponents/charts/ClickScrollHeatmap.jsx';
 import PerformanceTimelineByPage from '../components/dashboardComponents/charts/PerformanceTimelineByPage.jsx';
 import DashboardAI from '../components/dashboardComponents/DashboardAI.jsx';
+import DashboardMetricDeepDive from '../components/dashboardComponents/DashboardMetricDeepDive.jsx';
+import DashboardAIInsights from '../components/dashboardComponents/DashboardAIInsights.jsx';
 
 const darkElectricBlue = '#0066FF';
 const darkerElectricBlue = '#0052CC';
@@ -216,9 +218,20 @@ function Dash() {
           />
         </div>
 
+
         {/* AI ANALYST */}
         <div style={{ marginBottom: '24px', width: '100%' }}>
           <DashboardAI siteId={siteId} />
+        </div>
+
+        {/* METRIC DEEP DIVE */}
+        <div style={{ marginBottom: '24px', width: '100%' }}>
+          <DashboardMetricDeepDive siteId={siteId} />
+        </div>
+
+        {/* AUTOMATIC AI INSIGHTS */}
+        <div style={{ marginBottom: '24px', width: '100%' }}>
+          <DashboardAIInsights siteId={siteId} />
         </div>
 
         {/* METRIC CARDS */}
