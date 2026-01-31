@@ -3,6 +3,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import Response
 from fastapi.middleware.cors import CORSMiddleware
 from app.api import auth, ingest, sites
+from app.api import visit_frequency
 from app.db import init_db, migrate_db
 import os
 from dotenv import load_dotenv
@@ -39,6 +40,7 @@ def startup_event():
 app.include_router(auth.router, prefix="/api")
 app.include_router(ingest.router, prefix="/ingest")
 app.include_router(sites.router, prefix="/api")
+app.include_router(visit_frequency.router, prefix="/api")
 
 # ------------------------
 # Client-Side SDK (OPEN CORS)
