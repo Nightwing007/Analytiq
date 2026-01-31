@@ -32,6 +32,7 @@ export const API_CONFIG = {
     SITES: '/api/sites',
     SITE_BY_ID: (siteId) => `/api/sites/${siteId}`,
     DELETE_SITE: (siteId) => `/api/sites/${siteId}`,
+    VERIFY_SITE: (siteId) => `/api/sites/${siteId}/verify`,
 
     // Analytics
     DASHBOARD: (siteId) => `/api/sites/${siteId}/dashboard`,

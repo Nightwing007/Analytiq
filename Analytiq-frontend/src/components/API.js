@@ -316,6 +316,12 @@ class APIClient {
     return this.request(API_CONFIG.ENDPOINTS.SITE_BY_ID(siteId));
   }
 
+  async verifySite(siteId) {
+    return this.request(API_CONFIG.ENDPOINTS.VERIFY_SITE(siteId), {
+      method: 'POST',
+    });
+  }
+
   // Analytics methods
   async getDashboard(siteId) {
     return this.request(API_CONFIG.ENDPOINTS.DASHBOARD(siteId));
@@ -371,6 +377,7 @@ export const {
   getReport,
   getTimeseries,
   getTopPages,
+  verifySite,
   isAuthenticated,
   validateToken,
   refreshToken,
