@@ -19,7 +19,7 @@ export const API_CONFIG = {
   BASE_URL: API_BASE_URL,
   WS_URL: WS_URL,
   TIMEOUT: parseInt(import.meta.env.VITE_API_TIMEOUT || '10000'),
-  
+
   // API Endpoints
   ENDPOINTS: {
     // Authentication
@@ -27,18 +27,19 @@ export const API_CONFIG = {
     LOGIN: '/api/login',
     VALIDATE: '/api/validate',
     REFRESH: '/api/refresh',
-    
+
     // Site Management
     SITES: '/api/sites',
     SITE_BY_ID: (siteId) => `/api/sites/${siteId}`,
     DELETE_SITE: (siteId) => `/api/sites/${siteId}`,
-    
+    VERIFY_SITE: (siteId) => `/api/sites/${siteId}/verify`,
+
     // Analytics
     DASHBOARD: (siteId) => `/api/sites/${siteId}/dashboard`,
     REPORT: (siteId) => `/api/sites/${siteId}/report`,
     TIMESERIES: (siteId) => `/api/sites/${siteId}/timeseries`,
     TOP_PAGES: (siteId) => `/api/sites/${siteId}/top-pages`,
-    
+
     // WebSocket
     WS_SITE: (siteId) => `/ws/sites/${siteId}`
   }
@@ -61,30 +62,30 @@ export const THEME_CONFIG = {
     backgroundDark: '#0A0A0F',
     backgroundSecondary: '#121218',
     backgroundElevated: '#1A1A24',
-    
+
     // Electric Blue Accents
     electricBlue: '#00D4FF',
     electricBlueSecondary: '#0099CC',
     electricBlueDark: '#006B99',
     electricBlueLight: '#33DDFF',
-    
+
     // Text Colors
     textPrimary: '#FFFFFF',
     textSecondary: '#B8BCC8',
     textMuted: '#6B7280',
     textElectric: '#00D4FF',
-    
+
     // Status Colors
     success: '#10B981',
     warning: '#F59E0B',
     error: '#EF4444',
     info: '#3B82F6',
-    
+
     // Border Colors
     borderPrimary: '#2A2A35',
     borderSecondary: '#1F1F28',
     borderElectric: '#00D4FF',
-    
+
     // Legacy aliases for backward compatibility
     primary: '#00D4FF',
     primaryDark: '#006B99',
@@ -92,7 +93,7 @@ export const THEME_CONFIG = {
     text: '#FFFFFF',
     white: '#FFFFFF'
   },
-  
+
   BREAKPOINTS: {
     sm: '640px',
     md: '768px',
@@ -100,7 +101,7 @@ export const THEME_CONFIG = {
     xl: '1280px',
     xxl: '1536px'
   },
-  
+
   SPACING: {
     xs: '4px',
     sm: '8px',
@@ -110,14 +111,14 @@ export const THEME_CONFIG = {
     '2xl': '48px',
     '3xl': '64px'
   },
-  
+
   BORDER_RADIUS: {
     small: '6px',
     medium: '8px',
     large: '12px',
     xlarge: '16px'
   },
-  
+
   ANIMATIONS: {
     duration: {
       fast: 150,
@@ -126,7 +127,7 @@ export const THEME_CONFIG = {
     },
     easing: 'ease-in-out'
   },
-  
+
   TYPOGRAPHY: {
     fontFamily: {
       primary: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
