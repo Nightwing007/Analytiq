@@ -36,15 +36,15 @@ const TrafficSourcesPieChart = ({ data }) => {
           textAlign: 'center'
         }}
       >
-        <AlertCircle 
-          size={48} 
-          style={{ 
+        <AlertCircle
+          size={48}
+          style={{
             color: THEME_CONFIG.COLORS.textMuted,
             marginBottom: THEME_CONFIG.SPACING.md
-          }} 
+          }}
         />
-        <p 
-          style={{ 
+        <p
+          style={{
             color: THEME_CONFIG.COLORS.textMuted,
             fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.body,
             fontFamily: THEME_CONFIG.TYPOGRAPHY.fontFamily.primary
@@ -78,8 +78,8 @@ const TrafficSourcesPieChart = ({ data }) => {
       }}
     >
       {/* Header */}
-      <div 
-        style={{ 
+      <div
+        style={{
           display: 'flex',
           alignItems: 'center',
           gap: THEME_CONFIG.SPACING.sm,
@@ -99,9 +99,9 @@ const TrafficSourcesPieChart = ({ data }) => {
         >
           <TrendingUp size={18} style={{ color: darkElectricBlue }} />
         </div>
-        <h3 
+        <h3
           className="card-title"
-          style={{ 
+          style={{
             fontFamily: "'Rajdhani', sans-serif",
             fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.h5,
             fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
@@ -135,16 +135,16 @@ const TrafficSourcesPieChart = ({ data }) => {
             }}
           >
             {data.map((entry, idx) => (
-              <Cell 
-                key={`cell-${idx}`} 
+              <Cell
+                key={`cell-${idx}`}
                 fill={ELECTRIC_BLUE_COLORS[idx % ELECTRIC_BLUE_COLORS.length]}
                 stroke={THEME_CONFIG.COLORS.backgroundSecondary}
                 strokeWidth={2}
               />
             ))}
           </Pie>
-          <Tooltip 
-            contentStyle={{ 
+          <Tooltip
+            contentStyle={{
               backgroundColor: THEME_CONFIG.COLORS.backgroundElevated,
               border: `2px solid ${darkElectricBlue}`,
               borderRadius: THEME_CONFIG.BORDER_RADIUS.small,
@@ -162,10 +162,10 @@ const TrafficSourcesPieChart = ({ data }) => {
               fontWeight: 600
             }}
           />
-          <Legend 
+          <Legend
             iconType="circle"
             iconSize={10}
-            wrapperStyle={{ 
+            wrapperStyle={{
               fontFamily: "'Rajdhani', sans-serif",
               fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
               color: THEME_CONFIG.COLORS.textSecondary,

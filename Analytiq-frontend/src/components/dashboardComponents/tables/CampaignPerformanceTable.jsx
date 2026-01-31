@@ -31,15 +31,15 @@ const CampaignPerformanceTable = ({ data }) => {
           textAlign: 'center'
         }}
       >
-        <AlertCircle 
-          size={48} 
-          style={{ 
+        <AlertCircle
+          size={48}
+          style={{
             color: THEME_CONFIG.COLORS.textMuted,
             marginBottom: THEME_CONFIG.SPACING.md
-          }} 
+          }}
         />
-        <p 
-          style={{ 
+        <p
+          style={{
             color: THEME_CONFIG.COLORS.textMuted,
             fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.body,
             fontFamily: THEME_CONFIG.TYPOGRAPHY.fontFamily.primary
@@ -53,7 +53,7 @@ const CampaignPerformanceTable = ({ data }) => {
 
   const handleSort = (key) => {
     if (!columns.find(col => col.key === key)?.sortable) return;
-    
+
     let direction = 'asc';
     if (sortConfig.key === key && sortConfig.direction === 'asc') {
       direction = 'desc';
@@ -63,7 +63,7 @@ const CampaignPerformanceTable = ({ data }) => {
 
   const sortedData = [...data].sort((a, b) => {
     if (!sortConfig.key) return 0;
-    
+
     let aValue = a[sortConfig.key];
     let bValue = b[sortConfig.key];
 
@@ -86,9 +86,9 @@ const CampaignPerformanceTable = ({ data }) => {
   });
 
   const SortableHeader = ({ column }) => (
-    <th 
+    <th
       onClick={() => column.sortable && handleSort(column.key)}
-      style={{ 
+      style={{
         padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
         backgroundColor: THEME_CONFIG.COLORS.backgroundDark,
         color: THEME_CONFIG.COLORS.textSecondary,
@@ -118,8 +118,8 @@ const CampaignPerformanceTable = ({ data }) => {
         {column.sortable && (
           <div style={{ marginLeft: 'auto' }}>
             {sortConfig.key === column.key ? (
-              sortConfig.direction === 'asc' ? 
-                <ChevronUp size={14} style={{ color: darkElectricBlue }} /> : 
+              sortConfig.direction === 'asc' ?
+                <ChevronUp size={14} style={{ color: darkElectricBlue }} /> :
                 <ChevronDown size={14} style={{ color: darkElectricBlue }} />
             ) : (
               <div style={{ width: '14px', height: '14px' }}></div>
@@ -152,8 +152,8 @@ const CampaignPerformanceTable = ({ data }) => {
       }}
     >
       {/* Header */}
-      <div 
-        style={{ 
+      <div
+        style={{
           display: 'flex',
           alignItems: 'center',
           gap: THEME_CONFIG.SPACING.sm,
@@ -173,9 +173,9 @@ const CampaignPerformanceTable = ({ data }) => {
         >
           <Target size={18} style={{ color: darkElectricBlue }} />
         </div>
-        <h3 
+        <h3
           className="card-title"
-          style={{ 
+          style={{
             fontFamily: "'Rajdhani', sans-serif",
             fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.h5,
             fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
@@ -200,9 +200,9 @@ const CampaignPerformanceTable = ({ data }) => {
           </thead>
           <tbody>
             {sortedData.map((row, idx) => (
-              <tr 
+              <tr
                 key={idx}
-                style={{ 
+                style={{
                   backgroundColor: idx % 2 === 0 ? 'transparent' : `${THEME_CONFIG.COLORS.backgroundDark}40`,
                   borderBottom: `1px solid ${THEME_CONFIG.COLORS.borderPrimary}`,
                   transition: 'background-color 200ms ease'
@@ -215,9 +215,9 @@ const CampaignPerformanceTable = ({ data }) => {
                 }}
               >
                 {columns.map(col => (
-                  <td 
+                  <td
                     key={col.key}
-                    style={{ 
+                    style={{
                       padding: `${THEME_CONFIG.SPACING.md}`,
                       fontFamily: col.key === 'campaign' ? "'Rajdhani', sans-serif" : "'Orbitron', monospace",
                       fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.body,
@@ -227,8 +227,8 @@ const CampaignPerformanceTable = ({ data }) => {
                     }}
                   >
                     {row[col.key] != null ? (
-                      typeof row[col.key] === 'number' ? 
-                        row[col.key].toLocaleString() : 
+                      typeof row[col.key] === 'number' ?
+                        row[col.key].toLocaleString() :
                         row[col.key]
                     ) : '--'}
                   </td>
@@ -240,8 +240,8 @@ const CampaignPerformanceTable = ({ data }) => {
       </div>
 
       {/* Footer Info */}
-      <div 
-        style={{ 
+      <div
+        style={{
           marginTop: THEME_CONFIG.SPACING.md,
           paddingTop: THEME_CONFIG.SPACING.md,
           borderTop: `1px solid ${THEME_CONFIG.COLORS.borderPrimary}`,

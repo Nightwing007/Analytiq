@@ -33,15 +33,15 @@ const TechnologyStatsCard = ({ data }) => {
           textAlign: 'center'
         }}
       >
-        <AlertCircle 
-          size={48} 
-          style={{ 
+        <AlertCircle
+          size={48}
+          style={{
             color: THEME_CONFIG.COLORS.textMuted,
             marginBottom: THEME_CONFIG.SPACING.md
-          }} 
+          }}
         />
-        <p 
-          style={{ 
+        <p
+          style={{
             color: THEME_CONFIG.COLORS.textMuted,
             fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.body,
             fontFamily: THEME_CONFIG.TYPOGRAPHY.fontFamily.primary
@@ -55,9 +55,9 @@ const TechnologyStatsCard = ({ data }) => {
 
   const screenResData = Array.isArray(data.common_screen_resolutions)
     ? data.common_screen_resolutions.map((r) => ({
-        resolution: r.resolution,
-        percent: r.percent,
-      }))
+      resolution: r.resolution,
+      percent: r.percent,
+    }))
     : [];
 
   return (
@@ -84,8 +84,8 @@ const TechnologyStatsCard = ({ data }) => {
       }}
     >
       {/* Header */}
-      <div 
-        style={{ 
+      <div
+        style={{
           display: 'flex',
           alignItems: 'center',
           gap: THEME_CONFIG.SPACING.sm,
@@ -105,9 +105,9 @@ const TechnologyStatsCard = ({ data }) => {
         >
           <Cpu size={18} style={{ color: darkElectricBlue }} />
         </div>
-        <h3 
+        <h3
           className="card-title"
-          style={{ 
+          style={{
             fontFamily: "'Rajdhani', sans-serif",
             fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.h5,
             fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
@@ -121,9 +121,9 @@ const TechnologyStatsCard = ({ data }) => {
       </div>
 
       {/* Network Stats */}
-      <div style={{ 
-        display: 'flex', 
-        flexDirection: 'column', 
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
         gap: THEME_CONFIG.SPACING.md,
         marginBottom: THEME_CONFIG.SPACING.lg
       }}>
@@ -162,9 +162,9 @@ const TechnologyStatsCard = ({ data }) => {
             >
               <Wifi size={14} style={{ color: darkElectricBlue }} />
             </div>
-            <span 
+            <span
               className="card-title"
-              style={{ 
+              style={{
                 fontFamily: "'Rajdhani', sans-serif",
                 fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
                 fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.medium,
@@ -176,9 +176,9 @@ const TechnologyStatsCard = ({ data }) => {
               Avg Downlink
             </span>
           </div>
-          <span 
+          <span
             className="cool-title"
-            style={{ 
+            style={{
               fontFamily: "'Orbitron', monospace",
               fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.body,
               fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.bold,
@@ -226,9 +226,9 @@ const TechnologyStatsCard = ({ data }) => {
             >
               <Wifi size={14} style={{ color: darkElectricBlue }} />
             </div>
-            <span 
+            <span
               className="card-title"
-              style={{ 
+              style={{
                 fontFamily: "'Rajdhani', sans-serif",
                 fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
                 fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.medium,
@@ -240,9 +240,9 @@ const TechnologyStatsCard = ({ data }) => {
               Avg RTT
             </span>
           </div>
-          <span 
+          <span
             className="cool-title"
-            style={{ 
+            style={{
               fontFamily: "'Orbitron', monospace",
               fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.body,
               fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.bold,
@@ -258,16 +258,16 @@ const TechnologyStatsCard = ({ data }) => {
 
       {/* Screen Resolutions Section */}
       <div style={{ flex: 1 }}>
-        <div style={{ 
-          display: 'flex', 
-          alignItems: 'center', 
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
           gap: THEME_CONFIG.SPACING.xs,
-          marginBottom: THEME_CONFIG.SPACING.sm 
+          marginBottom: THEME_CONFIG.SPACING.sm
         }}>
           <Monitor size={14} style={{ color: darkElectricBlue }} />
-          <p 
+          <p
             className="card-title"
-            style={{ 
+            style={{
               fontFamily: "'Rajdhani', sans-serif",
               fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
               fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
@@ -280,9 +280,9 @@ const TechnologyStatsCard = ({ data }) => {
             Screen Resolutions
           </p>
         </div>
-        
-        <div 
-          style={{ 
+
+        <div
+          style={{
             padding: THEME_CONFIG.SPACING.md,
             backgroundColor: THEME_CONFIG.COLORS.backgroundDark,
             borderRadius: THEME_CONFIG.BORDER_RADIUS.small,
@@ -295,30 +295,30 @@ const TechnologyStatsCard = ({ data }) => {
         >
           {screenResData.length > 0 ? (
             <ResponsiveContainer width="100%" height={100}>
-              <BarChart 
-                data={screenResData} 
-                layout="vertical" 
+              <BarChart
+                data={screenResData}
+                layout="vertical"
                 margin={{ left: 10, right: 10, top: 5, bottom: 5 }}
               >
-                <XAxis 
-                  type="number" 
-                  hide 
-                  domain={[0, 100]} 
+                <XAxis
+                  type="number"
+                  hide
+                  domain={[0, 100]}
                 />
-                <YAxis 
-                  type="category" 
-                  dataKey="resolution" 
-                  tick={{ 
+                <YAxis
+                  type="category"
+                  dataKey="resolution"
+                  tick={{
                     fill: THEME_CONFIG.COLORS.textSecondary,
-                    fontFamily: "'Rajdhani', sans-serif", 
+                    fontFamily: "'Rajdhani', sans-serif",
                     fontSize: 11,
                     fontWeight: 500
-                  }} 
+                  }}
                   width={80}
                   stroke={THEME_CONFIG.COLORS.borderPrimary}
                 />
-                <Tooltip 
-                  contentStyle={{ 
+                <Tooltip
+                  contentStyle={{
                     backgroundColor: THEME_CONFIG.COLORS.backgroundElevated,
                     border: `2px solid ${darkElectricBlue}`,
                     borderRadius: THEME_CONFIG.BORDER_RADIUS.small,
@@ -330,14 +330,14 @@ const TechnologyStatsCard = ({ data }) => {
                   }}
                   formatter={(v) => [`${v.toFixed(1)}%`, 'Usage']}
                 />
-                <Bar 
-                  dataKey="percent" 
+                <Bar
+                  dataKey="percent"
                   radius={[0, 6, 6, 0]}
                   barSize={14}
                 >
                   {screenResData.map((entry, idx) => (
-                    <Cell 
-                      key={`cell-${idx}`} 
+                    <Cell
+                      key={`cell-${idx}`}
                       fill={RESOLUTION_COLORS[idx % RESOLUTION_COLORS.length]}
                     />
                   ))}
@@ -345,8 +345,8 @@ const TechnologyStatsCard = ({ data }) => {
               </BarChart>
             </ResponsiveContainer>
           ) : (
-            <span 
-              style={{ 
+            <span
+              style={{
                 color: THEME_CONFIG.COLORS.textMuted,
                 fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
                 fontFamily: "'Rajdhani', sans-serif"

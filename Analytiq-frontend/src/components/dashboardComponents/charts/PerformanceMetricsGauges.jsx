@@ -12,44 +12,44 @@ const darkerElectricBlue = '#0052CC';
  */
 const calculatePerformanceScore = (data) => {
   if (!data) return 0;
-  
+
   const scores = [];
-  
+
   // FCP: < 1800ms = 100, > 3000ms = 0
   if (data.first_contentful_paint_avg_ms !== null) {
     const fcpScore = Math.max(0, Math.min(100, 100 - ((data.first_contentful_paint_avg_ms - 1800) / 12)));
     scores.push(fcpScore);
   }
-  
+
   // LCP: < 2500ms = 100, > 4000ms = 0
   if (data.largest_contentful_paint_avg_ms !== null) {
     const lcpScore = Math.max(0, Math.min(100, 100 - ((data.largest_contentful_paint_avg_ms - 2500) / 15)));
     scores.push(lcpScore);
   }
-  
+
   // CLS: < 0.1 = 100, > 0.25 = 0
   if (data.cumulative_layout_shift_avg !== null) {
     const clsScore = Math.max(0, Math.min(100, 100 - ((data.cumulative_layout_shift_avg - 0.1) / 0.0015)));
     scores.push(clsScore);
   }
-  
+
   // FID: < 100ms = 100, > 300ms = 0
   if (data.first_input_delay_avg_ms !== null) {
     const fidScore = Math.max(0, Math.min(100, 100 - ((data.first_input_delay_avg_ms - 100) / 2)));
     scores.push(fidScore);
   }
-  
+
   // Server RT: < 200ms = 100, > 600ms = 0
   if (data.server_response_time_avg_ms !== null) {
     const serverScore = Math.max(0, Math.min(100, 100 - ((data.server_response_time_avg_ms - 200) / 4)));
     scores.push(serverScore);
   }
-  
+
   // CDN Cache: Higher is better, already 0-100
   if (data.cdn_cache_hit_ratio_percent !== null) {
     scores.push(data.cdn_cache_hit_ratio_percent);
   }
-  
+
   // Average of all scores
   return scores.length > 0 ? scores.reduce((a, b) => a + b, 0) / scores.length : 0;
 };
@@ -59,15 +59,15 @@ const calculatePerformanceScore = (data) => {
  */
 const formatValue = (value, unit) => {
   if (value === null || value === undefined) return '--';
-  
+
   if (unit === 'ms') {
     return value >= 1000 ? `${(value / 1000).toFixed(2)}s` : `${Math.round(value)}ms`;
   }
-  
+
   if (unit === '%') {
     return `${value.toFixed(1)}%`;
   }
-  
+
   return value.toFixed(3);
 };
 
@@ -164,15 +164,15 @@ const PerformanceMetricsGauges = ({ data }) => {
           textAlign: 'center'
         }}
       >
-        <AlertCircle 
-          size={48} 
-          style={{ 
+        <AlertCircle
+          size={48}
+          style={{
             color: THEME_CONFIG.COLORS.textMuted,
             marginBottom: THEME_CONFIG.SPACING.md
-          }} 
+          }}
         />
-        <p 
-          style={{ 
+        <p
+          style={{
             color: THEME_CONFIG.COLORS.textMuted,
             fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.body,
             fontFamily: THEME_CONFIG.TYPOGRAPHY.fontFamily.primary
@@ -185,7 +185,7 @@ const PerformanceMetricsGauges = ({ data }) => {
   }
 
   const performanceScore = calculatePerformanceScore(data);
-  
+
   const gaugeData = [
     { value: performanceScore },
     { value: 100 - performanceScore }
@@ -257,8 +257,8 @@ const PerformanceMetricsGauges = ({ data }) => {
       }}
     >
       {/* Header */}
-      <div 
-        style={{ 
+      <div
+        style={{
           display: 'flex',
           alignItems: 'center',
           gap: THEME_CONFIG.SPACING.sm,
@@ -278,9 +278,9 @@ const PerformanceMetricsGauges = ({ data }) => {
         >
           <Gauge size={18} style={{ color: darkElectricBlue }} />
         </div>
-        <h3 
+        <h3
           className="card-title"
-          style={{ 
+          style={{
             fontFamily: "'Rajdhani', sans-serif",
             fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.h5,
             fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,

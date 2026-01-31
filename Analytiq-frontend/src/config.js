@@ -41,7 +41,11 @@ export const API_CONFIG = {
     TOP_PAGES: (siteId) => `/api/sites/${siteId}/top-pages`,
 
     // WebSocket
-    WS_SITE: (siteId) => `/ws/sites/${siteId}`
+    WS_SITE: (siteId) => `/ws/sites/${siteId}`,
+
+    // AI
+    AI_CHAT_WEBSITE: '/ai/chat/website',
+    AI_CHAT_METRIC: '/ai/chat/metric'
   }
 };
 

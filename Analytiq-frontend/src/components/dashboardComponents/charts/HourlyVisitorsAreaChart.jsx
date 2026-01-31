@@ -19,9 +19,9 @@ const HourlyVisitorsAreaChart = ({ data }) => {
 
   // Find peak hour
   const peakHour = chartData.length > 0
-    ? chartData.reduce((max, curr) => 
-        curr.average_visitors > max.average_visitors ? curr : max
-      )
+    ? chartData.reduce((max, curr) =>
+      curr.average_visitors > max.average_visitors ? curr : max
+    )
     : null;
 
   // Empty state
@@ -41,15 +41,15 @@ const HourlyVisitorsAreaChart = ({ data }) => {
           textAlign: 'center'
         }}
       >
-        <AlertCircle 
-          size={48} 
-          style={{ 
+        <AlertCircle
+          size={48}
+          style={{
             color: THEME_CONFIG.COLORS.textMuted,
             marginBottom: THEME_CONFIG.SPACING.md
-          }} 
+          }}
         />
-        <p 
-          style={{ 
+        <p
+          style={{
             color: THEME_CONFIG.COLORS.textMuted,
             fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.body,
             fontFamily: THEME_CONFIG.TYPOGRAPHY.fontFamily.primary
@@ -83,8 +83,8 @@ const HourlyVisitorsAreaChart = ({ data }) => {
     >
       {/* Header */}
       <div style={{ marginBottom: THEME_CONFIG.SPACING.lg }}>
-        <div 
-          style={{ 
+        <div
+          style={{
             display: 'flex',
             alignItems: 'center',
             gap: THEME_CONFIG.SPACING.sm,
@@ -104,9 +104,9 @@ const HourlyVisitorsAreaChart = ({ data }) => {
           >
             <Activity size={18} style={{ color: darkElectricBlue }} />
           </div>
-          <h3 
+          <h3
             className="card-title"
-            style={{ 
+            style={{
               fontFamily: "'Rajdhani', sans-serif",
               fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.h5,
               fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
@@ -138,46 +138,46 @@ const HourlyVisitorsAreaChart = ({ data }) => {
 
       {/* Chart */}
       <ResponsiveContainer width="100%" height={320}>
-        <AreaChart 
-          data={chartData} 
+        <AreaChart
+          data={chartData}
           margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
         >
           <defs>
             <linearGradient id={GRADIENT_ID} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor={darkElectricBlue} stopOpacity={0.6}/>
-              <stop offset="95%" stopColor={darkElectricBlue} stopOpacity={0.05}/>
+              <stop offset="5%" stopColor={darkElectricBlue} stopOpacity={0.6} />
+              <stop offset="95%" stopColor={darkElectricBlue} stopOpacity={0.05} />
             </linearGradient>
           </defs>
-          
-          <CartesianGrid 
-            strokeDasharray="3 3" 
+
+          <CartesianGrid
+            strokeDasharray="3 3"
             stroke={THEME_CONFIG.COLORS.borderPrimary}
             strokeOpacity={0.3}
           />
-          
-          <XAxis 
-            dataKey="hour" 
-            tick={{ 
-              fill: THEME_CONFIG.COLORS.textMuted, 
+
+          <XAxis
+            dataKey="hour"
+            tick={{
+              fill: THEME_CONFIG.COLORS.textMuted,
               fontFamily: "'Rajdhani', sans-serif",
               fontSize: 12
             }}
             stroke={THEME_CONFIG.COLORS.borderPrimary}
             tickFormatter={(value) => `${value}:00`}
           />
-          
-          <YAxis 
-            tick={{ 
-              fill: THEME_CONFIG.COLORS.textMuted, 
+
+          <YAxis
+            tick={{
+              fill: THEME_CONFIG.COLORS.textMuted,
               fontFamily: "'Rajdhani', sans-serif",
               fontSize: 12
             }}
             stroke={THEME_CONFIG.COLORS.borderPrimary}
             allowDecimals={false}
           />
-          
-          <Tooltip 
-            contentStyle={{ 
+
+          <Tooltip
+            contentStyle={{
               backgroundColor: THEME_CONFIG.COLORS.backgroundElevated,
               border: `2px solid ${darkElectricBlue}`,
               borderRadius: THEME_CONFIG.BORDER_RADIUS.small,
@@ -197,21 +197,21 @@ const HourlyVisitorsAreaChart = ({ data }) => {
             }}
             labelFormatter={(value) => `${value}:00`}
             formatter={(value) => [
-              `${Math.round(value)} visitors`, 
+              `${Math.round(value)} visitors`,
               'Average'
             ]}
           />
-          
-          <Area 
-            type="monotone" 
-            dataKey="average_visitors" 
+
+          <Area
+            type="monotone"
+            dataKey="average_visitors"
             stroke={darkElectricBlue}
             strokeWidth={3}
             fill={`url(#${GRADIENT_ID})`}
             animationDuration={1000}
             dot={false}
-            activeDot={{ 
-              r: 6, 
+            activeDot={{
+              r: 6,
               fill: darkElectricBlue,
               stroke: THEME_CONFIG.COLORS.backgroundSecondary,
               strokeWidth: 2

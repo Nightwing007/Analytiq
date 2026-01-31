@@ -16,7 +16,7 @@ const EVENT_COLORS = {
 // Prepare chart data: group by timestamp, count event types
 function prepareTimelineData(data) {
   if (!Array.isArray(data)) return [];
-  
+
   const grouped = {};
   data.forEach((event) => {
     const ts = event.timestamp.slice(0, 13); // hour granularity
@@ -25,7 +25,7 @@ function prepareTimelineData(data) {
     if (event.event_type === 'click') grouped[ts].click += 1;
     if (event.event_type === 'exit') grouped[ts].exit += 1;
   });
-  
+
   return Object.values(grouped).sort((a, b) => a.timestamp.localeCompare(b.timestamp));
 }
 
@@ -49,15 +49,15 @@ const EventTimelineChart = ({ data }) => {
           textAlign: 'center'
         }}
       >
-        <AlertCircle 
-          size={48} 
-          style={{ 
+        <AlertCircle
+          size={48}
+          style={{
             color: THEME_CONFIG.COLORS.textMuted,
             marginBottom: THEME_CONFIG.SPACING.md
-          }} 
+          }}
         />
-        <p 
-          style={{ 
+        <p
+          style={{
             color: THEME_CONFIG.COLORS.textMuted,
             fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.body,
             fontFamily: THEME_CONFIG.TYPOGRAPHY.fontFamily.primary
@@ -90,8 +90,8 @@ const EventTimelineChart = ({ data }) => {
       }}
     >
       {/* Header */}
-      <div 
-        style={{ 
+      <div
+        style={{
           display: 'flex',
           alignItems: 'center',
           gap: THEME_CONFIG.SPACING.sm,
@@ -111,9 +111,9 @@ const EventTimelineChart = ({ data }) => {
         >
           <Activity size={18} style={{ color: darkElectricBlue }} />
         </div>
-        <h3 
+        <h3
           className="card-title"
-          style={{ 
+          style={{
             fontFamily: "'Rajdhani', sans-serif",
             fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.h5,
             fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
@@ -128,45 +128,45 @@ const EventTimelineChart = ({ data }) => {
 
       {/* Chart */}
       <ResponsiveContainer width="100%" height={280}>
-        <LineChart 
-          data={chartData} 
+        <LineChart
+          data={chartData}
           margin={{ top: 10, right: 20, left: 0, bottom: 10 }}
         >
-          <XAxis 
-            dataKey="timestamp" 
-            tick={{ 
+          <XAxis
+            dataKey="timestamp"
+            tick={{
               fill: THEME_CONFIG.COLORS.textMuted,
-              fontFamily: "'Rajdhani', sans-serif", 
-              fontSize: 11 
+              fontFamily: "'Rajdhani', sans-serif",
+              fontSize: 11
             }}
             stroke={THEME_CONFIG.COLORS.borderPrimary}
             tickFormatter={(value) => {
               // Format timestamp to readable format
               try {
                 const date = new Date(value);
-                return date.toLocaleTimeString('en-US', { 
-                  hour: '2-digit', 
+                return date.toLocaleTimeString('en-US', {
+                  hour: '2-digit',
                   minute: '2-digit',
-                  hour12: false 
+                  hour12: false
                 });
               } catch {
                 return value;
               }
             }}
           />
-          
-          <YAxis 
-            tick={{ 
+
+          <YAxis
+            tick={{
               fill: THEME_CONFIG.COLORS.textMuted,
-              fontFamily: "'Rajdhani', sans-serif", 
-              fontSize: 11 
+              fontFamily: "'Rajdhani', sans-serif",
+              fontSize: 11
             }}
             stroke={THEME_CONFIG.COLORS.borderPrimary}
             allowDecimals={false}
           />
-          
-          <Tooltip 
-            contentStyle={{ 
+
+          <Tooltip
+            contentStyle={{
               backgroundColor: THEME_CONFIG.COLORS.backgroundElevated,
               border: `2px solid ${darkElectricBlue}`,
               borderRadius: THEME_CONFIG.BORDER_RADIUS.small,
@@ -187,7 +187,7 @@ const EventTimelineChart = ({ data }) => {
             labelFormatter={(value) => {
               try {
                 const date = new Date(value);
-                return date.toLocaleString('en-US', { 
+                return date.toLocaleString('en-US', {
                   month: 'short',
                   day: 'numeric',
                   hour: '2-digit',
@@ -198,9 +198,9 @@ const EventTimelineChart = ({ data }) => {
               }
             }}
           />
-          
-          <Legend 
-            wrapperStyle={{ 
+
+          <Legend
+            wrapperStyle={{
               fontFamily: "'Rajdhani', sans-serif",
               fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
               color: THEME_CONFIG.COLORS.textSecondary,
@@ -214,48 +214,48 @@ const EventTimelineChart = ({ data }) => {
               </span>
             )}
           />
-          
-          <Line 
-            type="monotone" 
-            dataKey="pageview" 
+
+          <Line
+            type="monotone"
+            dataKey="pageview"
             stroke={EVENT_COLORS.pageview}
             strokeWidth={3}
             dot={false}
             name="Pageviews"
-            activeDot={{ 
-              r: 5, 
+            activeDot={{
+              r: 5,
               fill: EVENT_COLORS.pageview,
               stroke: THEME_CONFIG.COLORS.backgroundSecondary,
               strokeWidth: 2
             }}
             animationDuration={1000}
           />
-          
-          <Line 
-            type="monotone" 
-            dataKey="click" 
+
+          <Line
+            type="monotone"
+            dataKey="click"
             stroke={EVENT_COLORS.click}
             strokeWidth={3}
             dot={false}
             name="Clicks"
-            activeDot={{ 
-              r: 5, 
+            activeDot={{
+              r: 5,
               fill: EVENT_COLORS.click,
               stroke: THEME_CONFIG.COLORS.backgroundSecondary,
               strokeWidth: 2
             }}
             animationDuration={1000}
           />
-          
-          <Line 
-            type="monotone" 
-            dataKey="exit" 
+
+          <Line
+            type="monotone"
+            dataKey="exit"
             stroke={EVENT_COLORS.exit}
             strokeWidth={3}
             dot={false}
             name="Exits"
-            activeDot={{ 
-              r: 5, 
+            activeDot={{
+              r: 5,
               fill: EVENT_COLORS.exit,
               stroke: THEME_CONFIG.COLORS.backgroundSecondary,
               strokeWidth: 2
@@ -266,8 +266,8 @@ const EventTimelineChart = ({ data }) => {
       </ResponsiveContainer>
 
       {/* Footer Info */}
-      <div 
-        style={{ 
+      <div
+        style={{
           marginTop: THEME_CONFIG.SPACING.md,
           paddingTop: THEME_CONFIG.SPACING.md,
           borderTop: `1px solid ${THEME_CONFIG.COLORS.borderPrimary}`,

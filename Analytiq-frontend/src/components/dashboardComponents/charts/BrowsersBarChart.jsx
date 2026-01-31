@@ -52,15 +52,15 @@ const BrowsersBarChart = ({ data }) => {
           textAlign: 'center'
         }}
       >
-        <AlertCircle 
-          size={48} 
-          style={{ 
+        <AlertCircle
+          size={48}
+          style={{
             color: THEME_CONFIG.COLORS.textMuted,
             marginBottom: THEME_CONFIG.SPACING.md
-          }} 
+          }}
         />
-        <p 
-          style={{ 
+        <p
+          style={{
             color: THEME_CONFIG.COLORS.textMuted,
             fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.body,
             fontFamily: THEME_CONFIG.TYPOGRAPHY.fontFamily.primary
@@ -94,8 +94,8 @@ const BrowsersBarChart = ({ data }) => {
       }}
     >
       {/* Header */}
-      <div 
-        style={{ 
+      <div
+        style={{
           display: 'flex',
           alignItems: 'center',
           gap: THEME_CONFIG.SPACING.sm,
@@ -115,9 +115,9 @@ const BrowsersBarChart = ({ data }) => {
         >
           <Globe size={18} style={{ color: darkElectricBlue }} />
         </div>
-        <h3 
+        <h3
           className="card-title"
-          style={{ 
+          style={{
             fontFamily: "'Rajdhani', sans-serif",
             fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.h5,
             fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
@@ -137,10 +137,10 @@ const BrowsersBarChart = ({ data }) => {
           margin={{ top: 20, right: 20, left: 0, bottom: 20 }}
           barSize={40}
         >
-          <XAxis 
+          <XAxis
             dataKey="name"
-            tick={{ 
-              fill: THEME_CONFIG.COLORS.textSecondary, 
+            tick={{
+              fill: THEME_CONFIG.COLORS.textSecondary,
               fontFamily: "'Rajdhani', sans-serif",
               fontSize: 12,
               fontWeight: 500
@@ -150,20 +150,20 @@ const BrowsersBarChart = ({ data }) => {
             textAnchor="end"
             height={60}
           />
-          
-          <YAxis 
+
+          <YAxis
             domain={[0, 100]}
-            tick={{ 
-              fill: THEME_CONFIG.COLORS.textMuted, 
+            tick={{
+              fill: THEME_CONFIG.COLORS.textMuted,
               fontFamily: "'Rajdhani', sans-serif",
               fontSize: 12
             }}
             stroke={THEME_CONFIG.COLORS.borderPrimary}
             tickFormatter={(v) => `${v}%`}
           />
-          
-          <Tooltip 
-            contentStyle={{ 
+
+          <Tooltip
+            contentStyle={{
               backgroundColor: THEME_CONFIG.COLORS.backgroundElevated,
               border: `2px solid ${darkElectricBlue}`,
               borderRadius: THEME_CONFIG.BORDER_RADIUS.small,
@@ -183,15 +183,15 @@ const BrowsersBarChart = ({ data }) => {
             }}
             formatter={(value) => [`${value.toFixed(1)}%`, 'Usage']}
           />
-          
-          <Bar 
-            dataKey="percent" 
+
+          <Bar
+            dataKey="percent"
             radius={[8, 8, 0, 0]}
             animationDuration={1000}
           >
             {data.map((entry, index) => (
-              <Cell 
-                key={`cell-${index}`} 
+              <Cell
+                key={`cell-${index}`}
                 fill={getColorForBrowser(entry.name, index)}
               />
             ))}

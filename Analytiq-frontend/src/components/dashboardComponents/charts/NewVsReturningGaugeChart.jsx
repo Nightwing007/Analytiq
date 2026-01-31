@@ -34,15 +34,15 @@ const NewVsReturningGaugeChart = ({ data }) => {
           textAlign: 'center'
         }}
       >
-        <AlertCircle 
-          size={48} 
-          style={{ 
+        <AlertCircle
+          size={48}
+          style={{
             color: THEME_CONFIG.COLORS.textMuted,
             marginBottom: THEME_CONFIG.SPACING.md
-          }} 
+          }}
         />
-        <p 
-          style={{ 
+        <p
+          style={{
             color: THEME_CONFIG.COLORS.textMuted,
             fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.body,
             fontFamily: THEME_CONFIG.TYPOGRAPHY.fontFamily.primary
@@ -61,7 +61,7 @@ const NewVsReturningGaugeChart = ({ data }) => {
   ];
 
   // Determine dominant type for center display
-  const dominant = data.new_percent >= data.returning_percent 
+  const dominant = data.new_percent >= data.returning_percent
     ? { label: 'New', value: data.new_percent }
     : { label: 'Returning', value: data.returning_percent };
 
@@ -87,8 +87,8 @@ const NewVsReturningGaugeChart = ({ data }) => {
       }}
     >
       {/* Header */}
-      <div 
-        style={{ 
+      <div
+        style={{
           display: 'flex',
           alignItems: 'center',
           gap: THEME_CONFIG.SPACING.sm,
@@ -108,9 +108,9 @@ const NewVsReturningGaugeChart = ({ data }) => {
         >
           <UserPlus size={18} style={{ color: darkElectricBlue }} />
         </div>
-        <h3 
+        <h3
           className="card-title"
-          style={{ 
+          style={{
             fontFamily: "'Rajdhani', sans-serif",
             fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.h5,
             fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
@@ -143,8 +143,8 @@ const NewVsReturningGaugeChart = ({ data }) => {
               <Cell fill={COLORS.new} stroke={THEME_CONFIG.COLORS.backgroundSecondary} strokeWidth={2} />
               <Cell fill={COLORS.returning} stroke={THEME_CONFIG.COLORS.backgroundSecondary} strokeWidth={2} />
             </Pie>
-            <Tooltip 
-              contentStyle={{ 
+            <Tooltip
+              contentStyle={{
                 backgroundColor: THEME_CONFIG.COLORS.backgroundElevated,
                 border: `2px solid ${darkElectricBlue}`,
                 borderRadius: THEME_CONFIG.BORDER_RADIUS.small,

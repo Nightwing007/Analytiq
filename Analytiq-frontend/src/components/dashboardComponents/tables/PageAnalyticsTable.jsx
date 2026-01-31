@@ -5,13 +5,13 @@
 
 import React, { useState, useMemo } from 'react';
 import { THEME_CONFIG } from '../../../config.js';
-import { 
-  ChevronUp, 
-  ChevronDown, 
-  Search, 
-  Eye, 
-  Users, 
-  Clock, 
+import {
+  ChevronUp,
+  ChevronDown,
+  Search,
+  Eye,
+  Users,
+  Clock,
   TrendingDown,
   ExternalLink,
   Download,
@@ -25,10 +25,10 @@ import {
 const darkElectricBlue = '#0066FF';
 const darkerElectricBlue = '#0052CC';
 
-const PageAnalyticsTable = ({ 
+const PageAnalyticsTable = ({
   pages = [],
   title = "Page Analytics",
-  loading = false 
+  loading = false
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortConfig, setSortConfig] = useState({ key: 'views', direction: 'desc' });
@@ -37,7 +37,7 @@ const PageAnalyticsTable = ({
 
   if (loading) {
     return (
-      <div 
+      <div
         style={{
           border: `2px solid ${THEME_CONFIG.COLORS.borderPrimary}`,
           backgroundColor: THEME_CONFIG.COLORS.backgroundSecondary,
@@ -45,7 +45,7 @@ const PageAnalyticsTable = ({
           padding: THEME_CONFIG.SPACING.xl
         }}
       >
-        <div 
+        <div
           style={{
             height: '24px',
             backgroundColor: `${THEME_CONFIG.COLORS.borderPrimary}40`,
@@ -56,7 +56,7 @@ const PageAnalyticsTable = ({
         />
         <div style={{ display: 'flex', flexDirection: 'column', gap: THEME_CONFIG.SPACING.sm }}>
           {[1, 2, 3, 4, 5].map(i => (
-            <div 
+            <div
               key={i}
               style={{
                 height: '48px',
@@ -74,7 +74,7 @@ const PageAnalyticsTable = ({
 
   if (!pages || pages.length === 0) {
     return (
-      <div 
+      <div
         style={{
           border: `2px solid ${THEME_CONFIG.COLORS.borderPrimary}`,
           backgroundColor: THEME_CONFIG.COLORS.backgroundSecondary,
@@ -87,15 +87,15 @@ const PageAnalyticsTable = ({
           minHeight: '200px'
         }}
       >
-        <AlertCircle 
-          size={48} 
-          style={{ 
+        <AlertCircle
+          size={48}
+          style={{
             color: THEME_CONFIG.COLORS.textMuted,
             marginBottom: THEME_CONFIG.SPACING.md
-          }} 
+          }}
         />
-        <p 
-          style={{ 
+        <p
+          style={{
             color: THEME_CONFIG.COLORS.textMuted,
             fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.body,
             fontFamily: THEME_CONFIG.TYPOGRAPHY.fontFamily.primary
@@ -142,9 +142,9 @@ const PageAnalyticsTable = ({
   };
 
   const SortableHeader = ({ sortKey, children }) => (
-    <th 
+    <th
       onClick={() => handleSort(sortKey)}
-      style={{ 
+      style={{
         cursor: 'pointer',
         padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
         backgroundColor: THEME_CONFIG.COLORS.backgroundDark,
@@ -164,8 +164,8 @@ const PageAnalyticsTable = ({
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
         {children}
         {sortConfig.key === sortKey && (
-          sortConfig.direction === 'asc' ? 
-            <ChevronUp size={14} style={{ color: darkElectricBlue }} /> : 
+          sortConfig.direction === 'asc' ?
+            <ChevronUp size={14} style={{ color: darkElectricBlue }} /> :
             <ChevronDown size={14} style={{ color: darkElectricBlue }} />
         )}
       </div>
@@ -173,7 +173,7 @@ const PageAnalyticsTable = ({
   );
 
   return (
-    <div 
+    <div
       style={{
         border: `2px solid ${THEME_CONFIG.COLORS.borderPrimary}`,
         backgroundColor: THEME_CONFIG.COLORS.backgroundSecondary,
@@ -191,10 +191,10 @@ const PageAnalyticsTable = ({
       }}
     >
       {/* Header */}
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'space-between', 
-        alignItems: 'center', 
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
         marginBottom: THEME_CONFIG.SPACING.lg,
         flexWrap: 'wrap',
         gap: THEME_CONFIG.SPACING.md
@@ -213,8 +213,8 @@ const PageAnalyticsTable = ({
           >
             <FileText size={18} style={{ color: darkElectricBlue }} />
           </div>
-          <h3 
-            style={{ 
+          <h3
+            style={{
               fontFamily: "'Rajdhani', sans-serif",
               fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.h5,
               fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
@@ -226,12 +226,12 @@ const PageAnalyticsTable = ({
             {title}
           </h3>
         </div>
-        
+
         <div style={{ display: 'flex', alignItems: 'center', gap: THEME_CONFIG.SPACING.md }}>
           {/* Search */}
           <div style={{ position: 'relative' }}>
-            <Search 
-              size={16} 
+            <Search
+              size={16}
               style={{
                 position: 'absolute',
                 left: '12px',
@@ -264,7 +264,7 @@ const PageAnalyticsTable = ({
               onBlur={(e) => e.target.style.borderColor = THEME_CONFIG.COLORS.borderPrimary}
             />
           </div>
-          
+
           {/* Export Button */}
           <button
             style={{
@@ -302,7 +302,7 @@ const PageAnalyticsTable = ({
         <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '480px' }}>
           <thead>
             <tr>
-              <th style={{ 
+              <th style={{
                 padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
                 backgroundColor: THEME_CONFIG.COLORS.backgroundDark,
                 color: THEME_CONFIG.COLORS.textSecondary,
@@ -323,9 +323,9 @@ const PageAnalyticsTable = ({
           </thead>
           <tbody>
             {filteredAndSortedPages.map((page, index) => (
-              <tr 
+              <tr
                 key={index}
-                style={{ 
+                style={{
                   backgroundColor: index % 2 === 0 ? 'transparent' : `${THEME_CONFIG.COLORS.backgroundDark}40`,
                   borderBottom: `1px solid ${THEME_CONFIG.COLORS.borderPrimary}`,
                   cursor: 'pointer',
@@ -336,8 +336,8 @@ const PageAnalyticsTable = ({
                 onMouseLeave={(e) => e.currentTarget.style.backgroundColor = index % 2 === 0 ? 'transparent' : `${THEME_CONFIG.COLORS.backgroundDark}40`}
               >
                 <td style={{ padding: THEME_CONFIG.SPACING.md }}>
-                  <div 
-                    style={{ 
+                  <div
+                    style={{
                       fontFamily: "'Rajdhani', sans-serif",
                       fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.body,
                       fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.medium,
@@ -346,8 +346,8 @@ const PageAnalyticsTable = ({
                   >
                     {page.page_title || 'Untitled'}
                   </div>
-                  <div 
-                    style={{ 
+                  <div
+                    style={{
                       fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
                       color: THEME_CONFIG.COLORS.textMuted,
                       marginTop: '2px'
@@ -357,8 +357,8 @@ const PageAnalyticsTable = ({
                   </div>
                 </td>
                 <td style={{ padding: THEME_CONFIG.SPACING.md }}>
-                  <div 
-                    style={{ 
+                  <div
+                    style={{
                       fontFamily: "'Orbitron', monospace",
                       fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.body,
                       fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.bold,
@@ -370,8 +370,8 @@ const PageAnalyticsTable = ({
                   </div>
                 </td>
                 <td style={{ padding: THEME_CONFIG.SPACING.md }}>
-                  <span 
-                    style={{ 
+                  <span
+                    style={{
                       fontFamily: "'Rajdhani', sans-serif",
                       fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.body,
                       fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.medium,
@@ -382,8 +382,8 @@ const PageAnalyticsTable = ({
                   </span>
                 </td>
                 <td style={{ padding: THEME_CONFIG.SPACING.md }}>
-                  <span 
-                    style={{ 
+                  <span
+                    style={{
                       fontFamily: "'Rajdhani', sans-serif",
                       fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.body,
                       fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.medium,
@@ -401,8 +401,8 @@ const PageAnalyticsTable = ({
 
       {/* Modal */}
       {modalOpen && modalPage && (
-        <div 
-          style={{ 
+        <div
+          style={{
             position: 'fixed',
             top: 0,
             left: 0,
@@ -415,11 +415,11 @@ const PageAnalyticsTable = ({
             alignItems: 'center',
             justifyContent: 'center',
             padding: '1rem'
-          }} 
+          }}
           onClick={() => setModalOpen(false)}
         >
-          <div 
-            style={{ 
+          <div
+            style={{
               maxWidth: '500px',
               width: '100%',
               backgroundColor: THEME_CONFIG.COLORS.backgroundSecondary,
@@ -430,12 +430,12 @@ const PageAnalyticsTable = ({
               position: 'relative',
               maxHeight: '90vh',
               overflowY: 'auto'
-            }} 
+            }}
             onClick={e => e.stopPropagation()}
           >
             {/* Close Button */}
-            <button 
-              style={{ 
+            <button
+              style={{
                 position: 'absolute',
                 top: THEME_CONFIG.SPACING.md,
                 right: THEME_CONFIG.SPACING.md,
@@ -448,7 +448,7 @@ const PageAnalyticsTable = ({
                 alignItems: 'center',
                 justifyContent: 'center',
                 transition: 'color 200ms ease'
-              }} 
+              }}
               onClick={() => setModalOpen(false)}
               onMouseEnter={(e) => e.currentTarget.style.color = darkElectricBlue}
               onMouseLeave={(e) => e.currentTarget.style.color = THEME_CONFIG.COLORS.textMuted}
@@ -458,8 +458,8 @@ const PageAnalyticsTable = ({
 
             {/* Modal Header */}
             <div style={{ marginBottom: THEME_CONFIG.SPACING.lg, paddingRight: '2rem' }}>
-              <h3 
-                style={{ 
+              <h3
+                style={{
                   fontFamily: "'Rajdhani', sans-serif",
                   fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.h4,
                   fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
@@ -470,8 +470,8 @@ const PageAnalyticsTable = ({
               >
                 {modalPage.page_title || 'Untitled'}
               </h3>
-              <p 
-                style={{ 
+              <p
+                style={{
                   fontFamily: "'Rajdhani', sans-serif",
                   fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
                   color: THEME_CONFIG.COLORS.textMuted,
@@ -485,8 +485,8 @@ const PageAnalyticsTable = ({
             {/* Modal Content */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: THEME_CONFIG.SPACING.md }}>
               {/* Metrics Grid */}
-              <div 
-                style={{ 
+              <div
+                style={{
                   display: 'grid',
                   gridTemplateColumns: 'repeat(2, 1fr)',
                   gap: THEME_CONFIG.SPACING.md
@@ -499,14 +499,14 @@ const PageAnalyticsTable = ({
               </div>
 
               {/* Additional Metrics */}
-              <div 
+              <div
                 style={{
                   borderTop: `1px solid ${THEME_CONFIG.COLORS.borderPrimary}`,
                   paddingTop: THEME_CONFIG.SPACING.md,
                   marginTop: THEME_CONFIG.SPACING.sm
                 }}
               >
-                <h4 
+                <h4
                   style={{
                     fontFamily: "'Rajdhani', sans-serif",
                     fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.body,
@@ -564,8 +564,8 @@ const PageAnalyticsTable = ({
       )}
 
       {/* Footer */}
-      <div 
-        style={{ 
+      <div
+        style={{
           display: 'flex',
           justifyContent: 'flex-end',
           alignItems: 'center',
@@ -582,7 +582,7 @@ const PageAnalyticsTable = ({
 
 // Helper Components
 const MetricItem = ({ icon: Icon, label, value }) => (
-  <div 
+  <div
     style={{
       display: 'flex',
       flexDirection: 'column',
@@ -594,7 +594,7 @@ const MetricItem = ({ icon: Icon, label, value }) => (
   >
     <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
       <Icon size={14} style={{ color: darkElectricBlue }} />
-      <span 
+      <span
         style={{
           fontFamily: "'Rajdhani', sans-serif",
           fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
@@ -606,7 +606,7 @@ const MetricItem = ({ icon: Icon, label, value }) => (
         {label}
       </span>
     </div>
-    <span 
+    <span
       style={{
         fontFamily: "'Orbitron', monospace",
         fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.body,
@@ -621,8 +621,8 @@ const MetricItem = ({ icon: Icon, label, value }) => (
 );
 
 const DetailRow = ({ label, value }) => (
-  <div 
-    style={{ 
+  <div
+    style={{
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',

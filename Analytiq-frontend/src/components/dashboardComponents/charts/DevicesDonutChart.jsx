@@ -37,15 +37,15 @@ const DevicesDonutChart = ({ data }) => {
           textAlign: 'center'
         }}
       >
-        <AlertCircle 
-          size={48} 
-          style={{ 
+        <AlertCircle
+          size={48}
+          style={{
             color: THEME_CONFIG.COLORS.textMuted,
             marginBottom: THEME_CONFIG.SPACING.md
-          }} 
+          }}
         />
-        <p 
-          style={{ 
+        <p
+          style={{
             color: THEME_CONFIG.COLORS.textMuted,
             fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.body,
             fontFamily: THEME_CONFIG.TYPOGRAPHY.fontFamily.primary
@@ -79,8 +79,8 @@ const DevicesDonutChart = ({ data }) => {
       }}
     >
       {/* Header */}
-      <div 
-        style={{ 
+      <div
+        style={{
           display: 'flex',
           alignItems: 'center',
           gap: THEME_CONFIG.SPACING.sm,
@@ -100,9 +100,9 @@ const DevicesDonutChart = ({ data }) => {
         >
           <Monitor size={18} style={{ color: darkElectricBlue }} />
         </div>
-        <h3 
+        <h3
           className="card-title"
-          style={{ 
+          style={{
             fontFamily: "'Rajdhani', sans-serif",
             fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.h5,
             fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
@@ -132,8 +132,8 @@ const DevicesDonutChart = ({ data }) => {
             {data.map((entry, idx) => {
               const color = DEVICE_COLORS[entry.type?.toLowerCase()] || DEVICE_COLORS.other;
               return (
-                <Cell 
-                  key={`cell-${idx}`} 
+                <Cell
+                  key={`cell-${idx}`}
                   fill={color}
                   stroke={THEME_CONFIG.COLORS.backgroundSecondary}
                   strokeWidth={2}
@@ -141,8 +141,8 @@ const DevicesDonutChart = ({ data }) => {
               );
             })}
           </Pie>
-          <Tooltip 
-            contentStyle={{ 
+          <Tooltip
+            contentStyle={{
               backgroundColor: THEME_CONFIG.COLORS.backgroundElevated,
               border: `2px solid ${darkElectricBlue}`,
               borderRadius: THEME_CONFIG.BORDER_RADIUS.small,
@@ -157,10 +157,10 @@ const DevicesDonutChart = ({ data }) => {
             }}
             formatter={(value) => `${value.toFixed(1)}%`}
           />
-          <Legend 
+          <Legend
             iconType="circle"
             iconSize={10}
-            wrapperStyle={{ 
+            wrapperStyle={{
               fontFamily: "'Rajdhani', sans-serif",
               fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
               color: THEME_CONFIG.COLORS.textSecondary,
