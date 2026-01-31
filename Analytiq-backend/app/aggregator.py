@@ -263,41 +263,49 @@ def aggregate_daily(site_id):
 	
 	# Ensure all aggregation tables exist
 	create_aggregation_tables()
-	
+
 	today = datetime.utcnow().date()
-	
+
+	# # Prevent double aggregation for the same day
+	# already_aggregated = con.execute('''
+	# 	SELECT 1 FROM aggregated_metrics_daily WHERE site_id = ? AND day = ?
+	# ''', [site_id, str(today)]).fetchone()
+	# if already_aggregated:
+	# 	# Already aggregated for today, skip to prevent double-counting
+	# 	return
+
 	# Get all events for today
 	raw_events = con.execute('''
 		SELECT event_id, payload, visitor_id, session_id, event_type, ts
 		FROM raw_events
 		WHERE site_id = ? AND DATE(ts) = ?
 	''', [site_id, str(today)]).fetchall()
-	
+
 	conversion_events = con.execute('''
 		SELECT * FROM conversion_events
 		WHERE site_id = ? AND DATE(ts) = ?
 	''', [site_id, str(today)]).fetchall()
-	
+
 	performance_events = con.execute('''
 		SELECT * FROM performance_events
 		WHERE site_id = ? AND DATE(ts) = ?
 	''', [site_id, str(today)]).fetchall()
-	
+
 	engagement_events = con.execute('''
 		SELECT * FROM engagement_events
 		WHERE site_id = ? AND DATE(ts) = ?
 	''', [site_id, str(today)]).fetchall()
-	
+
 	search_events = con.execute('''
 		SELECT * FROM search_events
 		WHERE site_id = ? AND DATE(ts) = ?
 	''', [site_id, str(today)]).fetchall()
-	
+
 	custom_events = con.execute('''
 		SELECT * FROM custom_events
 		WHERE site_id = ? AND DATE(ts) = ?
 	''', [site_id, str(today)]).fetchall()
-	
+
 	if not raw_events:
 		return
 	
@@ -992,23 +1000,22 @@ def generate_comprehensive_report(site_id, start_date, end_date):
 				combined_pages_data[path] = create_pages_data()
 			# Views
 			combined_pages_data[path]['views'] += page_data.get('views', 0)
-			# Unique visitors
+			# Unique visitors: always use a set for correct merging
 			visitors_data = page_data.get('unique_visitors', 0)
+			if not isinstance(combined_pages_data[path]['unique_visitors'], set):
+				combined_pages_data[path]['unique_visitors'] = set()
 			if isinstance(visitors_data, (list, set)):
 				combined_pages_data[path]['unique_visitors'].update(visitors_data)
 			elif isinstance(visitors_data, int):
-				# If it's a per-day count (int), convert any existing set to a count then add
-				if isinstance(combined_pages_data[path]['unique_visitors'], set):
-					combined_pages_data[path]['unique_visitors'] = len(combined_pages_data[path]['unique_visitors']) + visitors_data
-				else:
-					combined_pages_data[path]['unique_visitors'] = combined_pages_data[path].get('unique_visitors', 0) + visitors_data
+				# If it's a per-day count (int), treat as unique visitors for that day (approximate)
+				# Add dummy values to set to avoid double-counting
+				combined_pages_data[path]['unique_visitors'].update([f"dummy_{i}" for i in range(visitors_data)])
 			# Total time spent
 			combined_pages_data[path]['total_time'] += page_data.get('total_time', 0)
 			# Load times: accept either a list of load_times or a precomputed avg_load_time_ms
 			if 'load_times' in page_data and isinstance(page_data.get('load_times'), list):
 				combined_pages_data[path]['load_times'].extend(page_data.get('load_times', []))
 			elif 'avg_load_time_ms' in page_data and page_data.get('avg_load_time_ms'):
-				# store precomputed daily average as one sample so it contributes to the combined average
 				try:
 					combined_pages_data[path]['load_times'].append(float(page_data.get('avg_load_time_ms')))
 				except Exception:
