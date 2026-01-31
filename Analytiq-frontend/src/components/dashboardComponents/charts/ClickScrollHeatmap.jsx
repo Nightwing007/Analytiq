@@ -27,15 +27,15 @@ const ClickScrollHeatmap = ({ data }) => {
           textAlign: 'center'
         }}
       >
-        <AlertCircle 
-          size={48} 
-          style={{ 
+        <AlertCircle
+          size={48}
+          style={{
             color: THEME_CONFIG.COLORS.textMuted,
             marginBottom: THEME_CONFIG.SPACING.md
-          }} 
+          }}
         />
-        <p 
-          style={{ 
+        <p
+          style={{
             color: THEME_CONFIG.COLORS.textMuted,
             fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.body,
             fontFamily: THEME_CONFIG.TYPOGRAPHY.fontFamily.primary
@@ -95,8 +95,8 @@ const ClickScrollHeatmap = ({ data }) => {
       }}
     >
       {/* Header */}
-      <div 
-        style={{ 
+      <div
+        style={{
           display: 'flex',
           alignItems: 'center',
           gap: THEME_CONFIG.SPACING.sm,
@@ -116,9 +116,9 @@ const ClickScrollHeatmap = ({ data }) => {
         >
           <MousePointer size={18} style={{ color: darkElectricBlue }} />
         </div>
-        <h3 
+        <h3
           className="card-title"
-          style={{ 
+          style={{
             fontFamily: "'Rajdhani', sans-serif",
             fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.h5,
             fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
@@ -133,16 +133,16 @@ const ClickScrollHeatmap = ({ data }) => {
 
       {/* Click Data Section */}
       <div style={{ marginBottom: THEME_CONFIG.SPACING.xl }}>
-        <div style={{ 
-          display: 'flex', 
-          alignItems: 'center', 
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
           gap: THEME_CONFIG.SPACING.xs,
           marginBottom: THEME_CONFIG.SPACING.md
         }}>
           <MousePointer size={16} style={{ color: darkElectricBlue }} />
-          <h4 
+          <h4
             className="card-title"
-            style={{ 
+            style={{
               fontFamily: "'Rajdhani', sans-serif",
               fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.body,
               fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
@@ -162,7 +162,7 @@ const ClickScrollHeatmap = ({ data }) => {
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                 <thead>
                   <tr>
-                    <th style={{ 
+                    <th style={{
                       padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
                       backgroundColor: THEME_CONFIG.COLORS.backgroundDark,
                       color: THEME_CONFIG.COLORS.textSecondary,
@@ -176,7 +176,7 @@ const ClickScrollHeatmap = ({ data }) => {
                     }}>
                       Page
                     </th>
-                    <th style={{ 
+                    <th style={{
                       padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
                       backgroundColor: THEME_CONFIG.COLORS.backgroundDark,
                       color: THEME_CONFIG.COLORS.textSecondary,
@@ -190,7 +190,7 @@ const ClickScrollHeatmap = ({ data }) => {
                     }}>
                       Position
                     </th>
-                    <th style={{ 
+                    <th style={{
                       padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
                       backgroundColor: THEME_CONFIG.COLORS.backgroundDark,
                       color: THEME_CONFIG.COLORS.textSecondary,
@@ -208,9 +208,9 @@ const ClickScrollHeatmap = ({ data }) => {
                 </thead>
                 <tbody>
                   {displayClickRows.map((row, idx) => (
-                    <tr 
+                    <tr
                       key={idx}
-                      style={{ 
+                      style={{
                         backgroundColor: idx % 2 === 0 ? 'transparent' : `${THEME_CONFIG.COLORS.backgroundDark}40`,
                         borderBottom: `1px solid ${THEME_CONFIG.COLORS.borderPrimary}`,
                         transition: 'background-color 200ms ease'
@@ -222,7 +222,7 @@ const ClickScrollHeatmap = ({ data }) => {
                         e.currentTarget.style.backgroundColor = idx % 2 === 0 ? 'transparent' : `${THEME_CONFIG.COLORS.backgroundDark}40`;
                       }}
                     >
-                      <td style={{ 
+                      <td style={{
                         padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
                         fontFamily: "'Rajdhani', sans-serif",
                         fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
@@ -230,7 +230,7 @@ const ClickScrollHeatmap = ({ data }) => {
                       }}>
                         {row.page}
                       </td>
-                      <td style={{ 
+                      <td style={{
                         padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
                         fontFamily: "'Rajdhani', sans-serif",
                         fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
@@ -238,7 +238,7 @@ const ClickScrollHeatmap = ({ data }) => {
                       }}>
                         {row.pos}
                       </td>
-                      <td style={{ 
+                      <td style={{
                         padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
                         fontFamily: "'Orbitron', monospace",
                         fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
@@ -315,16 +315,16 @@ const ClickScrollHeatmap = ({ data }) => {
 
       {/* Scroll Analysis Section */}
       <div>
-        <div style={{ 
-          display: 'flex', 
-          alignItems: 'center', 
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
           gap: THEME_CONFIG.SPACING.xs,
           marginBottom: THEME_CONFIG.SPACING.md
         }}>
           <ArrowDown size={16} style={{ color: lighterElectricBlue }} />
-          <h4 
+          <h4
             className="card-title"
-            style={{ 
+            style={{
               fontFamily: "'Rajdhani', sans-serif",
               fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.body,
               fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
@@ -344,7 +344,7 @@ const ClickScrollHeatmap = ({ data }) => {
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                 <thead>
                   <tr>
-                    <th style={{ 
+                    <th style={{
                       padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
                       backgroundColor: THEME_CONFIG.COLORS.backgroundDark,
                       color: THEME_CONFIG.COLORS.textSecondary,
@@ -358,7 +358,7 @@ const ClickScrollHeatmap = ({ data }) => {
                     }}>
                       Page
                     </th>
-                    <th style={{ 
+                    <th style={{
                       padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
                       backgroundColor: THEME_CONFIG.COLORS.backgroundDark,
                       color: THEME_CONFIG.COLORS.textSecondary,
@@ -372,7 +372,7 @@ const ClickScrollHeatmap = ({ data }) => {
                     }}>
                       Avg Depth
                     </th>
-                    <th style={{ 
+                    <th style={{
                       padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
                       backgroundColor: THEME_CONFIG.COLORS.backgroundDark,
                       color: THEME_CONFIG.COLORS.textSecondary,
@@ -390,9 +390,9 @@ const ClickScrollHeatmap = ({ data }) => {
                 </thead>
                 <tbody>
                   {displayScrollRows.map((row, idx) => (
-                    <tr 
+                    <tr
                       key={idx}
-                      style={{ 
+                      style={{
                         backgroundColor: idx % 2 === 0 ? 'transparent' : `${THEME_CONFIG.COLORS.backgroundDark}40`,
                         borderBottom: `1px solid ${THEME_CONFIG.COLORS.borderPrimary}`,
                         transition: 'background-color 200ms ease'
@@ -404,7 +404,7 @@ const ClickScrollHeatmap = ({ data }) => {
                         e.currentTarget.style.backgroundColor = idx % 2 === 0 ? 'transparent' : `${THEME_CONFIG.COLORS.backgroundDark}40`;
                       }}
                     >
-                      <td style={{ 
+                      <td style={{
                         padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
                         fontFamily: "'Rajdhani', sans-serif",
                         fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
@@ -412,7 +412,7 @@ const ClickScrollHeatmap = ({ data }) => {
                       }}>
                         {row.page}
                       </td>
-                      <td style={{ 
+                      <td style={{
                         padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
                         fontFamily: "'Orbitron', monospace",
                         fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
@@ -422,7 +422,7 @@ const ClickScrollHeatmap = ({ data }) => {
                       }}>
                         {row.avg != null ? `${row.avg}%` : '--'}
                       </td>
-                      <td style={{ 
+                      <td style={{
                         padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
                         fontFamily: "'Orbitron', monospace",
                         fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,

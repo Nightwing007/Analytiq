@@ -11,29 +11,29 @@ const darkerElectricBlue = '#0052CC';
  */
 const normalizeValue = (value, type) => {
   if (!value && value !== 0) return 0;
-  
-  switch(type) {
+
+  switch (type) {
     case 'scroll_depth':
       // Already 0-100 percentage
       return Math.min(100, Math.max(0, value));
-    
+
     case 'clicks':
       // Normalize: 50 clicks = 100, scale linearly
       return Math.min(100, (value / 50) * 100);
-    
+
     case 'idle_time':
       // Invert: less idle time is better
       // 0 seconds = 100, 300 seconds = 0
       return Math.max(0, 100 - (value / 300) * 100);
-    
+
     case 'forms':
       // Normalize: 10 interactions = 100
       return Math.min(100, (value / 10) * 100);
-    
+
     case 'video':
       // Normalize: 600 seconds (10 min) = 100
       return Math.min(100, (value / 600) * 100);
-    
+
     default:
       return value;
   }
@@ -44,8 +44,8 @@ const normalizeValue = (value, type) => {
  */
 const formatValue = (value, type) => {
   if (!value && value !== 0) return 'N/A';
-  
-  switch(type) {
+
+  switch (type) {
     case 'scroll_depth':
       return `${value.toFixed(1)}%`;
     case 'clicks':
@@ -83,15 +83,15 @@ const EngagementRadarChart = ({ data }) => {
           textAlign: 'center'
         }}
       >
-        <AlertCircle 
-          size={48} 
-          style={{ 
+        <AlertCircle
+          size={48}
+          style={{
             color: THEME_CONFIG.COLORS.textMuted,
             marginBottom: THEME_CONFIG.SPACING.md
-          }} 
+          }}
         />
-        <p 
-          style={{ 
+        <p
+          style={{
             color: THEME_CONFIG.COLORS.textMuted,
             fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.body,
             fontFamily: THEME_CONFIG.TYPOGRAPHY.fontFamily.primary
@@ -159,8 +159,8 @@ const EngagementRadarChart = ({ data }) => {
       }}
     >
       {/* Header */}
-      <div 
-        style={{ 
+      <div
+        style={{
           display: 'flex',
           alignItems: 'center',
           gap: THEME_CONFIG.SPACING.sm,
@@ -180,9 +180,9 @@ const EngagementRadarChart = ({ data }) => {
         >
           <Target size={18} style={{ color: darkElectricBlue }} />
         </div>
-        <h3 
+        <h3
           className="card-title"
-          style={{ 
+          style={{
             fontFamily: "'Rajdhani', sans-serif",
             fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.h5,
             fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
@@ -197,46 +197,46 @@ const EngagementRadarChart = ({ data }) => {
 
       {/* Chart */}
       <ResponsiveContainer width="100%" height={320}>
-        <RadarChart 
-          cx="50%" 
-          cy="50%" 
-          outerRadius="75%" 
+        <RadarChart
+          cx="50%"
+          cy="50%"
+          outerRadius="75%"
           data={metrics}
         >
-          <PolarGrid 
+          <PolarGrid
             stroke={THEME_CONFIG.COLORS.borderPrimary}
             strokeOpacity={0.4}
           />
-          
-          <PolarAngleAxis 
-            dataKey="metric" 
-            tick={{ 
-              fill: THEME_CONFIG.COLORS.textSecondary, 
+
+          <PolarAngleAxis
+            dataKey="metric"
+            tick={{
+              fill: THEME_CONFIG.COLORS.textSecondary,
               fontFamily: "'Rajdhani', sans-serif",
               fontSize: 12,
               fontWeight: 500
             }}
           />
-          
-          <PolarRadiusAxis 
+
+          <PolarRadiusAxis
             angle={90}
             domain={[0, 100]}
-            tick={{ 
-              fill: THEME_CONFIG.COLORS.textMuted, 
+            tick={{
+              fill: THEME_CONFIG.COLORS.textMuted,
               fontFamily: "'Rajdhani', sans-serif",
               fontSize: 10
             }}
             tickCount={6}
           />
-          
-          <Radar 
+
+          <Radar
             dataKey="normalizedValue"
             stroke={darkElectricBlue}
             fill={darkElectricBlue}
             fillOpacity={0.3}
             strokeWidth={2}
-            dot={{ 
-              r: 4, 
+            dot={{
+              r: 4,
               fill: darkElectricBlue,
               stroke: THEME_CONFIG.COLORS.backgroundSecondary,
               strokeWidth: 2
@@ -248,9 +248,9 @@ const EngagementRadarChart = ({ data }) => {
               strokeWidth: 2
             }}
           />
-          
-          <Tooltip 
-            contentStyle={{ 
+
+          <Tooltip
+            contentStyle={{
               backgroundColor: THEME_CONFIG.COLORS.backgroundElevated,
               border: `2px solid ${darkElectricBlue}`,
               borderRadius: THEME_CONFIG.BORDER_RADIUS.small,

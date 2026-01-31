@@ -101,15 +101,15 @@ const UserBehaviorStatsCard = ({ data }) => {
           textAlign: 'center'
         }}
       >
-        <AlertCircle 
-          size={48} 
-          style={{ 
+        <AlertCircle
+          size={48}
+          style={{
             color: THEME_CONFIG.COLORS.textMuted,
             marginBottom: THEME_CONFIG.SPACING.md
-          }} 
+          }}
         />
-        <p 
-          style={{ 
+        <p
+          style={{
             color: THEME_CONFIG.COLORS.textMuted,
             fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.body,
             fontFamily: THEME_CONFIG.TYPOGRAPHY.fontFamily.primary
@@ -145,8 +145,8 @@ const UserBehaviorStatsCard = ({ data }) => {
       }}
     >
       {/* Header */}
-      <div 
-        style={{ 
+      <div
+        style={{
           display: 'flex',
           alignItems: 'center',
           gap: THEME_CONFIG.SPACING.sm,
@@ -166,9 +166,9 @@ const UserBehaviorStatsCard = ({ data }) => {
         >
           <Users size={18} style={{ color: darkElectricBlue }} />
         </div>
-        <h3 
+        <h3
           className="card-title"
-          style={{ 
+          style={{
             fontFamily: "'Rajdhani', sans-serif",
             fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.h5,
             fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
@@ -189,14 +189,14 @@ const UserBehaviorStatsCard = ({ data }) => {
           value={data.avg_sessions_per_user?.toFixed(1) ?? '--'}
           isLast={false}
         />
-        
+
         <StatRow
           icon={FileText}
           label="Pages per Session"
           value={data.avg_pages_per_session?.toFixed(1) ?? '--'}
           isLast={false}
         />
-        
+
         <StatRow
           icon={Clock}
           label="Session Duration"

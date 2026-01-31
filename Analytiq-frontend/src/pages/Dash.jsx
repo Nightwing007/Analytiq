@@ -32,6 +32,7 @@ import EventTimelineChart from '../components/dashboardComponents/charts/EventTi
 import VisitorJourneyFlow from '../components/dashboardComponents/charts/VisitorJourneyFlow.jsx';
 import ClickScrollHeatmap from '../components/dashboardComponents/charts/ClickScrollHeatmap.jsx';
 import PerformanceTimelineByPage from '../components/dashboardComponents/charts/PerformanceTimelineByPage.jsx';
+import DashboardAI from '../components/dashboardComponents/DashboardAI.jsx';
 import DateRangePicker from '../components/dashboardComponents/DateRangePicker.jsx';
 
 const darkElectricBlue = '#0066FF';
@@ -281,7 +282,6 @@ function Dash() {
           padding: '0'
         }}
       >
-
         {/* HEADER */}
         <div style={{ marginBottom: '24px', width: '100%' }}>
           <DashboardHeader
@@ -302,6 +302,11 @@ function Dash() {
               />
             }
           />
+        </div>
+
+        {/* AI ANALYST */}
+        <div style={{ marginBottom: '24px', width: '100%' }}>
+          <DashboardAI siteId={siteId} />
         </div>
 
         {/* METRIC CARDS */}

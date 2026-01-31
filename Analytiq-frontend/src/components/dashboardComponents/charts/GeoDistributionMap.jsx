@@ -33,7 +33,7 @@ const getCoordinates = (location) => {
     'Netherlands': { lat: 52.1326, lng: 5.2913 },
     'South Korea': { lat: 35.9078, lng: 127.7669 },
   };
-  
+
   return coords[location] || { lat: 0, lng: 0 };
 };
 
@@ -60,15 +60,15 @@ const GeoDistributionMap = ({ data }) => {
           textAlign: 'center'
         }}
       >
-        <AlertCircle 
-          size={48} 
-          style={{ 
+        <AlertCircle
+          size={48}
+          style={{
             color: THEME_CONFIG.COLORS.textMuted,
             marginBottom: THEME_CONFIG.SPACING.md
-          }} 
+          }}
         />
-        <p 
-          style={{ 
+        <p
+          style={{
             color: THEME_CONFIG.COLORS.textMuted,
             fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.body,
             fontFamily: THEME_CONFIG.TYPOGRAPHY.fontFamily.primary
@@ -87,7 +87,7 @@ const GeoDistributionMap = ({ data }) => {
       const location = item.country || item.city || item.location || 'Unknown';
       const coords = getCoordinates(location);
       const visitors = item.visitors || item.count || item.value || 0;
-      
+
       return {
         lat: coords.lat,
         lng: coords.lng,
@@ -159,8 +159,8 @@ const GeoDistributionMap = ({ data }) => {
       }}
     >
       {/* Header */}
-      <div 
-        style={{ 
+      <div
+        style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -183,9 +183,9 @@ const GeoDistributionMap = ({ data }) => {
           >
             <Globe2 size={18} style={{ color: darkElectricBlue }} />
           </div>
-          <h3 
+          <h3
             className="card-title"
-            style={{ 
+            style={{
               fontFamily: "'Rajdhani', sans-serif",
               fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.h5,
               fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
@@ -197,7 +197,7 @@ const GeoDistributionMap = ({ data }) => {
             Geographic Distribution
           </h3>
         </div>
-        
+
         {/* Stats */}
         <div style={{
           display: 'flex',
@@ -229,32 +229,32 @@ const GeoDistributionMap = ({ data }) => {
       </div>
 
 
-{/* Globe Container */}
-<div
-  ref={containerRef}
-  style={{
-    height: '400px',
-    width: '100%',
-    maxWidth: '100%',
-    position: 'relative',
-    backgroundColor: THEME_CONFIG.COLORS.backgroundDark,
-    borderRadius: THEME_CONFIG.BORDER_RADIUS.small,
-    border: `1px solid ${THEME_CONFIG.COLORS.borderPrimary}`,
-    overflow: 'hidden'
-  }}
->
-  <Globe
-    ref={globeEl}
-    width={globeWidth}
-    height={400}
-    globeImageUrl="//unpkg.com/three-globe/example/img/earth-night.jpg"
-    backgroundImageUrl="//unpkg.com/three-globe/example/img/night-sky.png"
-    
-    pointsData={globeData}
-    pointAltitude="size"
-    pointRadius={0.6}
-    pointColor="color"
-    pointLabel={d => `
+      {/* Globe Container */}
+      <div
+        ref={containerRef}
+        style={{
+          height: '400px',
+          width: '100%',
+          maxWidth: '100%',
+          position: 'relative',
+          backgroundColor: THEME_CONFIG.COLORS.backgroundDark,
+          borderRadius: THEME_CONFIG.BORDER_RADIUS.small,
+          border: `1px solid ${THEME_CONFIG.COLORS.borderPrimary}`,
+          overflow: 'hidden'
+        }}
+      >
+        <Globe
+          ref={globeEl}
+          width={globeWidth}
+          height={400}
+          globeImageUrl="//unpkg.com/three-globe/example/img/earth-night.jpg"
+          backgroundImageUrl="//unpkg.com/three-globe/example/img/night-sky.png"
+
+          pointsData={globeData}
+          pointAltitude="size"
+          pointRadius={0.6}
+          pointColor="color"
+          pointLabel={d => `
       <div style="
         background: ${THEME_CONFIG.COLORS.backgroundElevated};
         border: 2px solid ${darkElectricBlue};
@@ -272,14 +272,14 @@ const GeoDistributionMap = ({ data }) => {
         </div>
       </div>
     `}
-    
-    atmosphereColor={darkElectricBlue}
-    atmosphereAltitude={0.15}
-    animateIn={true}
-    onGlobeReady={() => setGlobeReady(true)}
-    enablePointerInteraction={true}
-  />
-</div>
+
+          atmosphereColor={darkElectricBlue}
+          atmosphereAltitude={0.15}
+          animateIn={true}
+          onGlobeReady={() => setGlobeReady(true)}
+          enablePointerInteraction={true}
+        />
+      </div>
 
 
       {/* Top Locations List */}
@@ -303,7 +303,7 @@ const GeoDistributionMap = ({ data }) => {
           {data.slice(0, 6).map((location, idx) => {
             const visitors = location.visitors || location.count || location.value || 0;
             const name = location.country || location.city || location.location || 'Unknown';
-            
+
             return (
               <div
                 key={idx}

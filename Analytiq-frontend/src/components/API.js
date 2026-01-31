@@ -344,6 +344,21 @@ class APIClient {
     const endpoint = `${API_CONFIG.ENDPOINTS.TOP_PAGES(siteId)}${queryString ? `?${queryString}` : ''}`;
     return this.request(endpoint);
   }
+
+  // AI Methods
+  async chatWebsite(siteId, message) {
+    return this.request(API_CONFIG.ENDPOINTS.AI_CHAT_WEBSITE, {
+      method: 'POST',
+      body: JSON.stringify({ website_id: siteId, message })
+    });
+  }
+
+  async chatMetric(siteId, metric, message, page = null) {
+    return this.request(API_CONFIG.ENDPOINTS.AI_CHAT_METRIC, {
+      method: 'POST',
+      body: JSON.stringify({ website_id: siteId, metric, message, page })
+    });
+  }
 }
 
 // Create and export singleton instance
@@ -367,7 +382,9 @@ export const {
   validateToken,
   refreshToken,
   getUser,
-  getToken
+  getToken,
+  chatWebsite,
+  chatMetric
 } = apiClient;
 
 // Default export

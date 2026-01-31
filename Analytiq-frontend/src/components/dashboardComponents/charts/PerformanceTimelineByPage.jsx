@@ -45,15 +45,15 @@ const PerformanceTimelineByPage = ({ data }) => {
           textAlign: 'center'
         }}
       >
-        <AlertCircle 
-          size={48} 
-          style={{ 
+        <AlertCircle
+          size={48}
+          style={{
             color: THEME_CONFIG.COLORS.textMuted,
             marginBottom: THEME_CONFIG.SPACING.md
-          }} 
+          }}
         />
-        <p 
-          style={{ 
+        <p
+          style={{
             color: THEME_CONFIG.COLORS.textMuted,
             fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.body,
             fontFamily: THEME_CONFIG.TYPOGRAPHY.fontFamily.primary
@@ -86,8 +86,8 @@ const PerformanceTimelineByPage = ({ data }) => {
       }}
     >
       {/* Header */}
-      <div 
-        style={{ 
+      <div
+        style={{
           display: 'flex',
           alignItems: 'center',
           gap: THEME_CONFIG.SPACING.sm,
@@ -107,9 +107,9 @@ const PerformanceTimelineByPage = ({ data }) => {
         >
           <Zap size={18} style={{ color: darkElectricBlue }} />
         </div>
-        <h3 
+        <h3
           className="card-title"
-          style={{ 
+          style={{
             fontFamily: "'Rajdhani', sans-serif",
             fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.h5,
             fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
@@ -124,15 +124,15 @@ const PerformanceTimelineByPage = ({ data }) => {
 
       {/* Chart */}
       <ResponsiveContainer width="100%" height={Math.max(280, chartData.length * 60)}>
-        <BarChart 
-          data={chartData} 
-          layout="vertical" 
+        <BarChart
+          data={chartData}
+          layout="vertical"
           margin={{ top: 10, right: 20, left: 10, bottom: 10 }}
           barSize={16}
         >
-          <XAxis 
+          <XAxis
             type="number"
-            tick={{ 
+            tick={{
               fill: THEME_CONFIG.COLORS.textMuted,
               fontFamily: "'Rajdhani', sans-serif",
               fontSize: 11
@@ -140,11 +140,11 @@ const PerformanceTimelineByPage = ({ data }) => {
             stroke={THEME_CONFIG.COLORS.borderPrimary}
             tickFormatter={(value) => `${value}ms`}
           />
-          
-          <YAxis 
-            type="category" 
-            dataKey="page" 
-            tick={{ 
+
+          <YAxis
+            type="category"
+            dataKey="page"
+            tick={{
               fill: THEME_CONFIG.COLORS.textSecondary,
               fontFamily: "'Rajdhani', sans-serif",
               fontSize: 12,
@@ -153,9 +153,9 @@ const PerformanceTimelineByPage = ({ data }) => {
             stroke={THEME_CONFIG.COLORS.borderPrimary}
             width={150}
           />
-          
-          <Tooltip 
-            contentStyle={{ 
+
+          <Tooltip
+            contentStyle={{
               backgroundColor: THEME_CONFIG.COLORS.backgroundElevated,
               border: `2px solid ${darkElectricBlue}`,
               borderRadius: THEME_CONFIG.BORDER_RADIUS.small,
@@ -175,9 +175,9 @@ const PerformanceTimelineByPage = ({ data }) => {
             }}
             formatter={(value) => `${value}ms`}
           />
-          
-          <Legend 
-            wrapperStyle={{ 
+
+          <Legend
+            wrapperStyle={{
               fontFamily: "'Rajdhani', sans-serif",
               fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
               color: THEME_CONFIG.COLORS.textSecondary,
@@ -191,26 +191,26 @@ const PerformanceTimelineByPage = ({ data }) => {
               </span>
             )}
           />
-          
-          <Bar 
-            dataKey="fastest" 
-            name="Fastest Load" 
+
+          <Bar
+            dataKey="fastest"
+            name="Fastest Load"
             fill={PERFORMANCE_COLORS.fastest}
             radius={[0, 6, 6, 0]}
             animationDuration={1000}
           />
-          
-          <Bar 
-            dataKey="avg" 
-            name="Average Load" 
+
+          <Bar
+            dataKey="avg"
+            name="Average Load"
             fill={PERFORMANCE_COLORS.avg}
             radius={[0, 6, 6, 0]}
             animationDuration={1000}
           />
-          
-          <Bar 
-            dataKey="slowest" 
-            name="Slowest Load" 
+
+          <Bar
+            dataKey="slowest"
+            name="Slowest Load"
             fill={PERFORMANCE_COLORS.slowest}
             radius={[0, 6, 6, 0]}
             animationDuration={1000}
@@ -219,8 +219,8 @@ const PerformanceTimelineByPage = ({ data }) => {
       </ResponsiveContainer>
 
       {/* Footer Info */}
-      <div 
-        style={{ 
+      <div
+        style={{
           marginTop: THEME_CONFIG.SPACING.md,
           paddingTop: THEME_CONFIG.SPACING.md,
           borderTop: `1px solid ${THEME_CONFIG.COLORS.borderPrimary}`,
