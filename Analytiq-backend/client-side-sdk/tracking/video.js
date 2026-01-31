@@ -4,7 +4,7 @@
  */
 
 import { sendEvent } from './pageview.js';
-import { sendToSpecializedEndpoint } from '../api/sender.js';
+import { sendSingleEvent } from '../api/sender.js';
 import { Storage } from '../utils/storage.js';
 import { Config } from '../core/config.js';
 
@@ -24,8 +24,8 @@ function sendEngagementEvent(data) {
     url: window.location.href,
     ...data
   };
-  
-  sendToSpecializedEndpoint(Config.ENGAGEMENT_URL, event);
+
+  sendSingleEvent('engagement', event);
 }
 
 /**
@@ -33,7 +33,7 @@ function sendEngagementEvent(data) {
  */
 export function initVideoTracking() {
   // Video play tracking
-  document.addEventListener('play', function(e) {
+  document.addEventListener('play', function (e) {
     if (e.target.tagName === 'VIDEO') {
       sendEvent('video_play', { video_src: e.target.currentSrc });
       sendEngagementEvent({
@@ -42,27 +42,27 @@ export function initVideoTracking() {
       });
     }
   }, true);
-  
+
   // Video time tracking
-  document.addEventListener('timeupdate', function(e) {
+  document.addEventListener('timeupdate', function (e) {
     if (e.target.tagName === 'VIDEO') {
       var videoId = e.target.currentSrc || 'unknown';
       videoWatchTime[videoId] = e.target.currentTime;
     }
   }, true);
-  
+
   // Video ended tracking
-  document.addEventListener('ended', function(e) {
+  document.addEventListener('ended', function (e) {
     if (e.target.tagName === 'VIDEO') {
       var videoId = e.target.currentSrc || 'unknown';
       var watchTime = videoWatchTime[videoId] || 0;
-      
-      sendEvent('video_ended', { 
-        video_src: e.target.currentSrc, 
+
+      sendEvent('video_ended', {
+        video_src: e.target.currentSrc,
         duration: e.target.duration,
         watch_time: watchTime
       });
-      
+
       sendEngagementEvent({
         video_watch_time_sec: watchTime
       });

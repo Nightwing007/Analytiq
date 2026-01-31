@@ -17,51 +17,13 @@ FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000")
 # ------------------------
 # CORS Configuration
 # ------------------------
-# Custom middleware to handle different CORS policies for different routes
-@app.middleware("http")
-async def cors_middleware(request: Request, call_next):
-    # Handle preflight OPTIONS requests
-    if request.method == "OPTIONS":
-        # Open CORS for ingest endpoints (client SDK)
-        if request.url.path.startswith("/ingest/"):
-            return Response(
-                status_code=204,
-                headers={
-                    "Access-Control-Allow-Origin": "*",
-                    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-                    "Access-Control-Allow-Headers": "Content-Type, x-site-id, x-site-key, Authorization",
-                    "Access-Control-Max-Age": "86400",
-                },
-            )
-        # Strict CORS for dashboard API endpoints
-        elif request.url.path.startswith("/api/"):
-            return Response(
-                status_code=204,
-                headers={
-                    "Access-Control-Allow-Origin": FRONTEND_URL,
-                    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-                    "Access-Control-Allow-Headers": "Content-Type, Authorization",
-                    "Access-Control-Allow-Credentials": "true",
-                    "Access-Control-Max-Age": "86400",
-                },
-            )
-    
-    response = await call_next(request)
-    
-    # Add CORS headers to actual requests
-    # Open CORS for ingest endpoints (client SDK sends events from any site)
-    if request.url.path.startswith("/ingest/"):
-        response.headers["Access-Control-Allow-Origin"] = "*"
-        response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
-        response.headers["Access-Control-Allow-Headers"] = "Content-Type, x-site-id, x-site-key, Authorization"
-    # Strict CORS for dashboard API endpoints (only localhost:3000)
-    elif request.url.path.startswith("/api/"):
-        response.headers["Access-Control-Allow-Origin"] = FRONTEND_URL
-        response.headers["Access-Control-Allow-Credentials"] = "true"
-        response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
-        response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
-    
-    return response
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # ------------------------
 # Startup

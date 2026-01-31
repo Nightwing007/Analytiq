@@ -4,7 +4,7 @@
  */
 
 import { sendEvent } from './pageview.js';
-import { sendToSpecializedEndpoint } from '../api/sender.js';
+import { sendSingleEvent } from '../api/sender.js';
 import { Storage } from '../utils/storage.js';
 import { Config } from '../core/config.js';
 
@@ -22,8 +22,8 @@ function sendConversionEvent(eventType, data) {
     session_id: Storage.getSessionId(),
     ...data
   };
-  
-  sendToSpecializedEndpoint(Config.CONVERSION_URL, event);
+
+  sendSingleEvent('conversion', event);
 }
 
 /**
@@ -39,8 +39,8 @@ function sendEngagementEvent(data) {
     url: window.location.href,
     ...data
   };
-  
-  sendToSpecializedEndpoint(Config.ENGAGEMENT_URL, event);
+
+  sendSingleEvent('engagement', event);
 }
 
 /**
@@ -48,12 +48,12 @@ function sendEngagementEvent(data) {
  */
 export function initFormTracking() {
   // Form submission tracking
-  document.addEventListener('submit', function(e) {
+  document.addEventListener('submit', function (e) {
     var form = e.target;
     var formData = new FormData(form);
     var hasEmail = false;
     var hasPayment = false;
-    
+
     // Check form content to categorize
     for (var pair of formData.entries()) {
       var name = pair[0].toLowerCase();
@@ -62,14 +62,14 @@ export function initFormTracking() {
         hasPayment = true;
       }
     }
-    
+
     var conversionType = 'form_submit';
     if (hasEmail && !hasPayment) {
       conversionType = 'newsletter_signup';
     } else if (hasPayment) {
       conversionType = 'checkout_started';
     }
-    
+
     sendConversionEvent(conversionType, {
       form_id: form.id,
       form_class: form.className,
@@ -77,17 +77,17 @@ export function initFormTracking() {
       has_email: hasEmail,
       has_payment: hasPayment
     });
-    
-    sendEvent('form_submit', { 
-      form_id: form.id, 
-      form_class: form.className, 
+
+    sendEvent('form_submit', {
+      form_id: form.id,
+      form_class: form.className,
       form_action: form.action,
       form_type: conversionType
     });
   }, true);
-  
+
   // Form interaction tracking (when user starts filling)
-  document.addEventListener('focus', function(e) {
+  document.addEventListener('focus', function (e) {
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
       sendEngagementEvent({
         form_started: true,

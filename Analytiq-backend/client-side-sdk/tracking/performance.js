@@ -3,7 +3,7 @@
  * Sends periodic performance updates
  */
 
-import { sendToSpecializedEndpoint } from '../api/sender.js';
+import { sendSingleEvent } from '../api/sender.js';
 import { getAdvancedPerformanceMetrics } from '../collectors/performance.js';
 import { getNetworkInfo } from '../collectors/network.js';
 import { Storage } from '../utils/storage.js';
@@ -16,7 +16,7 @@ import { getLastActivity } from './engagement.js';
 export function sendPerformanceEvent() {
   var perfData = getAdvancedPerformanceMetrics();
   var networkData = getNetworkInfo();
-  
+
   var event = {
     site_id: Config.SITE_ID,
     ts: new Date().toISOString(),
@@ -26,8 +26,8 @@ export function sendPerformanceEvent() {
     ...perfData,
     ...networkData
   };
-  
-  sendToSpecializedEndpoint(Config.PERFORMANCE_URL, event);
+
+  sendSingleEvent('performance', event);
 }
 
 /**
@@ -36,13 +36,13 @@ export function sendPerformanceEvent() {
 export function initPerformanceMonitoring() {
   // Send initial performance metrics after page load
   if (window.addEventListener) {
-    window.addEventListener('load', function() {
+    window.addEventListener('load', function () {
       setTimeout(sendPerformanceEvent, 1000); // Wait for metrics to be available
     });
   }
-  
+
   // Send periodic performance updates (every 10 seconds if user is active)
-  setInterval(function() {
+  setInterval(function () {
     if (Date.now() - getLastActivity() < Config.RECENT_ACTIVITY_THRESHOLD) {
       sendPerformanceEvent();
     }

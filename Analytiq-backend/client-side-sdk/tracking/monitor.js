@@ -3,15 +3,15 @@
  * Sends periodic engagement updates
  */
 
-import { sendToSpecializedEndpoint } from '../api/sender.js';
+import { sendSingleEvent } from '../api/sender.js';
 import { Storage } from '../utils/storage.js';
 import { Config } from '../core/config.js';
-import { 
-  getMaxScroll, 
-  getMouseMovements, 
-  getKeyboardEvents, 
+import {
+  getMaxScroll,
+  getMouseMovements,
+  getKeyboardEvents,
   getIdleTime,
-  getLastActivity 
+  getLastActivity
 } from './engagement.js';
 import { getSessionStart } from './exit.js';
 
@@ -45,8 +45,8 @@ export function sendEngagementUpdate(additionalData = {}) {
     idle_time_sec: getIdleTime() / 1000,
     ...additionalData
   };
-  
-  sendToSpecializedEndpoint(Config.ENGAGEMENT_URL, event);
+
+  sendSingleEvent('engagement', event);
 }
 
 /**
@@ -54,7 +54,7 @@ export function sendEngagementUpdate(additionalData = {}) {
  */
 export function initEngagementMonitoring() {
   // Send periodic engagement updates (every 30 seconds if user is active)
-  setInterval(function() {
+  setInterval(function () {
     if (Date.now() - getLastActivity() < Config.ACTIVITY_THRESHOLD) {
       sendEngagementUpdate();
     }

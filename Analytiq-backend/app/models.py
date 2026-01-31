@@ -307,4 +307,4 @@ class Site(BaseModel):
 	url: str
 	site_key: Optional[str] = None
 	last_updated: Optional[str] = None
-	verified: Optional[bool] = False
+	verified: Optional[bool] = True

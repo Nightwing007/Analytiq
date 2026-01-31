@@ -16,7 +16,7 @@ def validate_site(site_id: str, site_key: str):
 # Unified ingest endpoint
 from fastapi import Request
 
-@router.post("/ingest")
+@router.post("/")
 async def ingest_event(request: Request, x_site_id: str = Header(...), x_site_key: str = Header(...)):
        """
        Accepts any event type (raw, conversion, performance, engagement, search, custom, or batch).

@@ -4,7 +4,7 @@
  */
 
 import { sendEvent } from './pageview.js';
-import { sendToSpecializedEndpoint } from '../api/sender.js';
+import { sendSingleEvent } from '../api/sender.js';
 import { Storage } from '../utils/storage.js';
 import { Config } from '../core/config.js';
 import { setClickCountRef } from './exit.js';
@@ -34,8 +34,8 @@ function sendConversionEvent(eventType, data) {
     session_id: Storage.getSessionId(),
     ...data
   };
-  
-  sendToSpecializedEndpoint(Config.CONVERSION_URL, event);
+
+  sendSingleEvent('conversion', event);
 }
 
 /**
@@ -44,23 +44,23 @@ function sendConversionEvent(eventType, data) {
 export function initClickTracking() {
   // Share click count with exit module
   setClickCountRef(clickState);
-  
-  document.addEventListener('click', function(e) {
+
+  document.addEventListener('click', function (e) {
     clickState.count++;
-    
+
     var target = e.target;
     var tag = target.tagName.toLowerCase();
-    var info = { 
+    var info = {
       tag: tag,
       clicks_count: clickState.count,
       page: window.location.pathname
     };
-    
+
     if (target.href) info.href = target.href;
     if (target.id) info.id = target.id;
     if (target.className) info.class = target.className;
     if (target.textContent) info.text = target.textContent.substring(0, 100);
-    
+
     // Detect potential conversion events
     var isConversionButton = target.textContent && (
       target.textContent.toLowerCase().includes('buy') ||
@@ -69,26 +69,26 @@ export function initClickTracking() {
       target.textContent.toLowerCase().includes('add to cart') ||
       target.textContent.toLowerCase().includes('subscribe')
     );
-    
+
     if (isConversionButton) {
       var conversionType = 'button_click';
-      
+
       if (target.textContent.toLowerCase().includes('add to cart')) {
         conversionType = 'add_to_cart';
       } else if (target.textContent.toLowerCase().includes('checkout')) {
         conversionType = 'checkout_started';
-      } else if (target.textContent.toLowerCase().includes('buy') || 
-                 target.textContent.toLowerCase().includes('purchase')) {
+      } else if (target.textContent.toLowerCase().includes('buy') ||
+        target.textContent.toLowerCase().includes('purchase')) {
         conversionType = 'purchase_intent';
       }
-      
+
       sendConversionEvent(conversionType, {
         button_text: target.textContent,
         button_id: target.id,
         button_class: target.className
       });
     }
-    
+
     sendEvent('click', info);
   }, true);
 }

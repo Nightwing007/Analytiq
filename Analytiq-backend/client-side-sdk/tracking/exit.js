@@ -8,11 +8,11 @@ import { sendToSpecializedEndpoint } from '../api/sender.js';
 import { flushBatch } from '../api/sender.js';
 import { Storage } from '../utils/storage.js';
 import { Config } from '../core/config.js';
-import { 
-  getMaxScroll, 
-  getMouseMovements, 
-  getKeyboardEvents, 
-  getIdleTime 
+import {
+  getMaxScroll,
+  getMouseMovements,
+  getKeyboardEvents,
+  getIdleTime
 } from './engagement.js';
 
 // Exit state
@@ -32,6 +32,10 @@ export function setClickCountRef(ref) {
  * Send engagement event
  * @param {Object} data - Engagement data
  */
+/*
+ * Send engagement event
+ * @param {Object} data - Engagement data
+ */
 function sendEngagementEvent(data) {
   var event = {
     site_id: Config.SITE_ID,
@@ -41,8 +45,9 @@ function sendEngagementEvent(data) {
     url: window.location.href,
     ...data
   };
-  
-  sendToSpecializedEndpoint(Config.ENGAGEMENT_URL, event);
+
+  // Use unified ingestion
+  import('../api/sender.js').then(m => m.sendSingleEvent('engagement', event));
 }
 
 /**
@@ -53,7 +58,7 @@ function sendEngagementEvent(data) {
 export function sendExitEvent(reason, extra) {
   if (exitSent) return;
   exitSent = true;
-  
+
   var timeSpent = (Date.now() - sessionStart) / 1000;
   var engagementData = {
     exit_reason: reason,
@@ -66,7 +71,7 @@ export function sendExitEvent(reason, extra) {
     idle_time_sec: getIdleTime() / 1000,
     ...extra
   };
-  
+
   sendEvent('exit', engagementData);
   sendEngagementEvent(engagementData);
   flushBatch(); // Ensure data is sent before leaving
@@ -77,12 +82,12 @@ export function sendExitEvent(reason, extra) {
  */
 export function initExitTracking() {
   // Page unload tracking
-  window.addEventListener('beforeunload', function(e) {
+  window.addEventListener('beforeunload', function (e) {
     sendExitEvent('tab_close_or_reload');
   });
-  
+
   // External link click tracking
-  document.addEventListener('click', function(e) {
+  document.addEventListener('click', function (e) {
     var target = e.target.closest('a');
     if (target && target.href) {
       if (target.target === '_blank' || target.href.indexOf(window.location.host) === -1) {
@@ -92,9 +97,9 @@ export function initExitTracking() {
       }
     }
   }, true);
-  
+
   // Tab visibility tracking
-  document.addEventListener('visibilitychange', function() {
+  document.addEventListener('visibilitychange', function () {
     if (document.visibilityState === 'hidden') {
       sendExitEvent('tab_hidden');
     }

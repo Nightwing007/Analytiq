@@ -3,7 +3,7 @@
  * Detects and tracks site search queries
  */
 
-import { sendToSpecializedEndpoint } from '../api/sender.js';
+import { sendSingleEvent } from '../api/sender.js';
 import { Storage } from '../utils/storage.js';
 import { Config } from '../core/config.js';
 
@@ -21,8 +21,8 @@ export function sendSearchEvent(searchTerm, resultsCount) {
     search_term: searchTerm,
     results_count: resultsCount || 0
   };
-  
-  sendToSpecializedEndpoint(Config.SEARCH_URL, event);
+
+  sendSingleEvent('search', event);
 }
 
 /**
@@ -30,10 +30,10 @@ export function sendSearchEvent(searchTerm, resultsCount) {
  */
 export function detectSiteSearch() {
   var searchParams = new URLSearchParams(window.location.search);
-  var searchTerms = searchParams.get('q') || 
-                   searchParams.get('search') || 
-                   searchParams.get('query');
-  
+  var searchTerms = searchParams.get('q') ||
+    searchParams.get('search') ||
+    searchParams.get('query');
+
   if (searchTerms) {
     sendSearchEvent(searchTerms);
   }

@@ -9,7 +9,7 @@ function getBackendUrl() {
   if (window.analytiqBackendUrl) {
     return window.analytiqBackendUrl;
   }
-  
+
   // Try to detect from the script that loaded stats-config.js
   var scripts = document.querySelectorAll('script[src*="stats-config.js"]');
   if (scripts.length > 0) {
@@ -21,7 +21,7 @@ function getBackendUrl() {
       console.warn('[Analytiq] Could not parse script URL, using default');
     }
   }
-  
+
   // Fallback to localhost for development
   return 'http://127.0.0.1:8000';
 }
@@ -36,7 +36,7 @@ export var Config = {
 
   // Unified ingest endpoint
   get INGEST_URL() {
-    return this.BASE_URL + '/ingest';
+    return this.BASE_URL + '/ingest/';
   },
 
   // Batching configuration
