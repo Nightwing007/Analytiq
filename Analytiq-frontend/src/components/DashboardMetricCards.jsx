@@ -32,12 +32,12 @@ function MetricCard({ icon: Icon, label, value, delay = 0 }) {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        border: `2px solid ${THEME_CONFIG.COLORS.borderPrimary}`,
+        border: `1px solid ${THEME_CONFIG.COLORS.electricBlue}33`,
         backgroundColor: THEME_CONFIG.COLORS.backgroundSecondary,
-        borderRadius: THEME_CONFIG.BORDER_RADIUS.medium,
-        padding: THEME_CONFIG.SPACING.xl,
+        borderRadius: '4px',
+        padding: THEME_CONFIG.SPACING.lg,
         transition: 'all 300ms ease',
-        minHeight: '160px',
+        minHeight: '140px',
         position: 'relative',
         overflow: 'hidden',
         animationDelay: `${delay}s`
@@ -53,15 +53,19 @@ function MetricCard({ icon: Icon, label, value, delay = 0 }) {
         e.currentTarget.style.boxShadow = 'none';
       }}
     >
+      {/* Corner accents */}
+      <div style={{ position: 'absolute', top: 0, left: 0, width: '10px', height: '10px', borderTop: `2px solid ${THEME_CONFIG.COLORS.electricBlue}`, borderLeft: `2px solid ${THEME_CONFIG.COLORS.electricBlue}`, opacity: 0.5 }} />
+      <div style={{ position: 'absolute', bottom: 0, right: 0, width: '10px', height: '10px', borderBottom: `2px solid ${THEME_CONFIG.COLORS.electricBlue}`, borderRight: `2px solid ${THEME_CONFIG.COLORS.electricBlue}`, opacity: 0.2 }} />
+
       {/* Icon Section */}
       <div
         style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          width: '48px',
-          height: '48px',
-          borderRadius: THEME_CONFIG.BORDER_RADIUS.small,
+          width: '40px',
+          height: '40px',
+          borderRadius: '4px',
           backgroundColor: `${darkElectricBlue}15`,
           marginBottom: THEME_CONFIG.SPACING.md,
           transition: 'all 300ms ease'
@@ -73,19 +77,19 @@ function MetricCard({ icon: Icon, label, value, delay = 0 }) {
           e.currentTarget.style.backgroundColor = `${darkElectricBlue}15`;
         }}
       >
-        <Icon size={24} style={{ color: darkElectricBlue }} />
+        <Icon size={20} style={{ color: darkElectricBlue }} />
       </div>
 
       {/* Label */}
       <div
-        className="card-title"
+        className="dash-card-title"
         style={{
-          fontFamily: "'Rajdhani', sans-serif",
-          fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
-          fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.medium,
+          fontFamily: "'Orbitron', sans-serif",
+          fontSize: '0.75rem',
+          fontWeight: 600,
           color: THEME_CONFIG.COLORS.textMuted,
-          letterSpacing: '0.5px',
-          marginBottom: THEME_CONFIG.SPACING.sm,
+          letterSpacing: '1px',
+          marginBottom: THEME_CONFIG.SPACING.xs,
           textTransform: 'uppercase'
         }}
       >
@@ -94,15 +98,15 @@ function MetricCard({ icon: Icon, label, value, delay = 0 }) {
 
       {/* Value */}
       <div
-        className="cool-title"
+        className="metric-value"
         style={{
-          fontFamily: "'Orbitron', monospace",
-          fontSize: '2.5rem',
-          fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.bold,
+          fontFamily: "'JetBrains Mono', monospace",
+          fontSize: '2rem',
+          fontWeight: 700,
           color: THEME_CONFIG.COLORS.textPrimary,
-          letterSpacing: '1px',
-          textShadow: `0 0 15px ${darkElectricBlue}22`,
-          lineHeight: '1.1'
+          letterSpacing: '0.5px',
+          textShadow: `0 0 10px ${THEME_CONFIG.COLORS.electricBlue}33`,
+          lineHeight: '1.2'
         }}
       >
         {value}
@@ -111,11 +115,11 @@ function MetricCard({ icon: Icon, label, value, delay = 0 }) {
   );
 }
 
-export default function DashboardMetricCards({ 
-  totalVisitors, 
-  totalPageviews, 
-  avgTimeOnSiteSec, 
-  bounceRatePercent 
+export default function DashboardMetricCards({
+  totalVisitors,
+  totalPageviews,
+  avgTimeOnSiteSec,
+  bounceRatePercent
 }) {
   const metrics = [
     {

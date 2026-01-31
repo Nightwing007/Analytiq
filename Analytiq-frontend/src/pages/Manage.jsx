@@ -827,41 +827,6 @@ function Manage() {
                   </button>
                 </div>
 
-                {/* Site metadata */}
-                <div style={{ marginBottom: THEME_CONFIG.SPACING.lg }}>
-                  <div className="flex justify-between items-center"
-                    style={{ marginBottom: THEME_CONFIG.SPACING.sm }}>
-                    <span style={{
-                      color: THEME_CONFIG.COLORS.textMuted,
-                      fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall
-                    }}>
-                      Created:
-                    </span>
-                    <span style={{
-                      color: THEME_CONFIG.COLORS.textSecondary,
-                      fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
-                      fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.medium
-                    }}>
-                      {new Date(site.created_at).toLocaleDateString()}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span style={{
-                      color: THEME_CONFIG.COLORS.textMuted,
-                      fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall
-                    }}>
-                      Timezone:
-                    </span>
-                    <span style={{
-                      color: THEME_CONFIG.COLORS.textSecondary,
-                      fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
-                      fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.medium
-                    }}>
-                      {site.timezone}
-                    </span>
-                  </div>
-                </div>
-
                 {/* Action button with neon border animation */}
                 <Link to={`/dash/${site.site_id}`} style={{ textDecoration: 'none' }}>
                   <button
