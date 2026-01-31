@@ -1,0 +1,235 @@
+{
+  "website_name": "Portfolio",
+  "url": "https://sanatjha.me",
+  "report_generated_at": "2025-10-16T07:17:19.169842Z",
+  "date_range": "2025-09-16 to 2025-10-16",
+  "total_visitors": 1,
+  "unique_visitors": 1,
+  "total_pageviews": 2,
+  "avg_time_spent_on_site_sec": 3433,
+  "bounce_rate_percent": 0,
+  "traffic_sources": [
+    {
+      "source": "direct",
+      "visitors": 2,
+      "percent": 200
+    }
+  ],
+  "devices": [
+    {
+      "type": "desktop",
+      "percent": 100
+    }
+  ],
+  "operating_systems": [
+    {
+      "name": "Windows",
+      "percent": 100
+    }
+  ],
+  "browsers": [
+    {
+      "name": "Chrome",
+      "percent": 100
+    }
+  ],
+  "utm_campaigns": [
+    {
+      "campaign": "Direct Traffic",
+      "clicks": 2,
+      "conversions": 0
+    }
+  ],
+  "last_24h_visitors_geo": [
+    {
+      "lat": 29.86632,
+      "long": 77.89118,
+      "country": "India",
+      "city": "Roorkee",
+      "timestamp": "2025-09-25T09:28:41.804000"
+    },
+    {
+      "lat": 29.86632,
+      "long": 77.89118,
+      "country": "India",
+      "city": "Roorkee",
+      "timestamp": "2025-09-25T10:25:37.044000"
+    }
+  ],
+  "engagement_summary": {
+    "avg_scroll_depth_percent": 88.25,
+    "avg_clicks_per_session": 4,
+    "avg_idle_time_sec": 0,
+    "avg_form_interactions": 0,
+    "avg_video_watch_time_sec": 0
+  },
+  "performance_metrics": {
+    "first_contentful_paint_avg_ms": 460,
+    "largest_contentful_paint_avg_ms": 0,
+    "cumulative_layout_shift_avg": 0,
+    "first_input_delay_avg_ms": 6.299999978807238,
+    "server_response_time_avg_ms": 50.333333333333336,
+    "cdn_cache_hit_ratio_percent": 0
+  },
+  "search_terms": [],
+  "events_summary": [],
+  "technology": {
+    "avg_downlink_mbps": 0,
+    "avg_rtt_ms": 0,
+    "common_screen_resolutions": [
+      {
+        "resolution": "1920x1080",
+        "percent": 50
+      },
+      {
+        "resolution": "1366x768",
+        "percent": 30
+      },
+      {
+        "resolution": "375x812",
+        "percent": 20
+      }
+    ]
+  },
+  "user_behavior": {
+    "avg_sessions_per_user": 2,
+    "avg_pages_per_session": 2,
+    "avg_session_duration_sec": 3433
+  },
+  "pages": [
+    {
+      "page_title": "index.html",
+      "path": "/index.html",
+      "views": 2,
+      "unique_visitors": 0,
+      "avg_load_time_ms": 0,
+      "avg_time_spent_sec": 0,
+      "avg_scroll_depth_percent": 0,
+      "avg_clicks_per_visit": 0,
+      "bounce_rate_percent": 0,
+      "exit_rate_percent": 0,
+      "links_clicked_most": [],
+      "top_referrers": []
+    }
+  ],
+  "total_pages": 1,
+  "avg_loading_time_ms": 50,
+  "new_vs_returning": {
+    "new_percent": 75,
+    "returning_percent": 25
+  },
+  "geo_distribution": [
+    {
+      "country": "Unknown",
+      "percent": 100
+    }
+  ],
+  "time_series_data": {
+    "hourly_visitors": {
+      "09:00": {
+        "hour": "09:00",
+        "average_visitors": 1,
+        "total_visitors": 1
+      },
+      "10:00": {
+        "hour": "10:00",
+        "average_visitors": 1,
+        "total_visitors": 1
+      }
+    },
+    "daily_timeline": [
+      {
+        "timestamp": "2025-09-25T09:28:41.804000",
+        "visitor_id": "057d753a-035d-4fce-ae3b-8bb3785851be",
+        "session_id": "8eb61848-8efb-4e3c-88a9-287757c8b859",
+        "event_type": "pageview",
+        "hour": "09:00"
+      },
+      {
+        "timestamp": "2025-09-25T09:28:45.134000",
+        "visitor_id": "057d753a-035d-4fce-ae3b-8bb3785851be",
+        "session_id": "8eb61848-8efb-4e3c-88a9-287757c8b859",
+        "event_type": "exit",
+        "hour": "09:00"
+      },
+      {
+        "timestamp": "2025-09-25T09:28:54.787000",
+        "visitor_id": "057d753a-035d-4fce-ae3b-8bb3785851be",
+        "session_id": "8eb61848-8efb-4e3c-88a9-287757c8b859",
+        "event_type": "click",
+        "hour": "09:00"
+      },
+      {
+        "timestamp": "2025-09-25T10:25:37.044000",
+        "visitor_id": "057d753a-035d-4fce-ae3b-8bb3785851be",
+        "session_id": "8eb61848-8efb-4e3c-88a9-287757c8b859",
+        "event_type": "pageview",
+        "hour": "10:00"
+      },
+      {
+        "timestamp": "2025-09-25T10:25:49.619000",
+        "visitor_id": "057d753a-035d-4fce-ae3b-8bb3785851be",
+        "session_id": "8eb61848-8efb-4e3c-88a9-287757c8b859",
+        "event_type": "exit",
+        "hour": "10:00"
+      },
+      {
+        "timestamp": "2025-09-25T10:25:52.716000",
+        "visitor_id": "057d753a-035d-4fce-ae3b-8bb3785851be",
+        "session_id": "8eb61848-8efb-4e3c-88a9-287757c8b859",
+        "event_type": "click",
+        "hour": "10:00"
+      },
+      {
+        "timestamp": "2025-09-25T10:25:55.480000",
+        "visitor_id": "057d753a-035d-4fce-ae3b-8bb3785851be",
+        "session_id": "8eb61848-8efb-4e3c-88a9-287757c8b859",
+        "event_type": "click",
+        "hour": "10:00"
+      }
+    ],
+    "visitor_journey_analysis": {
+      "sample_journeys": {
+        "057d753a-035d-4fce-ae3b-8bb3785851be": [
+          {
+            "page": "/index.html",
+            "timestamp": "2025-09-25T09:28:41.804000",
+            "session_id": "8eb61848-8efb-4e3c-88a9-287757c8b859"
+          },
+          {
+            "page": "/index.html",
+            "timestamp": "2025-09-25T10:25:37.044000",
+            "session_id": "8eb61848-8efb-4e3c-88a9-287757c8b859"
+          }
+        ]
+      },
+      "common_entry_pages": [
+        {
+          "page": "/index.html",
+          "visitors": 1
+        }
+      ],
+      "common_exit_pages": []
+    },
+    "interaction_heatmap": {
+      "click_data": {
+        "/": {
+          "0,0": 3
+        }
+      },
+      "scroll_analysis": {}
+    },
+    "performance_timeline": {
+      "/index.html": {
+        "avg_load_time_ms": -1758794220609,
+        "fastest_load_ms": -1758795928397,
+        "slowest_load_ms": -1758792512821
+      }
+    },
+    "referrer_analysis": {
+      "recent_referrers": [],
+      "referrer_patterns": []
+    }
+  },
+  "custom_segments": []
+}

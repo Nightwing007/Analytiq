@@ -1,0 +1,10 @@
+fastapi
+uvicorn[standard]
+duckdb
+pydantic
+python-dotenv
+websockets
+passlib[bcrypt]
+python-jose[cryptography]
+bcrypt>=4.0.0
+requests

@@ -1,0 +1,104 @@
+/**
+ * components.css - Component-Specific Styles
+ * 
+ * PRIMARY RESPONSIBILITIES:
+ * - Custom styles for React components
+ * - Chart and visualization styling
+ * - Form and input styling
+ * - Button and interactive element styles
+ * - Modal and overlay styles
+ * 
+ * COMPONENT SECTIONS:
+ * 
+ * 1. BUTTONS:
+ *    - Primary, secondary, tertiary button styles
+ *    - Icon buttons and floating action buttons
+ *    - Loading states and disabled states
+ *    - Hover and focus animations
+ * 
+ * 2. FORMS:
+ *    - Input field styling
+ *    - Label and validation styles
+ *    - Form group layouts
+ *    - Error and success states
+ * 
+ * 3. CHARTS:
+ *    - Recharts custom styling
+ *    - Tooltip customization
+ *    - Legend styling
+ *    - Interactive hover effects
+ *    - Loading animation overlays
+ * 
+ * 4. CARDS:
+ *    - Site management cards
+ *    - Metric display cards
+ *    - Dashboard widget cards
+ *    - Hover and click animations
+ * 
+ * 5. NAVIGATION:
+ *    - Header and navigation bar
+ *    - Sidebar styles
+ *    - Breadcrumb styling
+ *    - Mobile menu styles
+ * 
+ * 6. MODALS AND OVERLAYS:
+ *    - Modal backdrop and container
+ *    - Dialog box styling
+ *    - Tooltip styling
+ *    - Dropdown menu styles
+ * 
+ * 7. TABLES:
+ *    - Data table styling
+ *    - Sortable column headers
+ *    - Row hover effects
+ *    - Pagination controls
+ * 
+ * 8. LOADING STATES:
+ *    - Skeleton loaders
+ *    - Spinner animations
+ *    - Progress bars
+ *    - Shimmer effects
+ * 
+ * 9. NOTIFICATIONS:
+ *    - Toast notification styles
+ *    - Alert and banner styles
+ *    - Error message styling
+ *    - Success confirmation styles
+ * 
+ * 10. CODE DISPLAY:
+ *     - Syntax highlighting for snippets
+ *     - Code block containers
+ *     - Copy button styling
+ *     - Language indicators
+ * 
+ * DESIGN PRINCIPLES:
+ * - Thick borders (2-3px) as per design requirements
+ * - Solid colors, no gradients or shadows
+ * - Very small border radius (2-4px maximum)
+ * - Interactive animations on hover
+ * - Brand color consistency
+ * 
+ * RESPONSIVE DESIGN:
+ * - Mobile-first component styling
+ * - Touch-friendly interactive elements
+ * - Responsive spacing and sizing
+ * - Breakpoint-specific adjustments
+ * 
+ * ACCESSIBILITY:
+ * - Focus indicators for all interactive elements
+ * - High contrast for text and backgrounds
+ * - Screen reader compatible styles
+ * - Keyboard navigation support
+ * 
+ * ANIMATIONS:
+ * - Interactive hover effects on charts and graphs
+ * - Loading animations with brand colors
+ * - Smooth transitions between states
+ * - 2D scroll responsive animations
+ * 
+ * PERFORMANCE:
+ * - Efficient CSS selectors
+ * - Hardware-accelerated animations
+ * - Minimal repaints and reflows
+ * - Optimized for 60fps animations
+ */
