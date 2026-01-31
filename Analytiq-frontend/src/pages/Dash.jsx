@@ -339,8 +339,8 @@ function Dash() {
             width: '100%'
           }}
         >
-          <TrafficSourcesPieChart data={reportData?.traffic_sources} />
-          <DevicesDonutChart data={reportData?.devices} />
+          <TrafficSourcesPieChart data={reportData?.traffic_sources} totalVisitors={reportData?.total_visitors} />
+          <DevicesDonutChart data={reportData?.devices} totalPageviews={reportData?.total_pageviews} />
           <NewVsReturningGaugeChart data={reportData?.new_vs_returning} />
         </div>
 
