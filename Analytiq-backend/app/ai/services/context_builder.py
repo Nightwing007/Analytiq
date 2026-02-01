@@ -46,6 +46,49 @@ def build_site_context(website_id: str, days: int = 7) -> str:
     except Exception:
         pass
     
+    # Screen resolution breakdown from raw events
+    try:
+        screen_rows = con.execute("""
+            SELECT 
+                json_extract_string(payload, '$.screen') as screen_res,
+                count(distinct visitor_id) as visitors
+            FROM raw_events 
+            WHERE site_id = ? 
+            AND json_extract_string(payload, '$.screen') IS NOT NULL
+            AND ts > current_timestamp - INTERVAL '7' DAY
+            GROUP BY screen_res
+            ORDER BY visitors DESC
+            LIMIT 10
+        """, [website_id]).fetchall()
+        
+        if screen_rows:
+            context_parts.append(f"\nSCREEN RESOLUTIONS:")
+            for row in screen_rows:
+                context_parts.append(f"- {row[0]}: {row[1]} visitors")
+    except Exception:
+        pass
+    
+    # Platform breakdown (desktop/mobile/tablet detailed)
+    try:
+        platform_rows = con.execute("""
+            SELECT 
+                json_extract_string(payload, '$.platform') as platform,
+                count(distinct visitor_id) as visitors
+            FROM raw_events 
+            WHERE site_id = ? 
+            AND json_extract_string(payload, '$.platform') IS NOT NULL
+            AND ts > current_timestamp - INTERVAL '7' DAY
+            GROUP BY platform
+            ORDER BY visitors DESC
+        """, [website_id]).fetchall()
+        
+        if platform_rows:
+            context_parts.append(f"\nPLATFORM DISTRIBUTION:")
+            for row in platform_rows:
+                context_parts.append(f"- {row[0]}: {row[1]} visitors")
+    except Exception:
+        pass
+    
     # 3. Browsers
     try:
         browser_rows = con.execute("""
@@ -122,7 +165,7 @@ def build_site_context(website_id: str, days: int = 7) -> str:
     except Exception:
         pass
     
-    # 7. UTM Campaigns
+    # 7. UTM Campaigns and detailed UTM parameters
     try:
         utm_rows = con.execute("""
             SELECT utm_campaign, count(*) as cnt 
@@ -137,6 +180,102 @@ def build_site_context(website_id: str, days: int = 7) -> str:
             context_parts.append(f"\nCAMPAIGNS (UTM):")
             for row in utm_rows:
                 context_parts.append(f"- {row[0]}: {row[1]} sessions")
+    except Exception:
+        pass
+    
+    # UTM Source breakdown
+    try:
+        utm_source_rows = con.execute("""
+            SELECT 
+                json_extract_string(payload, '$.utm_source') as utm_source,
+                json_extract_string(payload, '$.utm_medium') as utm_medium,
+                count(distinct session_id) as sessions
+            FROM raw_events 
+            WHERE site_id = ? 
+            AND json_extract_string(payload, '$.utm_source') IS NOT NULL
+            AND ts > current_timestamp - INTERVAL '7' DAY
+            GROUP BY utm_source, utm_medium
+            ORDER BY sessions DESC
+            LIMIT 10
+        """, [website_id]).fetchall()
+        
+        if utm_source_rows:
+            context_parts.append(f"\nTRAFFIC SOURCE BREAKDOWN (UTM):")
+            for row in utm_source_rows:
+                source = row[0] or "unknown"
+                medium = row[1] or "unknown"
+                context_parts.append(f"- {source} / {medium}: {row[2]} sessions")
+    except Exception:
+        pass
+    
+    # Referrer domains
+    try:
+        referrer_rows = con.execute("""
+            SELECT 
+                json_extract_string(payload, '$.referrer_domain') as referrer_domain,
+                count(distinct visitor_id) as visitors
+            FROM raw_events 
+            WHERE site_id = ? 
+            AND json_extract_string(payload, '$.referrer_domain') IS NOT NULL
+            AND json_extract_string(payload, '$.referrer_domain') != 'direct'
+            AND ts > current_timestamp - INTERVAL '7' DAY
+            GROUP BY referrer_domain
+            ORDER BY visitors DESC
+            LIMIT 10
+        """, [website_id]).fetchall()
+        
+        if referrer_rows:
+            context_parts.append(f"\nTOP REFERRER DOMAINS:")
+            for row in referrer_rows:
+                context_parts.append(f"- {row[0]}: {row[1]} visitors")
+    except Exception:
+        pass
+    
+    # Network connection types
+    try:
+        network_rows = con.execute("""
+            SELECT 
+                connection_type,
+                count(*) as cnt,
+                avg(connection_downlink) as avg_downlink,
+                avg(connection_rtt) as avg_rtt
+            FROM performance_events 
+            WHERE site_id = ? 
+            AND connection_type IS NOT NULL
+            AND ts > current_timestamp - INTERVAL '7' DAY
+            GROUP BY connection_type
+            ORDER BY cnt DESC
+        """, [website_id]).fetchall()
+        
+        if network_rows:
+            context_parts.append(f"\nNETWORK CONNECTION TYPES:")
+            for row in network_rows:
+                downlink_str = f", avg {row[2]:.2f} Mbps" if row[2] else ""
+                rtt_str = f", {row[3]:.0f}ms RTT" if row[3] else ""
+                context_parts.append(f"- {row[0]}: {row[1]} events{downlink_str}{rtt_str}")
+    except Exception:
+        pass
+    
+    # Page titles (top viewed pages with titles)
+    try:
+        title_rows = con.execute("""
+            SELECT 
+                json_extract_string(payload, '$.title') as page_title,
+                json_extract_string(payload, '$.url') as page_url,
+                count(*) as views
+            FROM raw_events 
+            WHERE site_id = ? 
+            AND json_extract_string(payload, '$.title') IS NOT NULL
+            AND ts > current_timestamp - INTERVAL '7' DAY
+            GROUP BY page_title, page_url
+            ORDER BY views DESC
+            LIMIT 10
+        """, [website_id]).fetchall()
+        
+        if title_rows:
+            context_parts.append(f"\nTOP PAGES (with titles):")
+            for row in title_rows:
+                context_parts.append(f"- '{row[0]}' ({row[1]}): {row[2]} views")
     except Exception:
         pass
     
@@ -186,21 +325,119 @@ def build_site_context(website_id: str, days: int = 7) -> str:
     except Exception:
         pass
     
-    # 10. Geographic Distribution
+    # 10. Geographic Distribution (Countries and Cities)
     try:
-        geo_rows = con.execute("""
+        # Country-level distribution
+        country_rows = con.execute("""
             SELECT country, count(*) as cnt 
             FROM visitor_profiles 
             WHERE site_id = ? AND country IS NOT NULL 
             GROUP BY country 
             ORDER BY cnt DESC 
+            LIMIT 15
+        """, [website_id]).fetchall()
+        
+        if country_rows:
+            context_parts.append(f"\nGEOGRAPHIC DISTRIBUTION BY COUNTRY:")
+            for row in country_rows:
+                context_parts.append(f"- {row[0]}: {row[1]} visitors")
+    except Exception:
+        pass
+    
+    # City-level distribution from raw events payload
+    try:
+        city_rows = con.execute("""
+            SELECT 
+                json_extract_string(payload, '$.city') as city,
+                json_extract_string(payload, '$.country') as country,
+                count(distinct visitor_id) as visitors
+            FROM raw_events 
+            WHERE site_id = ? 
+            AND json_extract_string(payload, '$.city') IS NOT NULL
+            AND ts > current_timestamp - INTERVAL '7' DAY
+            GROUP BY city, country
+            ORDER BY visitors DESC 
+            LIMIT 15
+        """, [website_id]).fetchall()
+        
+        if city_rows:
+            context_parts.append(f"\nGEOGRAPHIC DISTRIBUTION BY CITY:")
+            for row in city_rows:
+                city = row[0] or "Unknown"
+                country = row[1] or "Unknown"
+                context_parts.append(f"- {city}, {country}: {row[2]} visitors")
+    except Exception:
+        pass
+    
+    # Coordinate data for detailed location analysis
+    try:
+        coord_rows = con.execute("""
+            SELECT 
+                json_extract_string(payload, '$.country') as country,
+                json_extract_string(payload, '$.city') as city,
+                avg(CAST(json_extract_string(payload, '$.geo.lat') AS DOUBLE)) as avg_lat,
+                avg(CAST(json_extract_string(payload, '$.geo.long') AS DOUBLE)) as avg_lng,
+                count(distinct visitor_id) as visitors
+            FROM raw_events 
+            WHERE site_id = ? 
+            AND json_extract_string(payload, '$.geo.lat') IS NOT NULL
+            AND ts > current_timestamp - INTERVAL '7' DAY
+            GROUP BY country, city
+            ORDER BY visitors DESC
             LIMIT 10
         """, [website_id]).fetchall()
         
-        if geo_rows:
-            context_parts.append(f"\nGEOGRAPHIC DISTRIBUTION:")
-            for row in geo_rows:
+        if coord_rows:
+            context_parts.append(f"\nDETAILED LOCATION DATA (with coordinates):")
+            for row in coord_rows:
+                country = row[0] or "Unknown"
+                city = row[1] or "Unknown"
+                context_parts.append(f"- {city}, {country}: {row[4]} visitors (avg coordinates: {row[2]:.4f}, {row[3]:.4f})")
+    except Exception:
+        pass
+    
+    # Language distribution
+    try:
+        lang_rows = con.execute("""
+            SELECT 
+                json_extract_string(payload, '$.language') as language,
+                count(distinct visitor_id) as visitors
+            FROM raw_events 
+            WHERE site_id = ? 
+            AND json_extract_string(payload, '$.language') IS NOT NULL
+            AND ts > current_timestamp - INTERVAL '7' DAY
+            GROUP BY language
+            ORDER BY visitors DESC
+            LIMIT 10
+        """, [website_id]).fetchall()
+        
+        if lang_rows:
+            context_parts.append(f"\nLANGUAGE DISTRIBUTION:")
+            for row in lang_rows:
                 context_parts.append(f"- {row[0]}: {row[1]} visitors")
+    except Exception:
+        pass
+    
+    # Timezone distribution
+    try:
+        tz_rows = con.execute("""
+            SELECT 
+                json_extract_string(payload, '$.tz_offset') as tz_offset,
+                count(distinct visitor_id) as visitors
+            FROM raw_events 
+            WHERE site_id = ? 
+            AND json_extract_string(payload, '$.tz_offset') IS NOT NULL
+            AND ts > current_timestamp - INTERVAL '7' DAY
+            GROUP BY tz_offset
+            ORDER BY visitors DESC
+            LIMIT 10
+        """, [website_id]).fetchall()
+        
+        if tz_rows:
+            context_parts.append(f"\nTIMEZONE DISTRIBUTION:")
+            for row in tz_rows:
+                tz_offset = row[0]
+                context_parts.append(f"- UTC{tz_offset if tz_offset.startswith('-') or tz_offset.startswith('+') else '+' + str(tz_offset)}: {row[1]} visitors")
     except Exception:
         pass
     
