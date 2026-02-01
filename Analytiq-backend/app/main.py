@@ -44,6 +44,12 @@ app.include_router(sites.router, prefix="/api")
 app.include_router(website_chat.router, prefix="/ai")
 app.include_router(metric_chat.router, prefix="/ai")
 app.include_router(visit_frequency.router, prefix="/api")
+# AI insights router (returns recent insights per site)
+try:
+    from app.ai.routers import ai_insights
+    app.include_router(ai_insights.router, prefix="")
+except Exception as exc:
+    print(f"Warning: failed to load ai_insights router: {exc}")
 
 # ------------------------
 # Client-Side SDK (OPEN CORS)

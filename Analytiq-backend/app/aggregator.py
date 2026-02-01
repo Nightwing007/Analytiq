@@ -8,6 +8,24 @@ from collections import defaultdict, Counter
 from urllib.parse import urlparse
 import re
 
+def normalize_path(path):
+	"""Normalize URL path to avoid duplicate page counts"""
+	if not path:
+		return '/'
+	# Remove trailing slash (except for root)
+	path = path.rstrip('/') if path != '/' else path
+	# Normalize to lowercase
+	path = path.lower()
+	# Ensure starts with /
+	if not path.startswith('/'):
+		path = '/' + path
+	# Collapse Windows file paths to last two segments so file:///d:/foo/bar.html and
+	# http://localhost/foo/bar.html both map to /foo/bar.html
+	parts = [p for p in path.split('/') if p]
+	if len(parts) >= 2 and parts[0].endswith(':'):
+		path = '/' + '/'.join(parts[-2:])
+	# Replace empty string with /
+	return path or '/'
 # Offline country lookup using bounding boxes (approximate coordinates)
 # Format: country_name: (min_lat, max_lat, min_lng, max_lng)
 COUNTRY_BOUNDING_BOXES = {
@@ -490,7 +508,7 @@ def aggregate_daily(site_id):
 			
 			# Track user journey
 			url = payload.get('url', '')
-			path = urlparse(url).path if url else '/'
+			path = normalize_path(urlparse(url).path) if url else '/'
 			user_journeys[visitor_id].append({
 				'page': path,
 				'timestamp': event_time.isoformat() if 'event_time' in locals() else str(ts),
@@ -677,7 +695,7 @@ def aggregate_daily(site_id):
 		try:
 			url = pe[5] if len(pe) > 5 else None
 			if url:
-				path = urlparse(url).path
+				path = normalize_path(urlparse(url).path)
 				# prefer server_response_time, fallback to load_event_end
 				load_time = None
 				if len(pe) > 15 and pe[15] is not None:
@@ -695,7 +713,7 @@ def aggregate_daily(site_id):
 		try:
 			url = ee[5] if len(ee) > 5 else None
 			if url:
-				path = urlparse(url).path
+				path = normalize_path(urlparse(url).path)
 				scroll = ee[6] if len(ee) > 6 else None
 				time_on_page = ee[7] if len(ee) > 7 else None
 				clicks_count = ee[8] if len(ee) > 8 else None
@@ -793,12 +811,12 @@ def aggregate_daily(site_id):
 			pageviews_in_session = [e for e in session if e[0] == 'pageview']
 			if len(pageviews_in_session) == 1:
 				url = pageviews_in_session[0][1].get('url')
-				if url and urlparse(url).path == path:
+				if url and normalize_path(urlparse(url).path) == path:
 					bounce_count += 1
 			# Exit: last pageview in session is this page
 			if len(pageviews_in_session) > 0:
 				last_url = pageviews_in_session[-1][1].get('url')
-				if last_url and urlparse(last_url).path == path:
+				if last_url and normalize_path(urlparse(last_url).path) == path:
 					exit_count += 1
 		page_bounce[path] = round(100 * bounce_count / data['views'], 1) if data['views'] > 0 else 0
 		page_exit[path] = round(100 * exit_count / data['views'], 1) if data['views'] > 0 else 0
@@ -1117,58 +1135,59 @@ def generate_comprehensive_report(site_id, start_date, end_date):
 		combined_events_summary.update(events_summary)
 		all_geo_data.extend(geo_data)
 		
-		# Combine pages data
+		# Combine pages data (normalize paths to avoid duplicates)
 		for path, page_data in pages_data.items():
-			if path not in combined_pages_data:
-				combined_pages_data[path] = create_pages_data()
+			normalized_path = normalize_path(path)
+			if normalized_path not in combined_pages_data:
+				combined_pages_data[normalized_path] = create_pages_data()
 			# Views
-			combined_pages_data[path]['views'] += page_data.get('views', 0)
+			combined_pages_data[normalized_path]['views'] += page_data.get('views', 0)
 			# Unique visitors: always use a set for correct merging
 			visitors_data = page_data.get('unique_visitors', 0)
-			if not isinstance(combined_pages_data[path]['unique_visitors'], set):
-				combined_pages_data[path]['unique_visitors'] = set()
+			if not isinstance(combined_pages_data[normalized_path]['unique_visitors'], set):
+				combined_pages_data[normalized_path]['unique_visitors'] = set()
 			if isinstance(visitors_data, (list, set)):
-				combined_pages_data[path]['unique_visitors'].update(visitors_data)
+				combined_pages_data[normalized_path]['unique_visitors'].update(visitors_data)
 			elif isinstance(visitors_data, int):
 				# If it's a per-day count (int), treat as unique visitors for that day (approximate)
 				# Add dummy values to set to avoid double-counting
-				combined_pages_data[path]['unique_visitors'].update([f"dummy_{i}" for i in range(visitors_data)])
+				combined_pages_data[normalized_path]['unique_visitors'].update([f"dummy_{i}" for i in range(visitors_data)])
 			# Total time spent
-			# combined_pages_data[path]['total_time'] += page_data.get('total_time', 0)
+			# combined_pages_data[normalized_path]['total_time'] += page_data.get('total_time', 0)
 			time_samples = page_data.get('time_samples', [])
 			if isinstance(time_samples, list):
-				combined_pages_data[path]['time_samples'].extend(time_samples)
+				combined_pages_data[normalized_path]['time_samples'].extend(time_samples)
 			# Load times: accept either a list of load_times or a precomputed avg_load_time_ms
 			if 'load_times' in page_data and isinstance(page_data.get('load_times'), list):
-				combined_pages_data[path]['load_times'].extend(page_data.get('load_times', []))
+				combined_pages_data[normalized_path]['load_times'].extend(page_data.get('load_times', []))
 			elif 'avg_load_time_ms' in page_data and page_data.get('avg_load_time_ms'):
 				try:
-					combined_pages_data[path]['load_times'].append(float(page_data.get('avg_load_time_ms')))
+					combined_pages_data[normalized_path]['load_times'].append(float(page_data.get('avg_load_time_ms')))
 				except Exception:
 					pass
 			# Scroll depths
 			scroll_depths = page_data.get('scroll_depths', [])
 			if isinstance(scroll_depths, list):
-				combined_pages_data[path]['scroll_depths'].extend(scroll_depths)
+				combined_pages_data[normalized_path]['scroll_depths'].extend(scroll_depths)
 			# Clicks
 			clicks = page_data.get('clicks', [])
 			if isinstance(clicks, list):
-				combined_pages_data[path]['clicks'].extend(clicks)
+				combined_pages_data[normalized_path]['clicks'].extend(clicks)
 			# Bounce rate
 			if 'bounce_rate_percent' in page_data and page_data['bounce_rate_percent'] is not None:
-				if 'bounce_rate_percent' not in combined_pages_data[path] or combined_pages_data[path]['bounce_rate_percent'] is None:
-					combined_pages_data[path]['bounce_rate_percent'] = page_data['bounce_rate_percent']
+				if 'bounce_rate_percent' not in combined_pages_data[normalized_path] or combined_pages_data[normalized_path]['bounce_rate_percent'] is None:
+					combined_pages_data[normalized_path]['bounce_rate_percent'] = page_data['bounce_rate_percent']
 				else:
-					combined_pages_data[path]['bounce_rate_percent'] = (
-						combined_pages_data[path]['bounce_rate_percent'] + page_data['bounce_rate_percent']
+					combined_pages_data[normalized_path]['bounce_rate_percent'] = (
+						combined_pages_data[normalized_path]['bounce_rate_percent'] + page_data['bounce_rate_percent']
 					) / 2
 			# Exit rate
 			if 'exit_rate_percent' in page_data and page_data['exit_rate_percent'] is not None:
-				if 'exit_rate_percent' not in combined_pages_data[path] or combined_pages_data[path]['exit_rate_percent'] is None:
-					combined_pages_data[path]['exit_rate_percent'] = page_data['exit_rate_percent']
+				if 'exit_rate_percent' not in combined_pages_data[normalized_path] or combined_pages_data[normalized_path]['exit_rate_percent'] is None:
+					combined_pages_data[normalized_path]['exit_rate_percent'] = page_data['exit_rate_percent']
 				else:
-					combined_pages_data[path]['exit_rate_percent'] = (
-						combined_pages_data[path]['exit_rate_percent'] + page_data['exit_rate_percent']
+					combined_pages_data[normalized_path]['exit_rate_percent'] = (
+						combined_pages_data[normalized_path]['exit_rate_percent'] + page_data['exit_rate_percent']
 					) / 2
 		
 		# Collect metrics for averaging
@@ -1177,25 +1196,19 @@ def generate_comprehensive_report(site_id, start_date, end_date):
 		if engagement_summary:
 			all_engagement_metrics.append(engagement_summary)
 	
-	# Calculate performance averages
+	# Calculate performance averages (skip None values to avoid TypeError)
+	def _avg(key):
+		vals = [m.get(key) for m in all_performance_metrics if m.get(key) is not None]
+		return sum(vals) / len(vals) if vals else 0
+
 	performance_metrics = {
-		"first_contentful_paint_avg_ms": 0,
-		"largest_contentful_paint_avg_ms": 0,
-		"cumulative_layout_shift_avg": 0,
-		"first_input_delay_avg_ms": 0,
-		"server_response_time_avg_ms": 0,
-		"cdn_cache_hit_ratio_percent": 0
+		"first_contentful_paint_avg_ms": _avg('first_contentful_paint_avg_ms') if all_performance_metrics else 0,
+		"largest_contentful_paint_avg_ms": _avg('largest_contentful_paint_avg_ms') if all_performance_metrics else 0,
+		"cumulative_layout_shift_avg": _avg('cumulative_layout_shift_avg') if all_performance_metrics else 0,
+		"first_input_delay_avg_ms": _avg('first_input_delay_avg_ms') if all_performance_metrics else 0,
+		"server_response_time_avg_ms": _avg('server_response_time_avg_ms') if all_performance_metrics else 0,
+		"cdn_cache_hit_ratio_percent": _avg('cdn_cache_hit_ratio_percent') if all_performance_metrics else 0
 	}
-	
-	if all_performance_metrics:
-		performance_metrics = {
-			"first_contentful_paint_avg_ms": sum(m.get('first_contentful_paint_avg_ms', 0) for m in all_performance_metrics) / len(all_performance_metrics),
-			"largest_contentful_paint_avg_ms": sum(m.get('largest_contentful_paint_avg_ms', 0) for m in all_performance_metrics) / len(all_performance_metrics),
-			"cumulative_layout_shift_avg": sum(m.get('cumulative_layout_shift_avg', 0) for m in all_performance_metrics) / len(all_performance_metrics),
-			"first_input_delay_avg_ms": sum(m.get('first_input_delay_avg_ms', 0) for m in all_performance_metrics) / len(all_performance_metrics),
-			"server_response_time_avg_ms": sum(m.get('server_response_time_avg_ms', 0) for m in all_performance_metrics) / len(all_performance_metrics),
-			"cdn_cache_hit_ratio_percent": sum(m.get('cdn_cache_hit_ratio_percent', 0) for m in all_performance_metrics) / len(all_performance_metrics)
-		}
 	
 	# Calculate engagement averages
 	engagement_summary = {

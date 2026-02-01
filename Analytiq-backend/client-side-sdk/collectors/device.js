@@ -6,9 +6,10 @@
 /**
  * Parse user agent to extract browser and OS
  * @param {string} ua - User agent string
+ * @param {string} platform - navigator.platform value
  * @returns {Object} { browser: string, os: string }
  */
-function parseBrowserInfo(ua) {
+function parseBrowserInfo(ua, platform) {
   var browser = 'Unknown';
   var os = 'Unknown';
   
@@ -25,17 +26,18 @@ function parseBrowserInfo(ua) {
     browser = 'Opera';
   }
   
-  // OS detection
-  if (ua.indexOf('Windows') > -1) {
-    os = 'Windows';
-  } else if (ua.indexOf('Mac') > -1) {
-    os = 'macOS';
-  } else if (ua.indexOf('Linux') > -1) {
-    os = 'Linux';
-  } else if (ua.indexOf('Android') > -1) {
+  // OS detection - Use navigator.platform which is more reliable
+  // Check Android BEFORE Linux since Android devices report "Linux" as platform
+  if (ua.indexOf('Android') > -1) {
     os = 'Android';
-  } else if (ua.indexOf('iOS') > -1 || ua.indexOf('iPhone') > -1 || ua.indexOf('iPad') > -1) {
-    os = 'iOS';
+  } else if (platform.indexOf('Win') > -1) {
+    os = 'Windows';
+  } else if (platform.indexOf('Mac') > -1 || ua.indexOf('iPhone') > -1 || ua.indexOf('iPad') > -1) {
+    os = ua.indexOf('iPhone') > -1 || ua.indexOf('iPad') > -1 ? 'iOS' : 'macOS';
+  } else if (ua.indexOf('CrOS') > -1) {
+    os = 'ChromeOS';
+  } else if (platform.indexOf('Linux') > -1) {
+    os = 'Linux';
   }
   
   return { browser, os };
@@ -53,7 +55,7 @@ export function getDeviceInfo() {
   var deviceType = /Mobi|Android/i.test(ua) 
     ? (/(Tablet|iPad)/i.test(ua) ? 'tablet' : 'mobile') 
     : 'desktop';
-  var browserInfo = parseBrowserInfo(ua);
+  var browserInfo = parseBrowserInfo(ua, platform);
   
   var conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
   var downlink = conn ? conn.downlink : undefined;
