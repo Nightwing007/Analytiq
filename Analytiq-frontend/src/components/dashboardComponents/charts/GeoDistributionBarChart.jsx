@@ -166,6 +166,7 @@ const GeoDistributionBarChart = ({ data }) => {
               padding: '8px',
               boxShadow: `0 0 20px ${darkElectricBlue}33`
             }}
+            cursor={{ fill: 'transparent' }}
             formatter={(v) => [`${v.toFixed(1)}%`, 'Usage']}
           />
           <Bar dataKey="percent" radius={[0, 8, 8, 0]}>

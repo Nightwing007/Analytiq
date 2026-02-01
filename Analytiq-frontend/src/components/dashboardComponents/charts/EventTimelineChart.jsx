@@ -165,6 +165,7 @@ const EventTimelineChart = ({ data }) => {
               padding: THEME_CONFIG.SPACING.sm,
               boxShadow: `0 0 15px ${darkElectricBlue}33`
             }}
+            cursor={{ fill: 'transparent' }}
             itemStyle={{
               color: THEME_CONFIG.COLORS.textPrimary
             }}
