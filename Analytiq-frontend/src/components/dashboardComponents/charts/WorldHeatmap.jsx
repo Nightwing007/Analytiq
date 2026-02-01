@@ -114,11 +114,11 @@ const WorldHeatmap = ({ data }) => {
     return Math.max(...data.map(item => item.visitors || item.count || item.value || item.percent || 0));
   }, [data]);
 
-  // Color scale for heatmap
+  // Color scale for heatmap - sky blue to dark blue gradient
   const colorScale = useMemo(() => {
     return scaleLinear()
-      .domain([0, maxValue * 0.25, maxValue * 0.5, maxValue])
-      .range(['#1a1a2e', '#0066FF', '#8833FF', '#FF00E0']);
+      .domain([0, maxValue * 0.33, maxValue * 0.66, maxValue])
+      .range(['#87CEEB', '#4A90D9', '#1E5AA8', '#0066FF']);
   }, [maxValue]);
 
   const handleMouseEnter = (geo, event, value) => {
@@ -232,7 +232,7 @@ const WorldHeatmap = ({ data }) => {
           position: 'relative',
           borderRadius: THEME_CONFIG.BORDER_RADIUS.medium,
           overflow: 'hidden',
-          backgroundColor: '#0a0a14'
+          backgroundColor: THEME_CONFIG.COLORS.backgroundSecondary
         }}
         onMouseMove={handleMouseMove}
       >
@@ -270,14 +270,15 @@ const WorldHeatmap = ({ data }) => {
                           transition: 'all 0.2s ease'
                         },
                         hover: {
-                          fill: visitors > 0 ? accentPink : '#2a2a4e',
+                          fill: fillColor,
                           stroke: darkElectricBlue,
-                          strokeWidth: 1,
+                          strokeWidth: 1.5,
                           outline: 'none',
-                          cursor: 'pointer'
+                          cursor: 'pointer',
+                          filter: 'brightness(1.3)'
                         },
                         pressed: {
-                          fill: darkElectricBlue,
+                          fill: fillColor,
                           stroke: '#fff',
                           strokeWidth: 1,
                           outline: 'none'
@@ -362,7 +363,7 @@ const WorldHeatmap = ({ data }) => {
             style={{
               width: '120px',
               height: '12px',
-              background: `linear-gradient(to right, ${darkElectricBlue}, ${accentPink})`,
+              background: 'linear-gradient(to right, #87CEEB, #4A90D9, #1E5AA8, #0066FF)',
               borderRadius: '6px',
               border: `1px solid ${THEME_CONFIG.COLORS.borderPrimary}`
             }}

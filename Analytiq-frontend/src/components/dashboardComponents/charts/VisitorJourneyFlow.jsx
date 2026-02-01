@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { GitBranch, AlertCircle, LogIn, LogOut, User, ChevronDown, ChevronUp } from 'lucide-react';
+import { GitBranch, AlertCircle, LogIn, LogOut, User, ChevronDown, X } from 'lucide-react';
 import { THEME_CONFIG } from '../../config.js';
 
 const darkElectricBlue = '#0066FF';
 const darkerElectricBlue = '#0052CC';
 
 const VisitorJourneyFlow = ({ data }) => {
-  const [showAllJourneys, setShowAllJourneys] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   // Empty state
   if (!data) {
@@ -58,7 +58,231 @@ const VisitorJourneyFlow = ({ data }) => {
     });
   }
 
-  const displayJourneys = showAllJourneys ? journeys : journeys.slice(0, 5);
+  const displayJourneys = journeys.slice(0, 5);
+
+  // Modal component for full journey list
+  const JourneyModal = () => (
+    <div
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.85)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 9999,
+        padding: THEME_CONFIG.SPACING.xl
+      }}
+      onClick={() => setShowModal(false)}
+    >
+      <div
+        style={{
+          backgroundColor: THEME_CONFIG.COLORS.backgroundSecondary,
+          border: `2px solid ${darkElectricBlue}`,
+          borderRadius: THEME_CONFIG.BORDER_RADIUS.medium,
+          width: '90%',
+          maxWidth: '900px',
+          maxHeight: '85vh',
+          overflow: 'hidden',
+          display: 'flex',
+          flexDirection: 'column',
+          boxShadow: `0 0 40px ${darkElectricBlue}40`
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Modal Header */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: THEME_CONFIG.SPACING.lg,
+            borderBottom: `1px solid ${THEME_CONFIG.COLORS.borderPrimary}`,
+            backgroundColor: THEME_CONFIG.COLORS.backgroundDark
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: THEME_CONFIG.SPACING.sm }}>
+            <User size={20} style={{ color: darkElectricBlue }} />
+            <h3
+              style={{
+                fontFamily: "'Rajdhani', sans-serif",
+                fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.h5,
+                fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
+                color: THEME_CONFIG.COLORS.textPrimary,
+                margin: 0
+              }}
+            >
+              All Sample Journeys ({journeys.length})
+            </h3>
+          </div>
+          <button
+            onClick={() => setShowModal(false)}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '36px',
+              height: '36px',
+              border: `1px solid ${THEME_CONFIG.COLORS.borderPrimary}`,
+              borderRadius: THEME_CONFIG.BORDER_RADIUS.small,
+              backgroundColor: 'transparent',
+              color: THEME_CONFIG.COLORS.textSecondary,
+              cursor: 'pointer',
+              transition: 'all 200ms ease'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = `${darkElectricBlue}20`;
+              e.currentTarget.style.borderColor = darkElectricBlue;
+              e.currentTarget.style.color = darkElectricBlue;
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'transparent';
+              e.currentTarget.style.borderColor = THEME_CONFIG.COLORS.borderPrimary;
+              e.currentTarget.style.color = THEME_CONFIG.COLORS.textSecondary;
+            }}
+          >
+            <X size={20} />
+          </button>
+        </div>
+
+        {/* Modal Body - Scrollable Table */}
+        <div style={{ overflowY: 'auto', flex: 1, padding: THEME_CONFIG.SPACING.lg }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr>
+                <th style={{
+                  padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
+                  backgroundColor: THEME_CONFIG.COLORS.backgroundDark,
+                  color: THEME_CONFIG.COLORS.textSecondary,
+                  borderBottom: `2px solid ${THEME_CONFIG.COLORS.borderPrimary}`,
+                  fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
+                  fontFamily: "'Rajdhani', sans-serif",
+                  fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
+                  textAlign: 'left',
+                  letterSpacing: '0.5px',
+                  textTransform: 'uppercase',
+                  position: 'sticky',
+                  top: 0
+                }}>
+                  Visitor
+                </th>
+                <th style={{
+                  padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
+                  backgroundColor: THEME_CONFIG.COLORS.backgroundDark,
+                  color: THEME_CONFIG.COLORS.textSecondary,
+                  borderBottom: `2px solid ${THEME_CONFIG.COLORS.borderPrimary}`,
+                  fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
+                  fontFamily: "'Rajdhani', sans-serif",
+                  fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
+                  textAlign: 'left',
+                  letterSpacing: '0.5px',
+                  textTransform: 'uppercase',
+                  position: 'sticky',
+                  top: 0
+                }}>
+                  Page
+                </th>
+                <th style={{
+                  padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
+                  backgroundColor: THEME_CONFIG.COLORS.backgroundDark,
+                  color: THEME_CONFIG.COLORS.textSecondary,
+                  borderBottom: `2px solid ${THEME_CONFIG.COLORS.borderPrimary}`,
+                  fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
+                  fontFamily: "'Rajdhani', sans-serif",
+                  fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
+                  textAlign: 'left',
+                  letterSpacing: '0.5px',
+                  textTransform: 'uppercase',
+                  position: 'sticky',
+                  top: 0
+                }}>
+                  Timestamp
+                </th>
+                <th style={{
+                  padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
+                  backgroundColor: THEME_CONFIG.COLORS.backgroundDark,
+                  color: THEME_CONFIG.COLORS.textSecondary,
+                  borderBottom: `2px solid ${THEME_CONFIG.COLORS.borderPrimary}`,
+                  fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
+                  fontFamily: "'Rajdhani', sans-serif",
+                  fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
+                  textAlign: 'left',
+                  letterSpacing: '0.5px',
+                  textTransform: 'uppercase',
+                  position: 'sticky',
+                  top: 0
+                }}>
+                  Session
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {journeys.map((j, idx) => (
+                <tr
+                  key={idx}
+                  style={{
+                    backgroundColor: idx % 2 === 0 ? 'transparent' : `${THEME_CONFIG.COLORS.backgroundDark}40`,
+                    borderBottom: `1px solid ${THEME_CONFIG.COLORS.borderPrimary}`,
+                    transition: 'background-color 200ms ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = `${darkElectricBlue}08`;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = idx % 2 === 0 ? 'transparent' : `${THEME_CONFIG.COLORS.backgroundDark}40`;
+                  }}
+                >
+                  <td style={{
+                    padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
+                    fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
+                    color: darkElectricBlue,
+                    letterSpacing: '0.5px'
+                  }}>
+                    {j.visitor.substring(0, 8)}...
+                  </td>
+                  <td style={{
+                    padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
+                    fontFamily: "'Rajdhani', sans-serif",
+                    fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
+                    color: THEME_CONFIG.COLORS.textSecondary
+                  }}>
+                    {j.page}
+                  </td>
+                  <td style={{
+                    padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
+                    fontFamily: "'Rajdhani', sans-serif",
+                    fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
+                    color: THEME_CONFIG.COLORS.textMuted
+                  }}>
+                    {new Date(j.timestamp).toLocaleString('en-US', {
+                      month: 'short',
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })}
+                  </td>
+                  <td style={{
+                    padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
+                    color: THEME_CONFIG.COLORS.textMuted,
+                    letterSpacing: '0.5px'
+                  }}>
+                    {j.session_id?.substring(0, 8)}...
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <div
@@ -440,11 +664,11 @@ const VisitorJourneyFlow = ({ data }) => {
             </table>
           </div>
 
-          {/* Show More/Less Button */}
+          {/* Show More Button */}
           {journeys.length > 5 && (
             <div style={{ textAlign: 'center' }}>
               <button
-                onClick={() => setShowAllJourneys(!showAllJourneys)}
+                onClick={() => setShowModal(true)}
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
@@ -471,20 +695,14 @@ const VisitorJourneyFlow = ({ data }) => {
                   e.currentTarget.style.color = darkElectricBlue;
                 }}
               >
-                {showAllJourneys ? (
-                  <>
-                    <ChevronUp size={14} />
-                    Show Less
-                  </>
-                ) : (
-                  <>
-                    <ChevronDown size={14} />
-                    Show More ({journeys.length - 5} more)
-                  </>
-                )}
+                <ChevronDown size={14} />
+                Show All ({journeys.length - 5} more)
               </button>
             </div>
           )}
+
+          {/* Journey Modal */}
+          {showModal && <JourneyModal />}
         </>
       )}
     </div>
