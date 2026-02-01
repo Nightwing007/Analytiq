@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import styled, { keyframes, css } from 'styled-components';
 import { THEME_CONFIG } from '../../config';
 import API from '../API';
@@ -18,19 +19,23 @@ const slideIn = keyframes`
 `;
 
 const Container = styled.div`
-  background: linear-gradient(135deg, 
-    ${THEME_CONFIG.COLORS.backgroundSecondary} 0%, 
-    rgba(59, 130, 246, 0.05) 100%);
-  border: 2px solid ${THEME_CONFIG.COLORS.accentPrimary};
-  border-radius: ${THEME_CONFIG.BORDER_RADIUS.large};
+  background-color: ${THEME_CONFIG.COLORS.backgroundSecondary};
+  border: 2px solid ${THEME_CONFIG.COLORS.borderPrimary};
+  border-radius: 12px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   height: 400px;
   animation: ${fadeIn} 0.3s ease-out;
-  box-shadow: 0 8px 32px rgba(59, 130, 246, 0.2), 
-              0 4px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
   position: relative;
+  transition: all 0.4s ease;
+  
+  &:hover {
+    border-color: ${THEME_CONFIG.COLORS.electricBlue};
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(0, 102, 255, 0.2);
+  }
   
   &::before {
     content: '';
@@ -38,39 +43,31 @@ const Container = styled.div`
     top: 0;
     left: 0;
     right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, 
-      transparent, 
-      ${THEME_CONFIG.COLORS.accentPrimary}, 
-      transparent);
-    animation: shimmer 2s ease-in-out infinite;
-  }
-  
-  @keyframes shimmer {
-    0%, 100% { opacity: 0.5; }
-    50% { opacity: 1; }
+    height: 4px;
+    background-color: ${THEME_CONFIG.COLORS.electricBlue};
+    transition: height 0.3s ease;
   }
 `;
 
 const Header = styled.div`
-  padding: ${THEME_CONFIG.SPACING.md};
-  background-color: ${THEME_CONFIG.COLORS.backgroundElevated};
-  border-bottom: 1px solid ${THEME_CONFIG.COLORS.borderPrimary};
+  padding: ${THEME_CONFIG.SPACING.lg};
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
+  margin-bottom: ${THEME_CONFIG.SPACING.md};
 `;
 
 const Title = styled.h3`
   margin: 0;
-  color: ${THEME_CONFIG.COLORS.textElectric};
-  font-family: ${THEME_CONFIG.TYPOGRAPHY.fontFamily.monospace};
-  font-size: ${THEME_CONFIG.TYPOGRAPHY.fontSize.h4};
+  color: ${THEME_CONFIG.COLORS.textPrimary};
+  font-family: 'Orbitron', sans-serif;
+  font-size: ${THEME_CONFIG.TYPOGRAPHY.fontSize.h3};
+  font-weight: ${THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold};
+  letter-spacing: 1px;
+  text-transform: uppercase;
   display: flex;
   align-items: center;
   gap: 8px;
-  
-
 `;
 
 const ChatArea = styled.div`
@@ -108,6 +105,8 @@ const MessageBubble = styled.div`
     : THEME_CONFIG.COLORS.textSecondary};
   border: 1px solid ${THEME_CONFIG.COLORS.borderPrimary};
   animation: ${slideIn} 0.3s ease-out;
+  font-family: 'Rajdhani', sans-serif;
+  line-height: 1.6;
 `;
 
 const AIContent = styled.div`
@@ -115,18 +114,24 @@ const AIContent = styled.div`
   flex-direction: column;
   gap: ${THEME_CONFIG.SPACING.md};
   font-size: ${THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall};
+  font-family: 'Rajdhani', sans-serif;
 `;
 
 const SectionTitle = styled.h5`
   margin: ${THEME_CONFIG.SPACING.sm} 0;
-  color: ${THEME_CONFIG.COLORS.textElectric};
-  font-size: ${THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall};
-  font-weight: 600;
+  color: ${THEME_CONFIG.COLORS.electricBlue};
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-family: 'Orbitron', sans-serif;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-shadow: 0 0 8px ${THEME_CONFIG.COLORS.electricBlue}44;
 `;
 
 const List = styled.ul`
   margin: 0;
   padding-left: ${THEME_CONFIG.SPACING.md};
+  font-family: 'Rajdhani', sans-serif;
   
   li {
     margin-bottom: ${THEME_CONFIG.SPACING.xs};
@@ -174,6 +179,7 @@ const Input = styled.input`
   border-radius: ${THEME_CONFIG.BORDER_RADIUS.medium};
   color: ${THEME_CONFIG.COLORS.textPrimary};
   font-size: ${THEME_CONFIG.TYPOGRAPHY.fontSize.body};
+  font-family: 'Rajdhani', sans-serif;
   
   &:focus {
     outline: none;
@@ -192,9 +198,13 @@ const SendButton = styled.button`
   border: none;
   border-radius: ${THEME_CONFIG.BORDER_RADIUS.medium};
   color: ${THEME_CONFIG.COLORS.textPrimary};
-  font-weight: 600;
+  font-weight: 700;
+  font-family: 'Orbitron', sans-serif;
+  letter-spacing: 1px;
+  font-size: 0.75rem;
   cursor: pointer;
   transition: all 0.2s;
+  text-transform: uppercase;
   
   &:hover:not(:disabled) {
     background: ${THEME_CONFIG.COLORS.accentSecondary};
@@ -207,8 +217,27 @@ const SendButton = styled.button`
   }
 `;
 
+const INITIAL_MESSAGES = [
+  {
+    role: 'ai',
+    content: {
+      summary: "Hi, I'm Analytiq AI. Ask me anything about your traffic, engagement, or performance metrics.",
+      root_causes: [
+        'Spot traffic spikes and drops across your key pages',
+        'Identify segments with unusually high bounce or low engagement',
+        'Highlight slow pages that may be hurting conversions'
+      ],
+      recommendations: [
+        'Try asking: "Why did my traffic spike yesterday?"',
+        'Or: "Which pages are loading slowest this week?"',
+        'Or: "Where am I losing the most users in the funnel?"'
+      ]
+    }
+  }
+];
+
 const DashboardAI = ({ siteId }) => {
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState(INITIAL_MESSAGES);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [toolsOpen, setToolsOpen] = useState(false);
@@ -288,17 +317,38 @@ const DashboardAI = ({ siteId }) => {
     <>
       <Container>
         <Header>
-          <Title>Analytiq AI</Title>
+          <div style={{ marginBottom: 0 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: THEME_CONFIG.SPACING.sm }}>
+              <span style={{
+                fontSize: '24px',
+                filter: `drop-shadow(0 0 8px ${THEME_CONFIG.COLORS.electricBlue})`
+              }}></span>
+              <Title>Analytiq AI</Title>
+            </div>
+          </div>
           <button
             onClick={() => setToolsOpen(true)}
             style={{
-              border: `1px solid ${THEME_CONFIG.COLORS.borderPrimary}`,
+              border: `1px solid ${THEME_CONFIG.COLORS.electricBlue}33`,
               borderRadius: THEME_CONFIG.BORDER_RADIUS.medium,
               padding: '6px 14px',
               background: 'transparent',
-              color: THEME_CONFIG.COLORS.textSecondary,
-              fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
-              cursor: 'pointer'
+              color: THEME_CONFIG.COLORS.electricBlue,
+              fontSize: '0.7rem',
+              fontFamily: 'Orbitron, sans-serif',
+              fontWeight: 600,
+              letterSpacing: '0.5px',
+              textTransform: 'uppercase',
+              cursor: 'pointer',
+              transition: 'all 0.2s'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = THEME_CONFIG.COLORS.electricBlue;
+              e.currentTarget.style.boxShadow = `0 0 10px ${THEME_CONFIG.COLORS.electricBlue}33`;
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = `${THEME_CONFIG.COLORS.electricBlue}33`;
+              e.currentTarget.style.boxShadow = 'none';
             }}
           >
             Open AI Tools
@@ -331,14 +381,15 @@ const DashboardAI = ({ siteId }) => {
           </SendButton>
         </InputArea>
       </Container>
-      {toolsOpen && (
+      {toolsOpen && typeof document !== 'undefined' && createPortal(
         <div
+          onClick={() => setToolsOpen(false)}
           style={{
             position: 'fixed',
             inset: 0,
-            backgroundColor: 'rgba(0,0,0,0.7)',
-            backdropFilter: 'blur(6px)',
-            zIndex: 1300,
+            backgroundColor: 'rgba(0,0,0,0.8)',
+            backdropFilter: 'blur(8px)',
+            zIndex: 9999,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -346,44 +397,103 @@ const DashboardAI = ({ siteId }) => {
           }}
         >
           <div
+            onClick={(e) => e.stopPropagation()}
             style={{
               width: 'min(960px, 100%)',
               maxHeight: '85vh',
-              background: THEME_CONFIG.COLORS.backgroundElevated,
-              borderRadius: THEME_CONFIG.BORDER_RADIUS.xlarge,
+              background: THEME_CONFIG.COLORS.backgroundSecondary,
+              borderRadius: '12px',
               border: `2px solid ${THEME_CONFIG.COLORS.borderPrimary}`,
-              padding: THEME_CONFIG.SPACING.lg,
-              boxShadow: '0 30px 60px rgba(0, 0, 0, 0.6)',
-              overflowY: 'auto'
+              padding: 0,
+              boxShadow: '0 4px 15px rgba(0, 0, 0, 0.4)',
+              overflowY: 'auto',
+              position: 'relative'
             }}
           >
+            {/* Top accent bar */}
+            <div style={{ 
+              position: 'absolute', 
+              top: 0, 
+              left: 0, 
+              right: 0, 
+              height: '4px', 
+              backgroundColor: THEME_CONFIG.COLORS.electricBlue
+            }} />
+
+            {/* Header */}
             <div
               style={{
                 display: 'flex',
                 justifyContent: 'space-between',
-                alignItems: 'center',
+                alignItems: 'flex-start',
+                padding: THEME_CONFIG.SPACING.lg,
                 marginBottom: THEME_CONFIG.SPACING.md
               }}
             >
-              <h4 style={{ margin: 0, color: THEME_CONFIG.COLORS.textPrimary }}>AI Insights & Deep Dive</h4>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: THEME_CONFIG.SPACING.sm }}>
+                  <span style={{
+                    fontSize: '24px',
+                    filter: `drop-shadow(0 0 8px ${THEME_CONFIG.COLORS.electricBlue})`
+                  }}>🔬</span>
+                  <h4 style={{ 
+                    margin: 0, 
+                    color: THEME_CONFIG.COLORS.textPrimary,
+                    fontFamily: 'Orbitron, sans-serif',
+                    fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.h3,
+                    fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
+                    letterSpacing: '1px',
+                    textTransform: 'uppercase'
+                  }}>AI Insights & Deep Dive</h4>
+                </div>
+                <p
+                  style={{
+                    color: THEME_CONFIG.COLORS.textMuted,
+                    fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.small,
+                    margin: `${THEME_CONFIG.SPACING.xs} 0 0 0`,
+                    fontFamily: THEME_CONFIG.TYPOGRAPHY.fontFamily.primary
+                  }}
+                >
+                  Advanced Analytics & Predictions
+                </p>
+              </div>
               <button
                 onClick={() => setToolsOpen(false)}
                 style={{
-                  border: 'none',
+                  border: `1px solid ${THEME_CONFIG.COLORS.electricBlue}33`,
                   background: 'transparent',
-                  color: THEME_CONFIG.COLORS.textSecondary,
-                  cursor: 'pointer'
+                  color: THEME_CONFIG.COLORS.electricBlue,
+                  padding: '6px 14px',
+                  borderRadius: THEME_CONFIG.BORDER_RADIUS.medium,
+                  fontFamily: 'Orbitron, sans-serif',
+                  fontSize: '0.7rem',
+                  fontWeight: 600,
+                  letterSpacing: '0.5px',
+                  textTransform: 'uppercase',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = THEME_CONFIG.COLORS.electricBlue;
+                  e.currentTarget.style.boxShadow = `0 0 10px ${THEME_CONFIG.COLORS.electricBlue}33`;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = `${THEME_CONFIG.COLORS.electricBlue}33`;
+                  e.currentTarget.style.boxShadow = 'none';
                 }}
               >
                 Close
               </button>
             </div>
-            <div style={{ display: 'grid', gap: THEME_CONFIG.SPACING.lg }}>
+
+            {/* Content */}
+            <div style={{ padding: `0 ${THEME_CONFIG.SPACING.lg} ${THEME_CONFIG.SPACING.lg}`, display: 'grid', gap: THEME_CONFIG.SPACING.lg }}>
               <DashboardMetricDeepDive siteId={siteId} />
               <DashboardAIInsights siteId={siteId} />
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );
