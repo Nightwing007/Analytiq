@@ -70,9 +70,7 @@ const Title = styled.h3`
   align-items: center;
   gap: 8px;
   
-  &::before {
-    content: '✨';
-  }
+
 `;
 
 const ChatArea = styled.div`

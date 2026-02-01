@@ -86,40 +86,28 @@ const PerformanceTimelineByPage = ({ data }) => {
       }}
     >
       {/* Header */}
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: THEME_CONFIG.SPACING.sm,
-          marginBottom: THEME_CONFIG.SPACING.lg
-        }}
-      >
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '32px',
-            height: '32px',
-            borderRadius: THEME_CONFIG.BORDER_RADIUS.small,
-            backgroundColor: `${darkElectricBlue}15`
-          }}
-        >
-          <Zap size={18} style={{ color: darkElectricBlue }} />
+      <div style={{ marginBottom: THEME_CONFIG.SPACING.md }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: THEME_CONFIG.SPACING.sm }}>
+          <Zap
+            size={24}
+            style={{
+              color: darkElectricBlue,
+              filter: `drop-shadow(0 0 8px ${darkElectricBlue})`
+            }}
+          />
+          <h3
+            className="dash-card-title"
+            style={{
+              color: THEME_CONFIG.COLORS.textPrimary,
+              fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.h3,
+              fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
+              fontFamily: THEME_CONFIG.TYPOGRAPHY.fontFamily.secondary,
+              margin: 0
+            }}
+          >
+            Performance Timeline by Page
+          </h3>
         </div>
-        <h3
-          className="card-title"
-          style={{
-            fontFamily: "'Rajdhani', sans-serif",
-            fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.h5,
-            fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
-            color: THEME_CONFIG.COLORS.textPrimary,
-            letterSpacing: '0.5px',
-            margin: 0
-          }}
-        >
-          Performance Timeline by Page
-        </h3>
       </div>
 
       {/* Chart */}

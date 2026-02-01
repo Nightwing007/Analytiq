@@ -89,53 +89,38 @@ const GeoDistributionBarChart = ({ data }) => {
       }} />
 
       {/* Header */}
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '12px',
-          marginBottom: '24px',
-          marginTop: '8px'
-        }}
-      >
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '44px',
-            height: '44px',
-            borderRadius: '8px',
-            backgroundColor: darkElectricBlue + '20',
-            border: `2px solid ${darkElectricBlue}40`
-          }}
-        >
-          <Map size={22} style={{ color: darkElectricBlue }} strokeWidth={2.5} />
-        </div>
-        <div>
-          <h3
+      <div style={{ marginBottom: THEME_CONFIG.SPACING.md }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: THEME_CONFIG.SPACING.sm }}>
+          <Map
+            size={24}
             style={{
-              fontFamily: "'Rajdhani', sans-serif",
-              fontSize: '16px',
-              fontWeight: 700,
+              color: darkElectricBlue,
+              filter: `drop-shadow(0 0 8px ${darkElectricBlue})`
+            }}
+          />
+          <h3
+            className="dash-card-title"
+            style={{
               color: THEME_CONFIG.COLORS.textPrimary,
-              letterSpacing: '0.5px',
-              textTransform: 'uppercase',
-              margin: 0,
-              marginBottom: '4px'
+              fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.h3,
+              fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
+              fontFamily: THEME_CONFIG.TYPOGRAPHY.fontFamily.secondary,
+              margin: 0
             }}
           >
             Geographic Distribution
           </h3>
-          <p style={{
-            fontFamily: "'Rajdhani', sans-serif",
-            fontSize: '13px',
-            color: THEME_CONFIG.COLORS.textSecondary,
-            margin: 0
-          }}>
-            Visitor Locations
-          </p>
         </div>
+        <p
+          style={{
+            color: THEME_CONFIG.COLORS.textMuted,
+            fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.small,
+            margin: `${THEME_CONFIG.SPACING.xs} 0 0 0`,
+            fontFamily: THEME_CONFIG.TYPOGRAPHY.fontFamily.primary
+          }}
+        >
+          Visitor Locations
+        </p>
       </div>
 
       {/* Chart */}

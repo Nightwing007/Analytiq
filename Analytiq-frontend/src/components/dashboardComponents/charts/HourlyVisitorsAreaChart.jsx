@@ -89,58 +89,40 @@ const HourlyVisitorsAreaChart = ({ data }) => {
       <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '4px', backgroundColor: darkElectricBlue }} />
       
       {/* Header */}
-      <div style={{ marginBottom: THEME_CONFIG.SPACING.lg, marginTop: '8px' }}>
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '12px',
-            marginBottom: THEME_CONFIG.SPACING.xs
-          }}
-        >
-          <div
+      <div style={{ marginBottom: THEME_CONFIG.SPACING.md }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: THEME_CONFIG.SPACING.sm }}>
+          <Activity
+            size={24}
             style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: '44px',
-              height: '44px',
-              borderRadius: '8px',
-              backgroundColor: `${darkElectricBlue}20`,
-              border: `2px solid ${darkElectricBlue}40`
+              color: darkElectricBlue,
+              filter: `drop-shadow(0 0 8px ${darkElectricBlue})`
+            }}
+          />
+          <h3
+            className="dash-card-title"
+            style={{
+              color: THEME_CONFIG.COLORS.textPrimary,
+              fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.h3,
+              fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
+              fontFamily: THEME_CONFIG.TYPOGRAPHY.fontFamily.secondary,
+              margin: 0
             }}
           >
-            <Activity size={22} style={{ color: darkElectricBlue }} strokeWidth={2.5} />
-          </div>
-          <div>
-            <h3
-              style={{
-                fontFamily: "'Rajdhani', sans-serif",
-                fontSize: '16px',
-                fontWeight: 700,
-                color: THEME_CONFIG.COLORS.textPrimary,
-                letterSpacing: '0.5px',
-                textTransform: 'uppercase',
-                margin: 0,
-                marginBottom: '4px'
-              }}
-            >
-              Hourly Visitor Pattern
-            </h3>
-            {peakHour && (
-              <p
-                style={{
-                  fontFamily: "'Rajdhani', sans-serif",
-                  fontSize: '13px',
-                  color: THEME_CONFIG.COLORS.textSecondary,
-                  margin: 0
-                }}
-              >
-                Peak: {peakHour.hour}:00 ({Math.round(peakHour.average_visitors)} visitors)
-              </p>
-            )}
-          </div>
+            Hourly Visitor Pattern
+          </h3>
         </div>
+        {peakHour && (
+          <p
+            style={{
+              color: THEME_CONFIG.COLORS.textMuted,
+              fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.small,
+              margin: `${THEME_CONFIG.SPACING.xs} 0 0 0`,
+              fontFamily: THEME_CONFIG.TYPOGRAPHY.fontFamily.primary
+            }}
+          >
+            Peak: {peakHour.hour}:00 ({Math.round(peakHour.average_visitors)} visitors)
+          </p>
+        )}
       </div>
 
       {/* Chart */}
