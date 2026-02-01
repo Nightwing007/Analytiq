@@ -206,12 +206,14 @@ const TrafficSourcesPieChart = ({ data, totalVisitors: globalTotal = 0 }) => {
                 backgroundColor: 'rgba(10, 10, 15, 0.95)',
                 border: `1px solid ${darkElectricBlue}`,
                 borderRadius: '4px',
-                color: THEME_CONFIG.COLORS.textPrimary,
+                color: '#FFFFFF',
                 fontFamily: "'JetBrains Mono', monospace",
                 fontSize: '0.75rem',
                 padding: '8px',
                 boxShadow: `0 0 20px ${darkElectricBlue}33`
               }}
+              labelStyle={{ color: '#FFFFFF' }}
+              itemStyle={{ color: '#FFFFFF' }}
               cursor={{ stroke: darkElectricBlue, strokeWidth: 1, strokeDasharray: '4 4' }}
               formatter={(value) => {
                 const percent = chartDomain > 0 ? ((value / chartDomain) * 100).toFixed(1) : '0.0';

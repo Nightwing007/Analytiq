@@ -220,11 +220,19 @@ const DevicesDonutChart = ({ data, totalPageviews = 0 }) => {
                 backgroundColor: 'rgba(10, 10, 15, 0.95)',
                 border: `1px solid ${darkElectricBlue}`,
                 borderRadius: '4px',
-                color: THEME_CONFIG.COLORS.textPrimary,
+                color: '#FFFFFF',
                 fontFamily: "'JetBrains Mono', monospace",
                 fontSize: '0.75rem',
                 padding: '8px',
                 boxShadow: `0 0 20px ${darkElectricBlue}33`
+              }}
+              labelStyle={{
+                color: '#FFFFFF',
+                fontWeight: 600,
+                marginBottom: '4px'
+              }}
+              itemStyle={{
+                color: '#FFFFFF'
               }}
               cursor={{ stroke: darkElectricBlue, strokeWidth: 1, strokeDasharray: '4 4' }}
               formatter={(value, name, props) => {
