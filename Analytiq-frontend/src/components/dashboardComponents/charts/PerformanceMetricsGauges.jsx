@@ -15,40 +15,44 @@ const calculatePerformanceScore = (data) => {
 
   const scores = [];
 
-  // FCP: < 1800ms = 100, > 3000ms = 0
-  if (data.first_contentful_paint_avg_ms !== null) {
-    const fcpScore = Math.max(0, Math.min(100, 100 - ((data.first_contentful_paint_avg_ms - 1800) / 12)));
-    scores.push(fcpScore);
-  }
+  const linearScore = (value, best, worst, higherIsBetter) => {
+    if (value === null || value === undefined) return null;
+    var clamped;
+    if (higherIsBetter) {
+      if (value <= worst) clamped = 0;
+      else if (value >= best) clamped = 100;
+      else clamped = ((value - worst) / (best - worst)) * 100;
+    } else {
+      if (value <= best) clamped = 100;
+      else if (value >= worst) clamped = 0;
+      else clamped = ((worst - value) / (worst - best)) * 100;
+    }
+    return Math.max(0, Math.min(100, clamped));
+  };
 
-  // LCP: < 2500ms = 100, > 4000ms = 0
-  if (data.largest_contentful_paint_avg_ms !== null) {
-    const lcpScore = Math.max(0, Math.min(100, 100 - ((data.largest_contentful_paint_avg_ms - 2500) / 15)));
-    scores.push(lcpScore);
-  }
+  // FCP: < 1800ms = 100, > 3000ms = 0 (lower is better)
+  const fcpScore = linearScore(data.first_contentful_paint_avg_ms, 1800, 3000, false);
+  if (fcpScore !== null) scores.push(fcpScore);
 
-  // CLS: < 0.1 = 100, > 0.25 = 0
-  if (data.cumulative_layout_shift_avg !== null) {
-    const clsScore = Math.max(0, Math.min(100, 100 - ((data.cumulative_layout_shift_avg - 0.1) / 0.0015)));
-    scores.push(clsScore);
-  }
+  // LCP: < 2500ms = 100, > 4000ms = 0 (lower is better)
+  const lcpScore = linearScore(data.largest_contentful_paint_avg_ms, 2500, 4000, false);
+  if (lcpScore !== null) scores.push(lcpScore);
 
-  // FID: < 100ms = 100, > 300ms = 0
-  if (data.first_input_delay_avg_ms !== null) {
-    const fidScore = Math.max(0, Math.min(100, 100 - ((data.first_input_delay_avg_ms - 100) / 2)));
-    scores.push(fidScore);
-  }
+  // CLS: < 0.1 = 100, > 0.25 = 0 (lower is better)
+  const clsScore = linearScore(data.cumulative_layout_shift_avg, 0.1, 0.25, false);
+  if (clsScore !== null) scores.push(clsScore);
 
-  // Server RT: < 200ms = 100, > 600ms = 0
-  if (data.server_response_time_avg_ms !== null) {
-    const serverScore = Math.max(0, Math.min(100, 100 - ((data.server_response_time_avg_ms - 200) / 4)));
-    scores.push(serverScore);
-  }
+  // FID: < 100ms = 100, > 300ms = 0 (lower is better)
+  const fidScore = linearScore(data.first_input_delay_avg_ms, 100, 300, false);
+  if (fidScore !== null) scores.push(fidScore);
 
-  // CDN Cache: Higher is better, already 0-100
-  if (data.cdn_cache_hit_ratio_percent !== null) {
-    scores.push(data.cdn_cache_hit_ratio_percent);
-  }
+  // Server RT: < 200ms = 100, > 600ms = 0 (lower is better)
+  const serverScore = linearScore(data.server_response_time_avg_ms, 200, 600, false);
+  if (serverScore !== null) scores.push(serverScore);
+
+  // CDN Cache: 0 = 0, 100 = 100 (higher is better)
+  const cdnScore = linearScore(data.cdn_cache_hit_ratio_percent, 100, 0, true);
+  if (cdnScore !== null) scores.push(cdnScore);
 
   // Average of all scores
   return scores.length > 0 ? scores.reduce((a, b) => a + b, 0) / scores.length : 0;

@@ -35,6 +35,56 @@ const PageAnalyticsTable = ({
   const [modalOpen, setModalOpen] = useState(false);
   const [modalPage, setModalPage] = useState(null);
 
+  const exportCsv = () => {
+    if (!pages || pages.length === 0) return;
+
+    var headers = [
+      'Page Title',
+      'Path',
+      'Views',
+      'Unique Visitors',
+      'Avg Time Spent (sec)',
+      'Bounce Rate (%)',
+      'Exit Rate (%)',
+      'Scroll Depth (%)',
+      'Avg Load Time (ms)'
+    ];
+
+    var rows = pages.map(function (p) {
+      return [
+        p.page_title || 'Untitled',
+        p.path || '',
+        p.views ?? 0,
+        p.unique_visitors ?? 0,
+        p.avg_time_spent_sec ?? 0,
+        p.bounce_rate_percent ?? 0,
+        p.exit_rate_percent ?? 0,
+        p.avg_scroll_depth_percent ?? 0,
+        p.avg_load_time_ms ?? 0
+      ];
+    });
+
+    var csv = [headers].concat(rows).map(function (row) {
+      return row.map(function (cell) {
+        var str = String(cell ?? '');
+        if (str.includes('"') || str.includes(',') || str.includes('\n')) {
+          str = '"' + str.replace(/"/g, '""') + '"';
+        }
+        return str;
+      }).join(',');
+    }).join('\n');
+
+    var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    var url = URL.createObjectURL(blob);
+    var link = document.createElement('a');
+    link.href = url;
+    link.download = 'page-analytics.csv';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   if (loading) {
     return (
       <div
@@ -290,6 +340,7 @@ const PageAnalyticsTable = ({
               e.currentTarget.style.backgroundColor = 'transparent';
               e.currentTarget.style.color = darkElectricBlue;
             }}
+            onClick={exportCsv}
           >
             <Download size={14} />
             Export CSV
