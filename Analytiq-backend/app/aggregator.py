@@ -1196,25 +1196,19 @@ def generate_comprehensive_report(site_id, start_date, end_date):
 		if engagement_summary:
 			all_engagement_metrics.append(engagement_summary)
 	
-	# Calculate performance averages
+	# Calculate performance averages (skip None values to avoid TypeError)
+	def _avg(key):
+		vals = [m.get(key) for m in all_performance_metrics if m.get(key) is not None]
+		return sum(vals) / len(vals) if vals else 0
+
 	performance_metrics = {
-		"first_contentful_paint_avg_ms": 0,
-		"largest_contentful_paint_avg_ms": 0,
-		"cumulative_layout_shift_avg": 0,
-		"first_input_delay_avg_ms": 0,
-		"server_response_time_avg_ms": 0,
-		"cdn_cache_hit_ratio_percent": 0
+		"first_contentful_paint_avg_ms": _avg('first_contentful_paint_avg_ms') if all_performance_metrics else 0,
+		"largest_contentful_paint_avg_ms": _avg('largest_contentful_paint_avg_ms') if all_performance_metrics else 0,
+		"cumulative_layout_shift_avg": _avg('cumulative_layout_shift_avg') if all_performance_metrics else 0,
+		"first_input_delay_avg_ms": _avg('first_input_delay_avg_ms') if all_performance_metrics else 0,
+		"server_response_time_avg_ms": _avg('server_response_time_avg_ms') if all_performance_metrics else 0,
+		"cdn_cache_hit_ratio_percent": _avg('cdn_cache_hit_ratio_percent') if all_performance_metrics else 0
 	}
-	
-	if all_performance_metrics:
-		performance_metrics = {
-			"first_contentful_paint_avg_ms": sum(m.get('first_contentful_paint_avg_ms', 0) for m in all_performance_metrics) / len(all_performance_metrics),
-			"largest_contentful_paint_avg_ms": sum(m.get('largest_contentful_paint_avg_ms', 0) for m in all_performance_metrics) / len(all_performance_metrics),
-			"cumulative_layout_shift_avg": sum(m.get('cumulative_layout_shift_avg', 0) for m in all_performance_metrics) / len(all_performance_metrics),
-			"first_input_delay_avg_ms": sum(m.get('first_input_delay_avg_ms', 0) for m in all_performance_metrics) / len(all_performance_metrics),
-			"server_response_time_avg_ms": sum(m.get('server_response_time_avg_ms', 0) for m in all_performance_metrics) / len(all_performance_metrics),
-			"cdn_cache_hit_ratio_percent": sum(m.get('cdn_cache_hit_ratio_percent', 0) for m in all_performance_metrics) / len(all_performance_metrics)
-		}
 	
 	# Calculate engagement averages
 	engagement_summary = {
