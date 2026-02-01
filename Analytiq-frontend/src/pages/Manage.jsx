@@ -636,14 +636,6 @@ function Manage() {
                 borderRadius: THEME_CONFIG.BORDER_RADIUS.large
               }}>
               <div className="mb-6">
-                <h3 className="font-bold mb-3"
-                  style={{
-                    color: THEME_CONFIG.COLORS.textPrimary,
-                    fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.h3,
-                    fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.bold
-                  }}>
-                  🎉 Site Created Successfully!
-                </h3>
                 <p style={{
                   color: THEME_CONFIG.COLORS.textSecondary,
                   fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.body

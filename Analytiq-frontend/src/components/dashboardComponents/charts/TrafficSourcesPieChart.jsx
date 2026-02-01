@@ -211,6 +211,7 @@ const TrafficSourcesPieChart = ({ data, totalVisitors: globalTotal = 0 }) => {
               cornerRadius={10}
             />
             <Tooltip
+              wrapperStyle={{ outline: 'none' }}
               contentStyle={{
                 backgroundColor: 'rgba(10, 10, 15, 0.95)',
                 border: `1px solid ${darkElectricBlue}`,

@@ -3,7 +3,7 @@
  */
 
 import React, { useState, useEffect, useRef } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useToast } from '../components/Toast.jsx';
 import { THEME_CONFIG } from '../config.js';
@@ -14,6 +14,7 @@ import LoadingSpinner from '../components/LoadingSpinner.jsx';
 import DashboardHeader from '../components/DashboardHeader.jsx';
 import DashboardMetricCards from '../components/DashboardMetricCards.jsx';
 import SummaryStatsRow from '../components/dashboardComponents/SummaryStatsRow.jsx';
+import DashboardAI from '../components/dashboardComponents/DashboardAI.jsx';
 import TrafficSourcesPieChart from '../components/dashboardComponents/charts/TrafficSourcesPieChart.jsx';
 import DevicesDonutChart from '../components/dashboardComponents/charts/DevicesDonutChart.jsx';
 import NewVsReturningGaugeChart from '../components/dashboardComponents/charts/NewVsReturningGaugeChart.jsx';
@@ -32,9 +33,6 @@ import EventTimelineChart from '../components/dashboardComponents/charts/EventTi
 import VisitorJourneyFlow from '../components/dashboardComponents/charts/VisitorJourneyFlow.jsx';
 import ClickScrollHeatmap from '../components/dashboardComponents/charts/ClickScrollHeatmap.jsx';
 import PerformanceTimelineByPage from '../components/dashboardComponents/charts/PerformanceTimelineByPage.jsx';
-import DashboardAI from '../components/dashboardComponents/DashboardAI.jsx';
-import DashboardMetricDeepDive from '../components/dashboardComponents/DashboardMetricDeepDive.jsx';
-import DashboardAIInsights from '../components/dashboardComponents/DashboardAIInsights.jsx';
 import DateRangePicker from '../components/dashboardComponents/DateRangePicker.jsx';
 
 const darkElectricBlue = '#0066FF';
@@ -169,7 +167,7 @@ const dashboardThemeCSS = `
   }
 
   @media (max-width: 768px) {
-    .dash-grid-three, .dash-grid-two, .dash-grid-geo {
+    .dash-grid-three, .dash-grid-two, .dash-grid-geo, .dash-grid-four {
       grid-template-columns: 1fr !important;
     }
   }
@@ -293,63 +291,6 @@ function Dash() {
           />
         </div>
 
-
-        {/* AI Dashboard CTA (replaces embedded AI block) */}
-        <div style={{ marginBottom: '24px', width: '100%' }}>
-          <div
-            className="dash-card"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              padding: '20px',
-              borderRadius: '12px'
-            }}
-          >
-            <div>
-              <h3 style={{
-                fontFamily: "'Rajdhani', sans-serif",
-                color: THEME_CONFIG.COLORS.textPrimary,
-                margin: 0,
-                fontSize: '1.25rem',
-                fontWeight: 600,
-                letterSpacing: '0.5px'
-              }}>AI Analyst</h3>
-              <p style={{
-                color: THEME_CONFIG.COLORS.textSecondary,
-                marginTop: '8px'
-              }}>Open the dedicated AI workspace for deeper, RAG-powered insights and context-aware analysis for this site.</p>
-            </div>
-
-            <Link to={`/dash/${siteId}/ai`} style={{ textDecoration: 'none' }}>
-              <button
-                className="neon-border-btn"
-                style={{
-                  padding: '12px 18px',
-                  border: `2px solid ${darkElectricBlue}`,
-                  borderRadius: THEME_CONFIG.BORDER_RADIUS.small,
-                  backgroundColor: darkElectricBlue,
-                  color: '#FFFFFF',
-                  fontWeight: 700,
-                  cursor: 'pointer'
-                }}
-              >
-                Open AI Dashboard
-              </button>
-            </Link>
-          </div>
-        </div>
-
-        {/* METRIC DEEP DIVE */}
-        <div style={{ marginBottom: '24px', width: '100%' }}>
-          <DashboardMetricDeepDive siteId={siteId} />
-        </div>
-
-        {/* AUTOMATIC AI INSIGHTS */}
-        <div style={{ marginBottom: '24px', width: '100%' }}>
-          <DashboardAIInsights siteId={siteId} />
-        </div>
-
         {/* METRIC CARDS */}
         <div style={{ marginBottom: '24px', width: '100%' }}>
           <DashboardMetricCards
@@ -369,19 +310,22 @@ function Dash() {
           />
         </div>
 
-        {/* QUICK INSIGHTS - 3 Columns */}
+        {/* QUICK INSIGHTS - 2x2 Grid */}
         <div
-          className="dash-grid-three"
+          className="dash-grid-four"
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
+            gridTemplateColumns: 'repeat(2, 1fr)',
             gap: '24px',
             marginBottom: '24px',
             width: '100%'
           }}
         >
-          <TrafficSourcesPieChart data={reportData?.traffic_sources} totalVisitors={reportData?.total_visitors} />
+          <div className="dash-card" style={{ padding: 0, borderRadius: '14px' }}>
+            <DashboardAI siteId={siteId} />
+          </div>
           <DevicesDonutChart data={reportData?.devices} totalPageviews={reportData?.total_pageviews} />
+          <TrafficSourcesPieChart data={reportData?.traffic_sources} totalVisitors={reportData?.total_visitors} />
           <NewVsReturningGaugeChart data={reportData?.new_vs_returning} />
         </div>
 
