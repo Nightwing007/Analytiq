@@ -46,8 +46,7 @@ const PageAnalyticsTable = ({
       'Avg Time Spent (sec)',
       'Bounce Rate (%)',
       'Exit Rate (%)',
-      'Scroll Depth (%)',
-      'Avg Load Time (ms)'
+      'Scroll Depth (%)'
     ];
 
     var rows = pages.map(function (p) {
@@ -59,8 +58,7 @@ const PageAnalyticsTable = ({
         p.avg_time_spent_sec ?? 0,
         p.bounce_rate_percent ?? 0,
         p.exit_rate_percent ?? 0,
-        p.avg_scroll_depth_percent ?? 0,
-        p.avg_load_time_ms ?? 0
+        p.avg_scroll_depth_percent ?? 0
       ];
     });
 
@@ -162,6 +160,13 @@ const PageAnalyticsTable = ({
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins}m ${secs}s`;
+  };
+
+  const getPageLoadMs = (p) => {
+    var raw = p?.avg_load_time_ms;
+    if (raw === undefined || raw === null) raw = p?.avg_loading_time_ms;
+    if (raw === undefined || raw === null) raw = p?.avg_page_load_time_ms;
+    return Math.max(0, raw ?? 0);
   };
 
   const filteredAndSortedPages = useMemo(() => {
@@ -561,7 +566,6 @@ const PageAnalyticsTable = ({
                   style={{
                     fontFamily: "'Rajdhani', sans-serif",
                     fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.body,
-                    fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
                     color: THEME_CONFIG.COLORS.textSecondary,
                     marginBottom: THEME_CONFIG.SPACING.sm,
                     textTransform: 'uppercase',
@@ -571,7 +575,7 @@ const PageAnalyticsTable = ({
                   Performance
                 </h4>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: THEME_CONFIG.SPACING.xs }}>
-                  <DetailRow label="Load Time" value={`${modalPage.avg_load_time_ms || 0}ms`} />
+                    <DetailRow label="Load Time" value={`${getPageLoadMs(modalPage)}ms`} />
                   <DetailRow label="Exit Rate" value={`${modalPage.exit_rate_percent || 0}%`} />
                   <DetailRow label="Scroll Depth" value={`${modalPage.avg_scroll_depth_percent || 0}%`} />
                 </div>
