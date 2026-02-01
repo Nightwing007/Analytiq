@@ -7,6 +7,9 @@ Website ID: {website_id}
 Metrics Overview:
 {metrics_summary}
 
+Full Analytics Data:
+{full_user_data}
+
 Recent AI Insights (if any):
 {recent_insights}
 

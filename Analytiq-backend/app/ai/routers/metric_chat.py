@@ -81,23 +81,38 @@ def fetch_metric_data(website_id, metric, page=None):
 
 @router.post("/chat/metric", response_model=AIResponse)
 async def chat_metric(request: MetricChatRequest):
+    """AI chat for specific metrics with full site context"""
     try:
+        # Import context builder
+        from app.ai.services.context_builder import build_site_context
+        
         # 1. Fetch Metric Data
         metric_data = fetch_metric_data(request.website_id, request.metric, request.page)
+        
+        # 2. Build comprehensive site context
+        full_context = build_site_context(request.website_id, days=7)
 
-        # 2. Retrieve RAG Context (SEO, summaries)
+        # 3. Retrieve RAG Context (SEO, summaries)
         rag_context = rag_service.retrieve_context(request.message)
 
-        # 3. Build System Prompt
+        # 4. Build System Prompt with all context
+        enriched_metric_data = f"""{metric_data}
+
+=== FULL SITE CONTEXT ===
+{full_context}
+
+=== SEO/AI CONTEXT ===
+{rag_context}"""
+        
         system_prompt = METRIC_ANALYSIS_PROMPT.format(
             metric=request.metric,
             website_id=request.website_id,
             page=request.page or "All",
-            metric_data=metric_data + "\n\nRelevant SEO/AI Context:\n" + rag_context,
+            metric_data=enriched_metric_data,
             user_query=request.message
         )
 
-        # 4. Call LLM
+        # 5. Call LLM
         response = llm_client.get_analysis(system_prompt, request.message)
         return response
 
