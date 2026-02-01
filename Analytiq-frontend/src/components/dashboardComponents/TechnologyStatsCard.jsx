@@ -348,6 +348,7 @@ const TechnologyStatsCard = ({ data }) => {
                     padding: THEME_CONFIG.SPACING.sm,
                     boxShadow: `0 0 15px ${darkElectricBlue}33`
                   }}
+                  cursor={{ fill: 'transparent' }}
                   formatter={(v) => [`${v.toFixed(1)}%`, 'Usage']}
                 />
                 <Bar
