@@ -70,9 +70,21 @@ export function sendEvent(eventType, payload, cb) {
 export function trackInitialPageview() {
   var visitorInfo = Storage.getOrSetVisitorId();
   var isFirstVisit = visitorInfo.isNewVisitor;
-  
-  sendEvent('pageview', {
-    is_first_visit: isFirstVisit,
-    is_returning: !isFirstVisit
-  });
+
+  // Delay to ensure performance timing is ready (loadEventEnd populated)
+  var sendPageview = function () {
+    sendEvent('pageview', {
+      is_first_visit: isFirstVisit,
+      is_returning: !isFirstVisit
+    });
+  };
+
+  // Wait for window.onload + small delay so loadEventEnd is populated
+  if (document.readyState === 'complete') {
+    setTimeout(sendPageview, 100);
+  } else {
+    window.addEventListener('load', function () {
+      setTimeout(sendPageview, 100);
+    });
+  }
 }

@@ -14,14 +14,14 @@ const PERFORMANCE_COLORS = {
   slowest: '#0052CC'   // Darker blue - worst case
 };
 
-// Prepare chart data: convert object to array
+// Prepare chart data: convert object to array, clamp negatives to 0
 function prepareTimelineData(data) {
   if (!data || typeof data !== 'object') return [];
   return Object.entries(data).map(([page, stats]) => ({
     page,
-    avg: stats.avg_load_time_ms ?? 0,
-    fastest: stats.fastest_load_ms ?? 0,
-    slowest: stats.slowest_load_ms ?? 0,
+    avg: Math.max(0, stats.avg_load_time_ms ?? 0),
+    fastest: Math.max(0, stats.fastest_load_ms ?? 0),
+    slowest: Math.max(0, stats.slowest_load_ms ?? 0),
   }));
 }
 
