@@ -19,7 +19,8 @@ import {
   AlertCircle,
   X,
   BarChart3,
-  MousePointer
+  MousePointer,
+  List
 } from 'lucide-react';
 
 const darkElectricBlue = '#0066FF';
@@ -34,6 +35,7 @@ const PageAnalyticsTable = ({
   const [sortConfig, setSortConfig] = useState({ key: 'views', direction: 'desc' });
   const [modalOpen, setModalOpen] = useState(false);
   const [modalPage, setModalPage] = useState(null);
+  const [showAllModal, setShowAllModal] = useState(false);
 
   const exportCsv = () => {
     if (!pages || pages.length === 0) return;
@@ -367,7 +369,7 @@ const PageAnalyticsTable = ({
         </div>
       </div>
 
-      {/* Table */}
+      {/* Table - Show only top 5 */}
       <div style={{ overflowX: 'auto', marginBottom: THEME_CONFIG.SPACING.md }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '480px' }}>
           <thead>
@@ -392,7 +394,7 @@ const PageAnalyticsTable = ({
             </tr>
           </thead>
           <tbody>
-            {filteredAndSortedPages.map((page, index) => (
+            {filteredAndSortedPages.slice(0, 5).map((page, index) => (
               <tr
                 key={index}
                 style={{
@@ -468,6 +470,300 @@ const PageAnalyticsTable = ({
           </tbody>
         </table>
       </div>
+
+      {/* Show More Button */}
+      {filteredAndSortedPages.length > 5 && (
+        <div style={{ textAlign: 'center', marginBottom: THEME_CONFIG.SPACING.md }}>
+          <button
+            onClick={() => setShowAllModal(true)}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
+              border: `2px solid ${darkElectricBlue}`,
+              borderRadius: THEME_CONFIG.BORDER_RADIUS.small,
+              backgroundColor: 'transparent',
+              color: darkElectricBlue,
+              fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
+              fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
+              fontFamily: "'Rajdhani', sans-serif",
+              cursor: 'pointer',
+              transition: 'all 300ms ease'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = `${darkElectricBlue}15`;
+              e.currentTarget.style.borderColor = darkerElectricBlue;
+              e.currentTarget.style.color = darkerElectricBlue;
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'transparent';
+              e.currentTarget.style.borderColor = darkElectricBlue;
+              e.currentTarget.style.color = darkElectricBlue;
+            }}
+          >
+            <ChevronDown size={14} />
+            Show All ({filteredAndSortedPages.length - 5} more)
+          </button>
+        </div>
+      )}
+
+      {/* Show All Pages Modal */}
+      {showAllModal && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.85)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 9999,
+            padding: THEME_CONFIG.SPACING.xl
+          }}
+          onClick={() => setShowAllModal(false)}
+        >
+          <div
+            style={{
+              backgroundColor: THEME_CONFIG.COLORS.backgroundSecondary,
+              border: `2px solid ${darkElectricBlue}`,
+              borderRadius: THEME_CONFIG.BORDER_RADIUS.medium,
+              width: '90%',
+              maxWidth: '900px',
+              maxHeight: '85vh',
+              overflow: 'hidden',
+              display: 'flex',
+              flexDirection: 'column',
+              boxShadow: `0 0 40px ${darkElectricBlue}40`
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: THEME_CONFIG.SPACING.lg,
+                borderBottom: `1px solid ${THEME_CONFIG.COLORS.borderPrimary}`,
+                backgroundColor: THEME_CONFIG.COLORS.backgroundDark
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: THEME_CONFIG.SPACING.sm }}>
+                <List size={20} style={{ color: darkElectricBlue }} />
+                <h3
+                  style={{
+                    fontFamily: "'Rajdhani', sans-serif",
+                    fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.h5,
+                    fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
+                    color: THEME_CONFIG.COLORS.textPrimary,
+                    margin: 0
+                  }}
+                >
+                  All Pages ({filteredAndSortedPages.length})
+                </h3>
+              </div>
+              <button
+                onClick={() => setShowAllModal(false)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '36px',
+                  height: '36px',
+                  border: `1px solid ${THEME_CONFIG.COLORS.borderPrimary}`,
+                  borderRadius: THEME_CONFIG.BORDER_RADIUS.small,
+                  backgroundColor: 'transparent',
+                  color: THEME_CONFIG.COLORS.textSecondary,
+                  cursor: 'pointer',
+                  transition: 'all 200ms ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = `${darkElectricBlue}20`;
+                  e.currentTarget.style.borderColor = darkElectricBlue;
+                  e.currentTarget.style.color = darkElectricBlue;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                  e.currentTarget.style.borderColor = THEME_CONFIG.COLORS.borderPrimary;
+                  e.currentTarget.style.color = THEME_CONFIG.COLORS.textSecondary;
+                }}
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            {/* Modal Body - Scrollable Table */}
+            <div style={{ overflowY: 'auto', flex: 1, padding: THEME_CONFIG.SPACING.lg }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <thead>
+                  <tr>
+                    <th style={{
+                      padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
+                      backgroundColor: THEME_CONFIG.COLORS.backgroundDark,
+                      color: THEME_CONFIG.COLORS.textSecondary,
+                      borderBottom: `2px solid ${THEME_CONFIG.COLORS.borderPrimary}`,
+                      fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
+                      fontFamily: "'Rajdhani', sans-serif",
+                      fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
+                      textAlign: 'left',
+                      letterSpacing: '0.5px',
+                      textTransform: 'uppercase',
+                      position: 'sticky',
+                      top: 0
+                    }}>
+                      Page Title
+                    </th>
+                    <th style={{
+                      padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
+                      backgroundColor: THEME_CONFIG.COLORS.backgroundDark,
+                      color: THEME_CONFIG.COLORS.textSecondary,
+                      borderBottom: `2px solid ${THEME_CONFIG.COLORS.borderPrimary}`,
+                      fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
+                      fontFamily: "'Rajdhani', sans-serif",
+                      fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
+                      textAlign: 'left',
+                      letterSpacing: '0.5px',
+                      textTransform: 'uppercase',
+                      position: 'sticky',
+                      top: 0
+                    }}>
+                      Views
+                    </th>
+                    <th style={{
+                      padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
+                      backgroundColor: THEME_CONFIG.COLORS.backgroundDark,
+                      color: THEME_CONFIG.COLORS.textSecondary,
+                      borderBottom: `2px solid ${THEME_CONFIG.COLORS.borderPrimary}`,
+                      fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
+                      fontFamily: "'Rajdhani', sans-serif",
+                      fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
+                      textAlign: 'left',
+                      letterSpacing: '0.5px',
+                      textTransform: 'uppercase',
+                      position: 'sticky',
+                      top: 0
+                    }}>
+                      Visitors
+                    </th>
+                    <th style={{
+                      padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
+                      backgroundColor: THEME_CONFIG.COLORS.backgroundDark,
+                      color: THEME_CONFIG.COLORS.textSecondary,
+                      borderBottom: `2px solid ${THEME_CONFIG.COLORS.borderPrimary}`,
+                      fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
+                      fontFamily: "'Rajdhani', sans-serif",
+                      fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
+                      textAlign: 'left',
+                      letterSpacing: '0.5px',
+                      textTransform: 'uppercase',
+                      position: 'sticky',
+                      top: 0
+                    }}>
+                      Avg Time
+                    </th>
+                    <th style={{
+                      padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
+                      backgroundColor: THEME_CONFIG.COLORS.backgroundDark,
+                      color: THEME_CONFIG.COLORS.textSecondary,
+                      borderBottom: `2px solid ${THEME_CONFIG.COLORS.borderPrimary}`,
+                      fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
+                      fontFamily: "'Rajdhani', sans-serif",
+                      fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
+                      textAlign: 'left',
+                      letterSpacing: '0.5px',
+                      textTransform: 'uppercase',
+                      position: 'sticky',
+                      top: 0
+                    }}>
+                      Bounce Rate
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredAndSortedPages.map((page, idx) => (
+                    <tr
+                      key={idx}
+                      style={{
+                        backgroundColor: idx % 2 === 0 ? 'transparent' : `${THEME_CONFIG.COLORS.backgroundDark}40`,
+                        borderBottom: `1px solid ${THEME_CONFIG.COLORS.borderPrimary}`,
+                        cursor: 'pointer',
+                        transition: 'background-color 200ms ease'
+                      }}
+                      onClick={() => { setModalPage(page); setModalOpen(true); setShowAllModal(false); }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = `${darkElectricBlue}08`;
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = idx % 2 === 0 ? 'transparent' : `${THEME_CONFIG.COLORS.backgroundDark}40`;
+                      }}
+                    >
+                      <td style={{ padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}` }}>
+                        <div
+                          style={{
+                            fontFamily: "'Rajdhani', sans-serif",
+                            fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.body,
+                            fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.medium,
+                            color: THEME_CONFIG.COLORS.textPrimary
+                          }}
+                        >
+                          {page.page_title || 'Untitled'}
+                        </div>
+                        <div
+                          style={{
+                            fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
+                            color: THEME_CONFIG.COLORS.textMuted,
+                            marginTop: '2px'
+                          }}
+                        >
+                          {page.path}
+                        </div>
+                      </td>
+                      <td style={{
+                        padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
+                        fontFamily: "'JetBrains Mono', monospace",
+                        fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
+                        fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
+                        color: darkElectricBlue,
+                        letterSpacing: '0.5px'
+                      }}>
+                        {page.views?.toLocaleString()}
+                      </td>
+                      <td style={{
+                        padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
+                        fontFamily: "'Rajdhani', sans-serif",
+                        fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
+                        color: THEME_CONFIG.COLORS.textSecondary
+                      }}>
+                        {page.unique_visitors?.toLocaleString()}
+                      </td>
+                      <td style={{
+                        padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
+                        fontFamily: "'Rajdhani', sans-serif",
+                        fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
+                        color: THEME_CONFIG.COLORS.textMuted
+                      }}>
+                        {formatDuration(page.avg_time_spent_sec || 0)}
+                      </td>
+                      <td style={{
+                        padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
+                        fontFamily: "'Rajdhani', sans-serif",
+                        fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
+                        color: THEME_CONFIG.COLORS.textMuted
+                      }}>
+                        {page.bounce_rate_percent?.toFixed(1)}%
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Modal */}
       {modalOpen && modalPage && (
@@ -643,7 +939,7 @@ const PageAnalyticsTable = ({
           color: THEME_CONFIG.COLORS.textMuted
         }}
       >
-        Showing {filteredAndSortedPages.length} of {pages.length} pages
+        Showing {Math.min(5, filteredAndSortedPages.length)} of {pages.length} pages
       </div>
     </div>
   );

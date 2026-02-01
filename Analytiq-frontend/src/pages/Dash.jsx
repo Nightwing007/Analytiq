@@ -26,6 +26,7 @@ import BrowsersBarChart from '../components/dashboardComponents/charts/BrowsersB
 import PerformanceMetricsGauges from '../components/dashboardComponents/charts/PerformanceMetricsGauges.jsx';
 import WorldHeatmap from '../components/dashboardComponents/charts/WorldHeatmap.jsx';
 import RecentVisitorsMap from '../components/dashboardComponents/maps/RecentVisitorsMap.jsx';
+import TopCountriesCard from '../components/dashboardComponents/cards/TopCountriesCard.jsx';
 import PageAnalyticsTable from '../components/dashboardComponents/tables/PageAnalyticsTable.jsx';
 import CampaignPerformanceTable from '../components/dashboardComponents/tables/CampaignPerformanceTable.jsx';
 import TechnologyStatsCard from '../components/dashboardComponents/TechnologyStatsCard.jsx';
@@ -364,12 +365,12 @@ function Dash() {
           <BrowsersBarChart data={reportData?.browsers} />
         </div>
 
-        {/* PERFORMANCE METRICS */}
+        {/* GEOGRAPHIC ANALYSIS - World Heatmap (Full Width) */}
         <div style={{ marginBottom: '24px', width: '100%' }}>
-          <PerformanceMetricsGauges data={reportData?.performance_metrics} />
+          <WorldHeatmap data={reportData?.geo_distribution} />
         </div>
 
-        {/* GEOGRAPHIC ANALYSIS - World Heatmap & Recent Visitors */}
+        {/* TOP COUNTRIES & RECENT VISITORS GLOBE - 2 Columns */}
         <div
           className="dash-grid-geo"
           style={{
@@ -380,12 +381,22 @@ function Dash() {
             width: '100%'
           }}
         >
-          <WorldHeatmap data={reportData?.geo_distribution} />
+          <TopCountriesCard data={reportData?.geo_distribution} />
           <RecentVisitorsMap data={reportData?.last_24h_visitors_geo} />
         </div>
 
-        {/* PAGE ANALYTICS */}
-        <div style={{ marginBottom: '24px', width: '100%' }}>
+        {/* PERFORMANCE METRICS & PAGE ANALYTICS - 2 Columns */}
+        <div
+          className="dash-grid-two"
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(2, 1fr)',
+            gap: '24px',
+            marginBottom: '24px',
+            width: '100%'
+          }}
+        >
+          <PerformanceMetricsGauges data={reportData?.performance_metrics} />
           <PageAnalyticsTable pages={reportData?.pages} />
         </div>
 
