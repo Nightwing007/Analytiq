@@ -2,7 +2,7 @@
  * Dash.jsx - Analytics Dashboard with Proper Layout
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useToast } from '../components/Toast.jsx';
@@ -23,7 +23,7 @@ import UserBehaviorStatsCard from '../components/dashboardComponents/UserBehavio
 import OperatingSystemsBarChart from '../components/dashboardComponents/charts/OperatingSystemsBarChart.jsx';
 import BrowsersBarChart from '../components/dashboardComponents/charts/BrowsersBarChart.jsx';
 import PerformanceMetricsGauges from '../components/dashboardComponents/charts/PerformanceMetricsGauges.jsx';
-import GeoDistributionMap from '../components/dashboardComponents/charts/GeoDistributionMap.jsx';
+import WorldHeatmap from '../components/dashboardComponents/charts/WorldHeatmap.jsx';
 import RecentVisitorsMap from '../components/dashboardComponents/maps/RecentVisitorsMap.jsx';
 import PageAnalyticsTable from '../components/dashboardComponents/tables/PageAnalyticsTable.jsx';
 import CampaignPerformanceTable from '../components/dashboardComponents/tables/CampaignPerformanceTable.jsx';
@@ -35,21 +35,48 @@ import PerformanceTimelineByPage from '../components/dashboardComponents/charts/
 import DashboardAI from '../components/dashboardComponents/DashboardAI.jsx';
 import DashboardMetricDeepDive from '../components/dashboardComponents/DashboardMetricDeepDive.jsx';
 import DashboardAIInsights from '../components/dashboardComponents/DashboardAIInsights.jsx';
+import DateRangePicker from '../components/dashboardComponents/DateRangePicker.jsx';
 
 const darkElectricBlue = '#0066FF';
 const darkerElectricBlue = '#0052CC';
 
 const dashboardThemeCSS = `
-  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
   * {
     box-sizing: border-box;
   }
 
+  body {
+    background-color: ${THEME_CONFIG.COLORS.backgroundDark};
+    background-image: 
+      linear-gradient(rgba(0, 212, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 212, 255, 0.05) 1px, transparent 1px);
+    background-size: 30px 30px;
+    background-attachment: fixed;
+  }
+
+  /* Scanline effect */
+  body::after {
+    content: " ";
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), 
+                linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
+    z-index: 9999;
+    background-size: 100% 4px, 3px 100%;
+    pointer-events: none;
+    opacity: 0.3;
+  }
+
   @keyframes fadeInUp {
     0% {
       opacity: 0;
-      transform: translateY(30px);
+      transform: translateY(20px);
     }
     100% {
       opacity: 1;
@@ -60,8 +87,8 @@ const dashboardThemeCSS = `
   @keyframes dashCardStagger {
     0% {
       opacity: 0;
-      transform: translateY(40px) scale(0.95);
-      filter: blur(3px);
+      transform: translateY(30px) scale(0.98);
+      filter: blur(5px);
     }
     100% {
       opacity: 1;
@@ -74,12 +101,40 @@ const dashboardThemeCSS = `
     animation: fadeInUp 0.6s ease-out;
     width: 100%;
     overflow-x: hidden;
+    position: relative;
+    z-index: 100;
   }
 
   .dash-card {
-    animation: dashCardStagger 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    animation: dashCardStagger 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     opacity: 0;
-    transition: all 300ms ease;
+    background: ${THEME_CONFIG.COLORS.backgroundElevated} !important;
+    border: 1px solid ${THEME_CONFIG.COLORS.electricBlue}33 !important;
+    border-radius: 4px !important;
+    padding: 20px !important;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    transition: all 0.3s ease;
+  }
+
+  .dash-card:hover {
+    border-color: ${THEME_CONFIG.COLORS.electricBlue}88 !important;
+    box-shadow: 0 0 15px ${THEME_CONFIG.COLORS.electricBlue}22;
+    transform: translateY(-2px);
+  }
+
+  /* Corner accents for cards */
+  .dash-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 10px;
+    height: 10px;
+    border-top: 2px solid ${THEME_CONFIG.COLORS.electricBlue};
+    border-left: 2px solid ${THEME_CONFIG.COLORS.electricBlue};
+    opacity: 0.5;
   }
 
   .dash-card:nth-child(1) { animation-delay: 0.05s; }
@@ -91,32 +146,43 @@ const dashboardThemeCSS = `
 
   .dash-section-title {
     font-family: 'Orbitron', monospace;
-    letter-spacing: 1px;
-    color: ${darkElectricBlue};
-    text-shadow: 0 0 15px ${darkElectricBlue}44;
-    font-size: 1.5rem;
-    font-weight: 700;
+    letter-spacing: 2px;
+    color: ${THEME_CONFIG.COLORS.electricBlue};
+    text-shadow: 0 0 10px ${THEME_CONFIG.COLORS.electricBlue}66;
+    font-size: 1.25rem;
+    font-weight: 800;
     margin-bottom: 1.5rem;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .dash-section-title::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, ${THEME_CONFIG.COLORS.electricBlue}44, transparent);
   }
 
   .dash-card-title {
-    font-family: 'Rajdhani', sans-serif;
-    letter-spacing: 0.5px;
+    font-family: 'Orbitron', sans-serif;
+    color: ${THEME_CONFIG.COLORS.textSecondary};
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  .metric-value {
+    font-family: 'JetBrains Mono', monospace !important;
+    color: ${THEME_CONFIG.COLORS.textPrimary};
+    text-shadow: 0 0 8px ${THEME_CONFIG.COLORS.electricBlue}33;
   }
 
   @media (max-width: 768px) {
-    .dash-grid-three,
-    .dash-grid-two,
-    .dash-grid-geo {
-      grid-template-columns: 1fr !important;
-    }
-  }
-
-  @media (min-width: 769px) and (max-width: 1024px) {
-    .dash-grid-three {
-      grid-template-columns: repeat(2, 1fr) !important;
-    }
-    .dash-grid-geo {
+    .dash-grid-three, .dash-grid-two, .dash-grid-geo {
       grid-template-columns: 1fr !important;
     }
   }
@@ -135,24 +201,37 @@ const injectDashboardCSS = () => {
 function Dash() {
   const { siteId } = useParams();
   const { user, logout } = useAuth();
-  const { addToast, toast } = useToast();
+  const { toast } = useToast();
+  const isInitialMount = useRef(true);
   const [reportData, setReportData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
+  // Date Range State (Default to last 7 days)
+  const defaultEnd = new Date().toISOString().split('T')[0];
+  const defaultStart = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+  const [startDate, setStartDate] = useState(defaultStart);
+  const [endDate, setEndDate] = useState(defaultEnd);
+
   useEffect(() => {
     if (siteId) {
-      fetchReportData();
+      fetchReportData(startDate, endDate, isInitialMount.current);
+      isInitialMount.current = false;
     }
     injectDashboardCSS();
-  }, [siteId]);
+  }, [siteId, startDate, endDate]);
 
-  const fetchReportData = async () => {
+  const fetchReportData = async (start = startDate, end = endDate, silent = true) => {
     try {
       setLoading(true);
-      const reportResponse = await API.getReport(siteId);
+      const reportResponse = await API.getReport(siteId, {
+        start_date: start,
+        end_date: end
+      });
       setReportData(reportResponse);
-      toast.success('Report data loaded successfully');
+      if (!silent) {
+        toast.success('Report data loaded successfully');
+      }
     } catch (error) {
       console.error('Error fetching report data:', error);
       toast.error(`Failed to load report data: ${error.message}`);
@@ -164,7 +243,7 @@ function Dash() {
 
   const handleRefresh = async () => {
     setRefreshing(true);
-    await fetchReportData();
+    await fetchReportData(startDate, endDate, false);
     setRefreshing(false);
   };
 
@@ -205,7 +284,6 @@ function Dash() {
           padding: '0'
         }}
       >
-
         {/* HEADER */}
         <div style={{ marginBottom: '24px', width: '100%' }}>
           <DashboardHeader
@@ -215,6 +293,16 @@ function Dash() {
             lastUpdated={reportData?.report_generated_at}
             onRefresh={handleRefresh}
             refreshing={refreshing}
+            datePicker={
+              <DateRangePicker
+                startDate={startDate}
+                endDate={endDate}
+                onApply={(start, end) => {
+                  setStartDate(start);
+                  setEndDate(end);
+                }}
+              />
+            }
           />
         </div>
 
@@ -264,8 +352,8 @@ function Dash() {
             width: '100%'
           }}
         >
-          <TrafficSourcesPieChart data={reportData?.traffic_sources} />
-          <DevicesDonutChart data={reportData?.devices} />
+          <TrafficSourcesPieChart data={reportData?.traffic_sources} totalVisitors={reportData?.total_visitors} />
+          <DevicesDonutChart data={reportData?.devices} totalPageviews={reportData?.total_pageviews} />
           <NewVsReturningGaugeChart data={reportData?.new_vs_returning} />
         </div>
 
@@ -309,7 +397,7 @@ function Dash() {
           <PerformanceMetricsGauges data={reportData?.performance_metrics} />
         </div>
 
-        {/* GEOGRAPHIC ANALYSIS - 1:1 Ratio (equal split) */}
+        {/* GEOGRAPHIC ANALYSIS - World Heatmap & Recent Visitors */}
         <div
           className="dash-grid-geo"
           style={{
@@ -320,7 +408,7 @@ function Dash() {
             width: '100%'
           }}
         >
-          <GeoDistributionMap data={reportData?.geo_distribution} />
+          <WorldHeatmap data={reportData?.geo_distribution} />
           <RecentVisitorsMap data={reportData?.last_24h_visitors_geo} />
         </div>
 

@@ -4,6 +4,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { THEME_CONFIG } from '../config.js';
+import { CheckCircle2, AlertCircle, AlertTriangle, Info, X } from 'lucide-react';
 
 // Toast context for global toast management
 const ToastContext = React.createContext();
@@ -14,7 +15,7 @@ export function ToastProvider({ children }) {
   const addToast = (message, type = 'info', duration = 5000) => {
     const id = Date.now() + Math.random();
     const toast = { id, message, type, duration };
-    
+
     setToasts(prev => [...prev, toast]);
 
     // Auto remove toast after duration
@@ -60,7 +61,7 @@ export function useToast() {
 
 function ToastContainer({ toasts, onRemove }) {
   return (
-    <div 
+    <div
       style={{
         position: 'fixed',
         top: '1rem',
@@ -95,19 +96,21 @@ function Toast({ toast, onRemove }) {
 
   const getToastColor = () => {
     switch (toast.type) {
-      case 'success': return THEME_CONFIG.COLORS.success;
+      case 'success': return THEME_CONFIG.COLORS.electricBlue; // Use theme's primary blue for success
       case 'error': return THEME_CONFIG.COLORS.error;
       case 'warning': return THEME_CONFIG.COLORS.warning;
-      default: return THEME_CONFIG.COLORS.info;
+      default: return THEME_CONFIG.COLORS.electricBlue; // Default to theme blue
     }
   };
 
   const getToastIcon = () => {
+    const iconSize = 20;
+    const color = getToastColor();
     switch (toast.type) {
-      case 'success': return '✅';
-      case 'error': return '❌';
-      case 'warning': return '⚠️';
-      default: return 'ℹ️';
+      case 'success': return <CheckCircle2 size={iconSize} color={color} />;
+      case 'error': return <AlertCircle size={iconSize} color={color} />;
+      case 'warning': return <AlertTriangle size={iconSize} color={color} />;
+      default: return <Info size={iconSize} color={color} />;
     }
   };
 
@@ -115,17 +118,19 @@ function Toast({ toast, onRemove }) {
     <div
       style={{
         minWidth: '320px',
-        maxWidth: '500px',
         width: 'auto',
-        backgroundColor: THEME_CONFIG.COLORS.white,
-        borderWidth: '2px',
+        backgroundColor: toast.type === 'success' || toast.type === 'info'
+          ? `${THEME_CONFIG.COLORS.backgroundElevated}EE`
+          : `${THEME_CONFIG.COLORS.backgroundElevated}CC`,
+        backdropFilter: 'blur(12px)',
+        borderWidth: '1px',
         borderStyle: 'solid',
-        borderColor: getToastColor(),
-        borderRadius: '8px',
-        boxShadow: '0 10px 25px rgba(0, 0, 0, 0.3)',
+        borderColor: `${getToastColor()}88`,
+        borderRadius: '12px',
+        boxShadow: `0 8px 32px rgba(0, 0, 0, 0.4), 0 0 20px ${getToastColor()}22, inset 0 0 10px ${getToastColor()}11`,
         transform: isVisible ? 'translateX(0)' : 'translateX(120%)',
         opacity: isVisible ? 1 : 0,
-        transition: 'all 300ms ease-in-out'
+        transition: 'all 500ms cubic-bezier(0.19, 1, 0.22, 1)'
       }}
     >
       <div style={{ padding: '1rem' }}>
@@ -133,18 +138,18 @@ function Toast({ toast, onRemove }) {
           <div style={{ flexShrink: 0, fontSize: '1.125rem', lineHeight: '1.75rem' }}>
             {getToastIcon()}
           </div>
-          <div style={{ 
-            flex: 1, 
+          <div style={{
+            flex: 1,
             minWidth: 0,
             wordBreak: 'break-word',
             overflowWrap: 'break-word'
           }}>
-            <p style={{ 
+            <p style={{
               fontSize: '0.875rem',
               fontWeight: 500,
               lineHeight: '1.5',
               margin: 0,
-              color: THEME_CONFIG.COLORS.background
+              color: THEME_CONFIG.COLORS.textPrimary
             }}>
               {toast.message}
             </p>
@@ -159,23 +164,22 @@ function Toast({ toast, onRemove }) {
                 background: 'none',
                 border: 'none',
                 cursor: 'pointer',
-                padding: '0',
-                fontSize: '1.5rem',
-                lineHeight: '1',
-                color: THEME_CONFIG.COLORS.background,
-                opacity: 0.6,
-                transition: 'opacity 200ms'
+                padding: '4px',
+                borderRadius: '50%',
+                color: THEME_CONFIG.COLORS.textSecondary,
+                opacity: 0.5,
+                transition: 'all 200ms'
               }}
-              onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
-              onMouseLeave={(e) => e.currentTarget.style.opacity = '0.6'}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.opacity = '1';
+                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.opacity = '0.5';
+                e.currentTarget.style.backgroundColor = 'transparent';
+              }}
             >
-              <span style={{ 
-                width: '20px', 
-                height: '20px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}>×</span>
+              <X size={16} />
             </button>
           </div>
         </div>
