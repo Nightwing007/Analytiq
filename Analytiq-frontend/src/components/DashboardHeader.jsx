@@ -18,24 +18,26 @@ const buttonBackground = 'rgb(18, 18, 24)';
  *   - onRefresh: function (optional)
  *   - refreshing: boolean (optional)
  */
-export default function DashboardHeader({ 
-  websiteName, 
-  url, 
-  dateRange, 
+export default function DashboardHeader({
+  websiteName,
+  url,
+  dateRange,
   lastUpdated,
   onRefresh,
-  refreshing = false
+  refreshing = false,
+  datePicker
 }) {
   return (
-    <div 
-      style={{ 
+    <div
+      style={{
         position: 'relative',
-        border: `2px solid ${THEME_CONFIG.COLORS.borderPrimary}`,
+        border: `1px solid ${THEME_CONFIG.COLORS.electricBlue}33`,
         backgroundColor: THEME_CONFIG.COLORS.backgroundSecondary,
-        borderRadius: THEME_CONFIG.BORDER_RADIUS.medium,
-        padding: THEME_CONFIG.SPACING.xl,
+        borderRadius: '4px',
+        padding: THEME_CONFIG.SPACING.lg,
         transition: 'all 300ms ease',
-        overflow: 'hidden'
+        overflow: 'visible', // Changed from 'hidden' to allow dropdowns
+        zIndex: 10
       }}
       onMouseEnter={(e) => {
         e.currentTarget.style.borderColor = darkElectricBlue;
@@ -48,22 +50,15 @@ export default function DashboardHeader({
         e.currentTarget.style.boxShadow = 'none';
       }}
     >
-      {/* Optional: Subtle accent line on left */}
-      <div 
-        style={{
-          position: 'absolute',
-          left: 0,
-          top: 0,
-          width: '4px',
-          height: '100%',
-          background: `linear-gradient(180deg, ${darkElectricBlue}, ${darkerElectricBlue})`,
-          opacity: 0.6
-        }}
-      />
+      {/* Corner accents */}
+      <div style={{ position: 'absolute', top: 0, left: 0, width: '12px', height: '12px', borderTop: `2px solid ${THEME_CONFIG.COLORS.electricBlue}`, borderLeft: `2px solid ${THEME_CONFIG.COLORS.electricBlue}`, opacity: 0.6 }} />
+      <div style={{ position: 'absolute', top: 0, right: 0, width: '12px', height: '12px', borderTop: `2px solid ${THEME_CONFIG.COLORS.electricBlue}`, borderRight: `2px solid ${THEME_CONFIG.COLORS.electricBlue}`, opacity: 0.2 }} />
+      <div style={{ position: 'absolute', bottom: 0, left: 0, width: '12px', height: '12px', borderBottom: `2px solid ${THEME_CONFIG.COLORS.electricBlue}`, borderLeft: `2px solid ${THEME_CONFIG.COLORS.electricBlue}`, opacity: 0.2 }} />
+      <div style={{ position: 'absolute', bottom: 0, right: 0, width: '12px', height: '12px', borderBottom: `2px solid ${THEME_CONFIG.COLORS.electricBlue}`, borderRight: `2px solid ${THEME_CONFIG.COLORS.electricBlue}`, opacity: 0.2 }} />
 
       {/* Main Content */}
-      <div 
-        style={{ 
+      <div
+        style={{
           display: 'flex',
           flexDirection: 'row',
           alignItems: 'flex-start',
@@ -76,9 +71,9 @@ export default function DashboardHeader({
         {/* Left Section - Site Info */}
         <div style={{ flex: 1, minWidth: 0 }}>
           {/* Website Name - Orbitron Font */}
-          <h1 
+          <h1
             className="cool-title"
-            style={{ 
+            style={{
               fontFamily: "'Orbitron', monospace",
               fontSize: '2rem',
               fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.bold,
@@ -94,27 +89,27 @@ export default function DashboardHeader({
           </h1>
 
           {/* Website URL - Rajdhani Font */}
-          <div 
-            style={{ 
+          <div
+            style={{
               display: 'flex',
               alignItems: 'center',
               gap: '8px',
               marginBottom: THEME_CONFIG.SPACING.md
             }}
           >
-            <Globe 
-              size={16} 
-              style={{ 
+            <Globe
+              size={16}
+              style={{
                 color: THEME_CONFIG.COLORS.textMuted,
                 flexShrink: 0
-              }} 
+              }}
             />
             <a
               href={url}
               target="_blank"
               rel="noopener noreferrer"
-              className="card-title"
-              style={{ 
+              className="metric-value"
+              style={{
                 fontFamily: "'Rajdhani', sans-serif",
                 fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.body,
                 fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.medium,
@@ -135,65 +130,29 @@ export default function DashboardHeader({
             </a>
           </div>
 
-          {/* Date Range Badge */}
-          {dateRange && (
-            <div 
-              style={{ 
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px',
-                padding: `${THEME_CONFIG.SPACING.xs} ${THEME_CONFIG.SPACING.sm}`,
-                border: `2px solid ${darkElectricBlue}`,
-                borderRadius: THEME_CONFIG.BORDER_RADIUS.small,
-                backgroundColor: 'transparent'
+          {/* Last Updated - Moved to Left Side */}
+          {lastUpdated && (
+            <div
+              style={{
+                textAlign: 'left',
+                marginTop: THEME_CONFIG.SPACING.xs
               }}
             >
-              <Calendar size={14} style={{ color: darkElectricBlue }} />
-              <span 
-                className="card-title"
-                style={{ 
+              <span
+                style={{
+                  fontSize: '0.65rem',
+                  color: THEME_CONFIG.COLORS.textMuted,
+                  marginRight: '8px',
                   fontFamily: "'Rajdhani', sans-serif",
-                  fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
-                  fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
-                  color: darkElectricBlue,
+                  textTransform: 'uppercase',
                   letterSpacing: '0.5px'
                 }}
               >
-                {dateRange}
+                Last Updated:
               </span>
-            </div>
-          )}
-        </div>
-
-        {/* Right Section - Metadata & Actions */}
-        <div 
-          style={{ 
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'flex-end',
-            gap: THEME_CONFIG.SPACING.md,
-            minWidth: 'fit-content'
-          }}
-        >
-          {/* Last Updated */}
-          {lastUpdated && (
-            <div 
-              style={{ 
-                textAlign: 'right'
-              }}
-            >
-              <div 
-                style={{ 
-                  fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
-                  color: THEME_CONFIG.COLORS.textMuted,
-                  marginBottom: '4px'
-                }}
-              >
-                Last Updated
-              </div>
-              <div 
-                className="card-title"
-                style={{ 
+              <span
+                className="metric-value"
+                style={{
                   fontFamily: "'Rajdhani', sans-serif",
                   fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
                   fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.medium,
@@ -202,9 +161,55 @@ export default function DashboardHeader({
                 }}
               >
                 {new Date(lastUpdated).toLocaleString()}
-              </div>
+              </span>
             </div>
           )}
+        </div>
+
+        {/* Right Section - Metadata & Actions */}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-end',
+            gap: THEME_CONFIG.SPACING.md,
+            minWidth: 'fit-content'
+          }}
+        >
+          {/* Date Picker or Static Date Range - Moved to Right Section */}
+          {datePicker ? (
+            <div style={{ marginBottom: THEME_CONFIG.SPACING.xs }}>
+              {datePicker}
+            </div>
+          ) : dateRange && (
+            <div
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: `${THEME_CONFIG.SPACING.xs} ${THEME_CONFIG.SPACING.sm}`,
+                border: `1px solid ${THEME_CONFIG.COLORS.electricBlue}`,
+                borderRadius: '4px',
+                backgroundColor: 'transparent',
+                marginBottom: THEME_CONFIG.SPACING.sm
+              }}
+            >
+              <Calendar size={14} style={{ color: THEME_CONFIG.COLORS.electricBlue }} />
+              <span
+                className="metric-value"
+                style={{
+                  fontFamily: "'Rajdhani', sans-serif",
+                  fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
+                  fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
+                  color: THEME_CONFIG.COLORS.electricBlue,
+                  letterSpacing: '0.5px'
+                }}
+              >
+                {dateRange}
+              </span>
+            </div>
+          )}
+
 
           {/* Refresh Button (Optional) */}
           {onRefresh && (
@@ -216,18 +221,20 @@ export default function DashboardHeader({
                 display: 'flex',
                 alignItems: 'center',
                 gap: '8px',
-                padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
-                border: `2px solid ${darkElectricBlue}`,
-                borderRadius: THEME_CONFIG.BORDER_RADIUS.small,
+                padding: `${THEME_CONFIG.SPACING.xs} ${THEME_CONFIG.SPACING.md}`,
+                border: `1px solid ${THEME_CONFIG.COLORS.electricBlue}`,
+                borderRadius: '4px',
                 backgroundColor: 'transparent',
-                color: darkElectricBlue,
-                fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
-                fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
-                fontFamily: THEME_CONFIG.TYPOGRAPHY.fontFamily.primary,
+                color: THEME_CONFIG.COLORS.electricBlue,
+                fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.caption,
+                fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.bold,
+                fontFamily: "'Orbitron', sans-serif",
                 cursor: refreshing ? 'not-allowed' : 'pointer',
                 opacity: refreshing ? 0.6 : 1,
                 transition: 'all 300ms ease',
-                minHeight: '36px'
+                minHeight: '32px',
+                textTransform: 'uppercase',
+                letterSpacing: '1px'
               }}
               onMouseEnter={(e) => {
                 if (!refreshing) {
@@ -244,11 +251,11 @@ export default function DashboardHeader({
                 e.target.style.transform = 'translateY(0)';
               }}
             >
-              <RefreshCw 
-                size={14} 
-                style={{ 
+              <RefreshCw
+                size={14}
+                style={{
                   animation: refreshing ? 'spin 1s linear infinite' : 'none'
-                }} 
+                }}
               />
               <span>{refreshing ? 'Refreshing...' : 'Refresh'}</span>
             </button>

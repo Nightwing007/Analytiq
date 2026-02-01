@@ -347,6 +347,7 @@ def create_page_data():
 		'views': 0,
 		'visitors': set(),
 		'total_time': 0,
+		'time_samples': [],
 		'load_times': [],
 		'scroll_depths': [],
 		'clicks': [],
@@ -359,7 +360,8 @@ def create_pages_data():
 	return {
 		'views': 0,
 		'unique_visitors': set(),
-		'total_time': 0,
+		# 'total_time': 0,
+		'time_samples': [],
 		'load_times': [],
 		'scroll_depths': [],
 		'clicks': []
@@ -701,7 +703,8 @@ def aggregate_daily(site_id):
 					pages[path]['scroll_depths'].append(scroll)
 				if time_on_page is not None:
 					try:
-						pages[path]['total_time'] += float(time_on_page)
+						# pages[path]['total_time'] += float(time_on_page)
+						pages[path]['time_samples'].append(float(time_on_page))
 					except Exception:
 						pass
 				if clicks_count is not None:
@@ -841,7 +844,8 @@ def aggregate_daily(site_id):
 				'views': data['views'],
 				'unique_visitors': len(data['visitors']),
 				'avg_load_time_ms': sum(data['load_times']) / len(data['load_times']) if data['load_times'] else 0,
-				'total_time': data['total_time'],
+				# 'total_time': data['total_time'],
+				'time_samples': data['time_samples'],
 				'scroll_depths': data['scroll_depths'],
 				'clicks': data['clicks'],
 				'bounce_rate_percent': page_bounce.get(path, 0),
@@ -993,7 +997,24 @@ def generate_comprehensive_report(site_id, start_date, end_date):
 	num_days = len(aggregated_data)
 	avg_session_duration = sum(row[5] for row in aggregated_data) / num_days if num_days > 0 else 0
 	avg_pages_per_session = sum(row[6] for row in aggregated_data) / num_days if num_days > 0 else 0
-	avg_bounce_rate = sum(row[7] for row in aggregated_data) / num_days if num_days > 0 else 0
+	# Calculate bounce rate from total sessions and bounce sessions across all days
+	total_sessions = 0
+	total_bounce_sessions = 0
+
+	for row in aggregated_data:
+		day_visitors = row[2]  # total_visitors
+		day_bounce_rate = row[7]  # bounce_rate_percent
+		
+		# Back-calculate the number of sessions and bounces for this day
+		# Assuming sessions ≈ total_visitors (approximate, but better than averaging percentages)
+		day_sessions = day_visitors
+		day_bounces = int((day_bounce_rate / 100) * day_sessions)
+		
+		total_sessions += day_sessions
+		total_bounce_sessions += day_bounces
+
+	avg_bounce_rate = (total_bounce_sessions / total_sessions) * 100 if total_sessions > 0 else 0
+	# avg_bounce_rate = sum(row[7] for row in aggregated_data) / num_days if num_days > 0 else 0
 	
 	# Combine JSON data from all days
 	combined_traffic_sources = Counter()
@@ -1113,7 +1134,10 @@ def generate_comprehensive_report(site_id, start_date, end_date):
 				# Add dummy values to set to avoid double-counting
 				combined_pages_data[path]['unique_visitors'].update([f"dummy_{i}" for i in range(visitors_data)])
 			# Total time spent
-			combined_pages_data[path]['total_time'] += page_data.get('total_time', 0)
+			# combined_pages_data[path]['total_time'] += page_data.get('total_time', 0)
+			time_samples = page_data.get('time_samples', [])
+			if isinstance(time_samples, list):
+				combined_pages_data[path]['time_samples'].extend(time_samples)
 			# Load times: accept either a list of load_times or a precomputed avg_load_time_ms
 			if 'load_times' in page_data and isinstance(page_data.get('load_times'), list):
 				combined_pages_data[path]['load_times'].extend(page_data.get('load_times', []))
@@ -1280,7 +1304,7 @@ def generate_comprehensive_report(site_id, start_date, end_date):
 					"views": page_data['views'],
 					"unique_visitors": (len(page_data['unique_visitors']) if isinstance(page_data['unique_visitors'], set) else page_data.get('unique_visitors', 0)),
 					"avg_load_time_ms": int(sum(page_data.get('load_times', [])) / len(page_data.get('load_times', []))) if page_data.get('load_times') else 0,
-					"avg_time_spent_sec": int(page_data.get('total_time', 0) / page_data['views']) if page_data['views'] > 0 else 0,
+					"avg_time_spent_sec": int(sum(page_data.get('time_samples', [])) / len(page_data.get('time_samples', []))) if page_data.get('time_samples') else 0,
 					"avg_scroll_depth_percent": int(sum(page_data.get('scroll_depths', [])) / len(page_data.get('scroll_depths', []))) if page_data.get('scroll_depths') else 0,
 					"bounce_rate_percent": page_data.get('bounce_rate_percent', None),
 					"exit_rate_percent": page_data.get('exit_rate_percent', None)
