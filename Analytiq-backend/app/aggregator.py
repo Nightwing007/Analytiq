@@ -8,6 +8,113 @@ from collections import defaultdict, Counter
 from urllib.parse import urlparse
 import re
 
+# Offline country lookup using bounding boxes (approximate coordinates)
+# Format: country_name: (min_lat, max_lat, min_lng, max_lng)
+COUNTRY_BOUNDING_BOXES = {
+	'United States': (24.5, 49.5, -125.0, -66.5),
+	'Canada': (41.7, 83.1, -141.0, -52.6),
+	'Mexico': (14.5, 32.7, -118.4, -86.7),
+	'Brazil': (-33.8, 5.3, -73.9, -34.8),
+	'Argentina': (-55.1, -21.8, -73.6, -53.6),
+	'United Kingdom': (49.9, 60.9, -8.6, 1.8),
+	'France': (41.3, 51.1, -5.1, 9.6),
+	'Germany': (47.3, 55.1, 5.9, 15.0),
+	'Spain': (36.0, 43.8, -9.3, 4.3),
+	'Italy': (36.6, 47.1, 6.6, 18.5),
+	'Portugal': (36.9, 42.2, -9.5, -6.2),
+	'Netherlands': (50.8, 53.5, 3.4, 7.2),
+	'Belgium': (49.5, 51.5, 2.5, 6.4),
+	'Switzerland': (45.8, 47.8, 5.9, 10.5),
+	'Austria': (46.4, 49.0, 9.5, 17.2),
+	'Poland': (49.0, 54.8, 14.1, 24.2),
+	'Czech Republic': (48.5, 51.1, 12.1, 18.9),
+	'Sweden': (55.3, 69.1, 11.1, 24.2),
+	'Norway': (58.0, 71.2, 4.6, 31.1),
+	'Finland': (59.8, 70.1, 20.6, 31.6),
+	'Denmark': (54.6, 57.8, 8.1, 15.2),
+	'Ireland': (51.4, 55.4, -10.5, -6.0),
+	'Greece': (34.8, 41.7, 19.4, 29.6),
+	'Romania': (43.6, 48.3, 20.3, 29.7),
+	'Hungary': (45.7, 48.6, 16.1, 22.9),
+	'Ukraine': (44.4, 52.4, 22.1, 40.2),
+	'Russia': (41.2, 81.9, 19.6, 180.0),
+	'China': (18.2, 53.6, 73.5, 135.0),
+	'Japan': (24.0, 45.5, 122.9, 153.9),
+	'South Korea': (33.1, 38.6, 124.6, 131.9),
+	'India': (6.7, 35.5, 68.2, 97.4),
+	'Indonesia': (-11.0, 6.1, 95.0, 141.0),
+	'Thailand': (5.6, 20.5, 97.3, 105.6),
+	'Vietnam': (8.4, 23.4, 102.1, 109.5),
+	'Philippines': (4.6, 21.1, 116.9, 126.6),
+	'Malaysia': (0.9, 7.4, 99.6, 119.3),
+	'Singapore': (1.2, 1.5, 103.6, 104.0),
+	'Australia': (-43.6, -10.7, 113.2, 153.6),
+	'New Zealand': (-47.3, -34.4, 166.4, 178.6),
+	'South Africa': (-34.8, -22.1, 16.5, 32.9),
+	'Egypt': (22.0, 31.7, 24.7, 36.9),
+	'Nigeria': (4.3, 13.9, 2.7, 14.7),
+	'Kenya': (-4.7, 5.0, 33.9, 41.9),
+	'Saudi Arabia': (16.4, 32.2, 34.5, 55.7),
+	'UAE': (22.6, 26.1, 51.5, 56.4),
+	'Israel': (29.5, 33.3, 34.3, 35.9),
+	'Turkey': (36.0, 42.1, 26.0, 44.8),
+	'Chile': (-55.9, -17.5, -75.6, -66.9),
+	'Colombia': (-4.2, 12.5, -79.0, -66.9),
+	'Peru': (-18.4, -0.0, -81.3, -68.7),
+	'Pakistan': (23.7, 37.1, 60.9, 77.8),
+	'Bangladesh': (20.7, 26.6, 88.0, 92.7),
+}
+
+def get_country_from_coordinates(lat, lng):
+	"""
+	Get country name from latitude/longitude using bounding box lookup.
+	Returns 'Unknown' if coordinates don't match any known country.
+	"""
+	if lat is None or lng is None:
+		return 'Unknown'
+	
+	try:
+		lat = float(lat)
+		lng = float(lng)
+	except (ValueError, TypeError):
+		return 'Unknown'
+	
+	# Check each country's bounding box
+	for country, (min_lat, max_lat, min_lng, max_lng) in COUNTRY_BOUNDING_BOXES.items():
+		if min_lat <= lat <= max_lat and min_lng <= lng <= max_lng:
+			return country
+	
+	# If no bounding box match, try reverse geocoding as fallback (cached)
+	return reverse_geocode_country(lat, lng)
+
+# Simple cache for reverse geocoding results
+_geocode_cache = {}
+
+def reverse_geocode_country(lat, lng):
+	"""
+	Reverse geocode coordinates to country using geopy with caching.
+	Falls back to 'Unknown' on error.
+	"""
+	# Round coordinates to reduce cache misses (1 decimal = ~11km precision)
+	cache_key = (round(lat, 1), round(lng, 1))
+	
+	if cache_key in _geocode_cache:
+		return _geocode_cache[cache_key]
+	
+	try:
+		from geopy.geocoders import Nominatim
+		geolocator = Nominatim(user_agent="analytiq-geo")
+		location = geolocator.reverse(f"{lat}, {lng}", language='en', timeout=5)
+		if location and location.raw and 'address' in location.raw:
+			country = location.raw['address'].get('country', 'Unknown')
+			_geocode_cache[cache_key] = country
+			return country
+	except Exception:
+		pass
+	
+	_geocode_cache[cache_key] = 'Unknown'
+	return 'Unknown'
+
 def parse_user_agent(ua):
 	"""Parse user agent to extract browser and OS"""
 	browser = 'Unknown'
@@ -458,25 +565,18 @@ def aggregate_daily(site_id):
 				# Track direct traffic as a campaign
 				utm_campaigns['direct_traffic'] += 1
 			
-			# Geo data with backend fallback using geopy
+			# Geo data with improved country lookup using bounding boxes
 			geo = payload.get('geo')
 			lat = geo.get('lat') if geo else None
 			long = geo.get('long') if geo else None
-			country = geo.get('country', 'Unknown') if geo else 'Unknown'
+			country = geo.get('country') if geo else None
 			city = geo.get('city', 'Unknown') if geo else 'Unknown'
-			if lat and long:
-				# If country/city are unknown, try to resolve using geopy
-				if country == 'Unknown' or city == 'Unknown':
-					try:
-						from geopy.geocoders import Nominatim
-						geolocator = Nominatim(user_agent="analytiq-geo")
-						location = geolocator.reverse(f"{lat}, {long}", language='en', timeout=5)
-						if location and location.raw and 'address' in location.raw:
-							address = location.raw['address']
-							country = address.get('country', country)
-							city = address.get('city', address.get('town', address.get('village', city)))
-					except Exception:
-						pass
+			
+			if lat is not None and long is not None:
+				# If country is missing or unknown, use bounding box lookup
+				if not country or country == 'Unknown':
+					country = get_country_from_coordinates(lat, long)
+				
 				geo_data.append({
 					'lat': lat,
 					'long': long,
@@ -484,14 +584,16 @@ def aggregate_daily(site_id):
 					'city': city,
 					'timestamp': event_time.isoformat() if 'event_time' in locals() else str(ts)
 				})
-			else:
+			elif country and country != 'Unknown':
+				# We have country but no coordinates - still useful for geo_distribution
 				geo_data.append({
 					'lat': 0,
 					'long': 0,
-					'country': 'Unknown',
-					'city': 'Unknown',
+					'country': country,
+					'city': city,
 					'timestamp': event_time.isoformat() if 'event_time' in locals() else str(ts)
 				})
+			# Skip entries with no useful geo data (no coordinates AND no country)
 		
 		# Track clicks and interactions
 		elif event_type == 'click':
@@ -1191,17 +1293,17 @@ def generate_comprehensive_report(site_id, start_date, end_date):
 			"new_percent": new_percent,
 			"returning_percent": returning_percent
 		},
-		"geo_distribution": [
-			# Calculate country-wise distribution from all_geo_data
-			*(
-				[
-					{"country": country, "percent": round((count/len(all_geo_data))*100, 1)}
+		"geo_distribution": (
+			# Calculate country-wise distribution from all_geo_data, filtering out Unknown
+			lambda: (
+				lambda known_geo: [
+					{"country": country, "percent": round((count/len(known_geo))*100, 1)}
 					for country, count in Counter(
-						geo.get('country', 'Unknown') for geo in all_geo_data if geo.get('country')
+						geo.get('country') for geo in known_geo
 					).most_common()
-				] if all_geo_data else [{"country": "Unknown", "percent": 100.0}]
-			)
-		],
+				] if known_geo else [{"country": "Unknown", "percent": 100.0}]
+			)([geo for geo in all_geo_data if geo.get('country') and geo.get('country') != 'Unknown'])
+		)(),
 		"time_series_data": {
 			"visitors_pageviews_trend": calculate_visitors_pageviews_trend(site_id, start_date, end_date),
 			"hourly_visitors": {
