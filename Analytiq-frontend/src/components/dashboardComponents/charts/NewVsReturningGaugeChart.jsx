@@ -1,16 +1,16 @@
 import React from 'react';
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-import { UserPlus, AlertCircle } from 'lucide-react';
+import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
+import { UserPlus, AlertCircle, Users, UserCheck } from 'lucide-react';
 import { THEME_CONFIG } from '../../../config.js';
 
-// Electric blue color palette for new vs returning
+// Electric blue color palette for new vs returning - matching theme
 const COLORS = {
-  new: '#4D94FF',      // Lighter blue (fresh, new users)
-  returning: '#0052CC' // Darker blue (established users)
+  new: '#00D4FF',      // Neon cyan-blue (fresh, new users)
+  returning: '#00D4FF' // Primary electric blue (established users)
 };
 
-const darkElectricBlue = '#0066FF';
-const darkerElectricBlue = '#0052CC';
+const darkElectricBlue = '#00D4FF';
+const darkerElectricBlue = '#00D4FF';
 
 /**
  * NewVsReturningGaugeChart
@@ -21,24 +21,26 @@ const NewVsReturningGaugeChart = ({ data }) => {
   if (!data || typeof data.new_percent !== 'number' || typeof data.returning_percent !== 'number') {
     return (
       <div
+        className="dash-card"
         style={{
           border: `2px solid ${THEME_CONFIG.COLORS.borderPrimary}`,
           backgroundColor: THEME_CONFIG.COLORS.backgroundSecondary,
-          borderRadius: THEME_CONFIG.BORDER_RADIUS.medium,
-          padding: THEME_CONFIG.SPACING.xl,
-          minHeight: '400px',
+          borderRadius: '12px',
+          padding: '24px',
+          minHeight: '450px',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          textAlign: 'center'
+          textAlign: 'center',
+          transition: 'all 0.3s ease'
         }}
       >
         <AlertCircle
           size={48}
           style={{
             color: THEME_CONFIG.COLORS.textMuted,
-            marginBottom: THEME_CONFIG.SPACING.md
+            marginBottom: '16px'
           }}
         />
         <p
@@ -67,185 +69,310 @@ const NewVsReturningGaugeChart = ({ data }) => {
 
   return (
     <div
+      className="dash-card"
       style={{
         border: `2px solid ${THEME_CONFIG.COLORS.borderPrimary}`,
         backgroundColor: THEME_CONFIG.COLORS.backgroundSecondary,
-        borderRadius: THEME_CONFIG.BORDER_RADIUS.medium,
-        padding: THEME_CONFIG.SPACING.xl,
-        transition: 'all 300ms ease',
-        minHeight: '400px'
+        borderRadius: '12px',
+        padding: '24px',
+        transition: 'all 0.4s ease',
+        minHeight: '450px',
+        position: 'relative',
+        overflow: 'hidden',
+        boxShadow: '0 4px 15px rgba(0, 0, 0, 0.3)'
       }}
       onMouseEnter={(e) => {
         e.currentTarget.style.borderColor = darkElectricBlue;
-        e.currentTarget.style.transform = 'translateY(-2px)';
-        e.currentTarget.style.boxShadow = `0 0 20px ${darkElectricBlue}33, 0 4px 30px ${darkerElectricBlue}22`;
+        e.currentTarget.style.transform = 'translateY(-4px)';
+        e.currentTarget.style.boxShadow = `0 8px 30px rgba(0, 102, 255, 0.2)`;
       }}
       onMouseLeave={(e) => {
         e.currentTarget.style.borderColor = THEME_CONFIG.COLORS.borderPrimary;
         e.currentTarget.style.transform = 'translateY(0)';
-        e.currentTarget.style.boxShadow = 'none';
+        e.currentTarget.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.3)';
       }}
     >
+      {/* Accent bar at top */}
+      <div style={{ 
+        position: 'absolute', 
+        top: 0, 
+        left: 0, 
+        right: 0, 
+        height: '4px', 
+        backgroundColor: darkElectricBlue,
+        transition: 'height 0.3s ease'
+      }} className="accent-bar" />
       {/* Header */}
       <div
         style={{
           display: 'flex',
           alignItems: 'center',
-          gap: THEME_CONFIG.SPACING.sm,
-          marginBottom: THEME_CONFIG.SPACING.lg
+          justifyContent: 'space-between',
+          marginBottom: '24px',
+          marginTop: '8px'
         }}
       >
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '32px',
-            height: '32px',
-            borderRadius: THEME_CONFIG.BORDER_RADIUS.small,
-            backgroundColor: `${darkElectricBlue}15`
-          }}
-        >
-          <UserPlus size={18} style={{ color: darkElectricBlue }} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '44px',
+              height: '44px',
+              borderRadius: '8px',
+              backgroundColor: darkElectricBlue + '20',
+              border: `2px solid ${darkElectricBlue}40`,
+              transition: 'all 0.3s ease'
+            }}
+            className="icon-container"
+          >
+            <UserPlus size={22} style={{ color: darkElectricBlue }} strokeWidth={2.5} />
+          </div>
+          <div>
+            <h3
+              style={{
+                fontFamily: "'Rajdhani', sans-serif",
+                fontSize: '16px',
+                fontWeight: 700,
+                color: THEME_CONFIG.COLORS.textPrimary,
+                letterSpacing: '0.5px',
+                textTransform: 'uppercase',
+                margin: 0,
+                marginBottom: '4px'
+              }}
+            >
+              New vs Returning
+            </h3>
+            <p style={{
+              fontFamily: "'Rajdhani', sans-serif",
+              fontSize: '13px',
+              color: THEME_CONFIG.COLORS.textSecondary,
+              margin: 0
+            }}>
+              Visitor Type Breakdown
+            </p>
+          </div>
         </div>
-        <h3
-          className="card-title"
-          style={{
+        <div style={{
+          backgroundColor: THEME_CONFIG.COLORS.backgroundElevated,
+          padding: '8px 16px',
+          borderRadius: '8px',
+          border: `1px solid ${THEME_CONFIG.COLORS.borderPrimary}`
+        }}>
+          <p style={{
+            fontFamily: "'JetBrains Mono', monospace",
+            fontSize: '20px',
+            fontWeight: 700,
+            color: darkElectricBlue,
+            margin: 0,
+            textShadow: `0 0 10px ${darkElectricBlue}44`
+          }}>
+            {(data.new_percent + data.returning_percent).toFixed(0)}%
+          </p>
+          <p style={{
             fontFamily: "'Rajdhani', sans-serif",
-            fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.h5,
-            fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
-            color: THEME_CONFIG.COLORS.textPrimary,
-            letterSpacing: '0.5px',
-            margin: 0
-          }}
-        >
-          New vs Returning
-        </h3>
+            fontSize: '11px',
+            color: THEME_CONFIG.COLORS.textMuted,
+            margin: 0,
+            textTransform: 'uppercase',
+            letterSpacing: '0.5px'
+          }}>
+            Coverage
+          </p>
+        </div>
       </div>
 
-      {/* Gauge Chart with Center Display */}
-      <div style={{ position: 'relative' }}>
-        <ResponsiveContainer width="100%" height={220}>
+      {/* Donut Chart */}
+      <div style={{ position: 'relative', height: '200px', marginBottom: '20px' }}>
+        <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
               data={chartData}
               dataKey="value"
               nameKey="name"
               cx="50%"
-              cy="70%"
-              startAngle={180}
-              endAngle={0}
-              innerRadius={70}
-              outerRadius={95}
-              paddingAngle={2}
+              cy="50%"
+              innerRadius={60}
+              outerRadius={85}
+              paddingAngle={4}
               label={false}
             >
-              <Cell fill={COLORS.new} stroke={THEME_CONFIG.COLORS.backgroundSecondary} strokeWidth={2} />
-              <Cell fill={COLORS.returning} stroke={THEME_CONFIG.COLORS.backgroundSecondary} strokeWidth={2} />
+              <Cell fill={COLORS.new} stroke={THEME_CONFIG.COLORS.backgroundSecondary} strokeWidth={3} />
+              <Cell fill={COLORS.returning} stroke={THEME_CONFIG.COLORS.backgroundSecondary} strokeWidth={3} />
             </Pie>
-            <Tooltip
-              contentStyle={{
-                backgroundColor: THEME_CONFIG.COLORS.backgroundElevated,
-                border: `2px solid ${darkElectricBlue}`,
-                borderRadius: THEME_CONFIG.BORDER_RADIUS.small,
-                color: THEME_CONFIG.COLORS.textPrimary,
-                fontFamily: "'Rajdhani', sans-serif",
-                fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
-                padding: THEME_CONFIG.SPACING.sm,
-                boxShadow: `0 0 15px ${darkElectricBlue}33`
-              }}
-              itemStyle={{
-                color: THEME_CONFIG.COLORS.textPrimary
-              }}
-              formatter={(value) => `${value.toFixed(1)}%`}
-            />
           </PieChart>
         </ResponsiveContainer>
 
-        {/* Center Display */}
+        {/* Center Display - Dominant Type */}
         <div
           style={{
             position: 'absolute',
             top: '50%',
             left: '50%',
-            transform: 'translate(-50%, -20%)',
+            transform: 'translate(-50%, -50%)',
             textAlign: 'center',
             pointerEvents: 'none'
           }}
         >
           <div
-            className="cool-title"
             style={{
-              fontFamily: "'Orbitron', monospace",
-              fontSize: '3rem',
-              fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.bold,
+              width: '50px',
+              height: '50px',
+              borderRadius: '50%',
+              backgroundColor: dominant.label === 'New' ? COLORS.new + '30' : COLORS.returning + '30',
+              border: `2px solid ${dominant.label === 'New' ? COLORS.new : COLORS.returning}`,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              margin: '0 auto 8px'
+            }}
+          >
+            {dominant.label === 'New' ? (
+              <Users size={24} style={{ color: COLORS.new }} strokeWidth={2.5} />
+            ) : (
+              <UserCheck size={24} style={{ color: COLORS.returning }} strokeWidth={2.5} />
+            )}
+          </div>
+          <div
+            style={{
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: '28px',
+              fontWeight: 700,
               color: THEME_CONFIG.COLORS.textPrimary,
-              letterSpacing: '1px',
-              textShadow: `0 0 15px ${darkElectricBlue}22`,
-              lineHeight: '1',
-              marginBottom: '8px'
+              letterSpacing: '0px',
+              textShadow: `0 0 12px ${darkElectricBlue}33`,
+              lineHeight: '1'
             }}
           >
             {dominant.value.toFixed(0)}%
           </div>
-          <div
-            className="card-title"
-            style={{
-              fontFamily: "'Rajdhani', sans-serif",
-              fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
-              fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.medium,
-              color: THEME_CONFIG.COLORS.textMuted,
-              letterSpacing: '0.5px',
-              textTransform: 'uppercase'
-            }}
-          >
-            {dominant.label}
-          </div>
         </div>
       </div>
 
-      {/* Legend Below Chart */}
+      {/* Stats Cards */}
       <div
         style={{
-          display: 'flex',
-          justifyContent: 'center',
-          gap: THEME_CONFIG.SPACING.lg,
-          marginTop: THEME_CONFIG.SPACING.md,
-          paddingTop: THEME_CONFIG.SPACING.md,
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr',
+          gap: '12px',
+          paddingTop: '20px',
           borderTop: `1px solid ${THEME_CONFIG.COLORS.borderPrimary}`
         }}
       >
-        {chartData.map((item, index) => (
-          <div
-            key={index}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px'
-            }}
-          >
+        {/* New Visitors Card */}
+        <div
+          style={{
+            padding: '16px',
+            backgroundColor: THEME_CONFIG.COLORS.backgroundElevated,
+            borderRadius: '8px',
+            border: `2px solid ${THEME_CONFIG.COLORS.borderPrimary}`,
+            transition: 'all 0.3s ease'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.borderColor = COLORS.new;
+            e.currentTarget.style.transform = 'translateY(-2px)';
+            e.currentTarget.style.boxShadow = `0 4px 12px ${COLORS.new}33`;
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.borderColor = THEME_CONFIG.COLORS.borderPrimary;
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.boxShadow = 'none';
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
             <div
               style={{
-                width: '12px',
-                height: '12px',
+                width: '10px',
+                height: '10px',
                 borderRadius: '50%',
-                backgroundColor: index === 0 ? COLORS.new : COLORS.returning
+                backgroundColor: COLORS.new,
+                boxShadow: `0 0 8px ${COLORS.new}66`
               }}
             />
             <span
-              className="card-title"
               style={{
                 fontFamily: "'Rajdhani', sans-serif",
-                fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
-                fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.medium,
+                fontSize: '12px',
+                fontWeight: 600,
                 color: THEME_CONFIG.COLORS.textSecondary,
+                textTransform: 'uppercase',
                 letterSpacing: '0.5px'
               }}
             >
-              {item.name}: {item.value.toFixed(1)}%
+              New Visitors
             </span>
           </div>
-        ))}
+          <div
+            style={{
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: '32px',
+              fontWeight: 700,
+              color: COLORS.new,
+              lineHeight: '1',
+              textShadow: `0 0 10px ${COLORS.new}44`
+            }}
+          >
+            {data.new_percent.toFixed(1)}%
+          </div>
+        </div>
+
+        {/* Returning Visitors Card */}
+        <div
+          style={{
+            padding: '16px',
+            backgroundColor: THEME_CONFIG.COLORS.backgroundElevated,
+            borderRadius: '8px',
+            border: `2px solid ${THEME_CONFIG.COLORS.borderPrimary}`,
+            transition: 'all 0.3s ease'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.borderColor = COLORS.returning;
+            e.currentTarget.style.transform = 'translateY(-2px)';
+            e.currentTarget.style.boxShadow = `0 4px 12px ${COLORS.returning}33`;
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.borderColor = THEME_CONFIG.COLORS.borderPrimary;
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.boxShadow = 'none';
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+            <div
+              style={{
+                width: '10px',
+                height: '10px',
+                borderRadius: '50%',
+                backgroundColor: COLORS.returning,
+                boxShadow: `0 0 8px ${COLORS.returning}66`
+              }}
+            />
+            <span
+              style={{
+                fontFamily: "'Rajdhani', sans-serif",
+                fontSize: '12px',
+                fontWeight: 600,
+                color: THEME_CONFIG.COLORS.textSecondary,
+                textTransform: 'uppercase',
+                letterSpacing: '0.5px'
+              }}
+            >
+              Returning Visitors
+            </span>
+          </div>
+          <div
+            style={{
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: '32px',
+              fontWeight: 700,
+              color: COLORS.returning,
+              lineHeight: '1',
+              textShadow: `0 0 10px ${COLORS.returning}44`
+            }}
+          >
+            {data.returning_percent.toFixed(1)}%
+          </div>
+        </div>
       </div>
     </div>
   );

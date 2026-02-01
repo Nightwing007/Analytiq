@@ -177,54 +177,76 @@ const PageAnalyticsTable = ({
       style={{
         border: `2px solid ${THEME_CONFIG.COLORS.borderPrimary}`,
         backgroundColor: THEME_CONFIG.COLORS.backgroundSecondary,
-        borderRadius: THEME_CONFIG.BORDER_RADIUS.medium,
-        padding: THEME_CONFIG.SPACING.xl,
-        transition: 'all 300ms ease'
+        borderRadius: '12px',
+        padding: '24px',
+        transition: 'all 300ms ease',
+        position: 'relative',
+        overflow: 'hidden',
+        boxShadow: '0 4px 15px rgba(0, 0, 0, 0.3)'
       }}
       onMouseEnter={(e) => {
         e.currentTarget.style.borderColor = darkElectricBlue;
-        e.currentTarget.style.boxShadow = `0 0 20px ${darkElectricBlue}22`;
+        e.currentTarget.style.transform = 'translateY(-2px)';
+        e.currentTarget.style.boxShadow = `0 6px 25px rgba(0, 102, 255, 0.15)`;
       }}
       onMouseLeave={(e) => {
         e.currentTarget.style.borderColor = THEME_CONFIG.COLORS.borderPrimary;
-        e.currentTarget.style.boxShadow = 'none';
+        e.currentTarget.style.transform = 'translateY(0)';
+        e.currentTarget.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.3)';
       }}
     >
+      {/* Top accent bar */}
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '4px', backgroundColor: darkElectricBlue }} />
+      
       {/* Header */}
       <div style={{
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
         marginBottom: THEME_CONFIG.SPACING.lg,
+        marginTop: '8px',
         flexWrap: 'wrap',
         gap: THEME_CONFIG.SPACING.md
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: THEME_CONFIG.SPACING.sm }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <div
             style={{
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              width: '32px',
-              height: '32px',
-              borderRadius: THEME_CONFIG.BORDER_RADIUS.small,
-              backgroundColor: `${darkElectricBlue}15`
+              width: '44px',
+              height: '44px',
+              borderRadius: '8px',
+              backgroundColor: `${darkElectricBlue}20`,
+              border: `2px solid ${darkElectricBlue}40`
             }}
           >
-            <FileText size={18} style={{ color: darkElectricBlue }} />
+            <FileText size={22} style={{ color: darkElectricBlue }} strokeWidth={2.5} />
           </div>
-          <h3
-            style={{
+          <div>
+            <h3
+              style={{
+                fontFamily: "'Rajdhani', sans-serif",
+                fontSize: '16px',
+                fontWeight: 700,
+                color: THEME_CONFIG.COLORS.textPrimary,
+                letterSpacing: '0.5px',
+                textTransform: 'uppercase',
+                margin: 0,
+                marginBottom: '4px'
+              }}
+            >
+              {title}
+            </h3>
+            <p style={{
               fontFamily: "'Rajdhani', sans-serif",
-              fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.h5,
-              fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
-              color: THEME_CONFIG.COLORS.textPrimary,
-              letterSpacing: '0.5px',
+              fontSize: '13px',
+              color: THEME_CONFIG.COLORS.textSecondary,
               margin: 0
-            }}
-          >
-            {title}
-          </h3>
+            }}>
+              Page Performance Metrics
+            </p>
+          </div>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: THEME_CONFIG.SPACING.md }}>
@@ -359,7 +381,7 @@ const PageAnalyticsTable = ({
                 <td style={{ padding: THEME_CONFIG.SPACING.md }}>
                   <div
                     style={{
-                      fontFamily: "'Orbitron', monospace",
+                      fontFamily: "'Rajdhani', sans-serif",
                       fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.body,
                       fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.bold,
                       color: THEME_CONFIG.COLORS.textPrimary,
@@ -608,7 +630,7 @@ const MetricItem = ({ icon: Icon, label, value }) => (
     </div>
     <span
       style={{
-        fontFamily: "'Orbitron', monospace",
+        fontFamily: "'JetBrains Mono', monospace",
         fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.body,
         fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.bold,
         color: THEME_CONFIG.COLORS.textPrimary,

@@ -66,28 +66,35 @@ const HourlyVisitorsAreaChart = ({ data }) => {
       style={{
         border: `2px solid ${THEME_CONFIG.COLORS.borderPrimary}`,
         backgroundColor: THEME_CONFIG.COLORS.backgroundSecondary,
-        borderRadius: THEME_CONFIG.BORDER_RADIUS.medium,
-        padding: THEME_CONFIG.SPACING.xl,
-        transition: 'all 300ms ease'
+        borderRadius: '12px',
+        padding: '24px',
+        transition: 'all 300ms ease',
+        minHeight: '450px',
+        position: 'relative',
+        overflow: 'hidden',
+        boxShadow: '0 4px 15px rgba(0, 0, 0, 0.3)'
       }}
       onMouseEnter={(e) => {
         e.currentTarget.style.borderColor = darkElectricBlue;
-        e.currentTarget.style.transform = 'translateY(-2px)';
-        e.currentTarget.style.boxShadow = `0 0 20px ${darkElectricBlue}33, 0 4px 30px ${darkerElectricBlue}22`;
+        e.currentTarget.style.transform = 'translateY(-4px)';
+        e.currentTarget.style.boxShadow = `0 8px 30px rgba(0, 102, 255, 0.2)`;
       }}
       onMouseLeave={(e) => {
         e.currentTarget.style.borderColor = THEME_CONFIG.COLORS.borderPrimary;
         e.currentTarget.style.transform = 'translateY(0)';
-        e.currentTarget.style.boxShadow = 'none';
+        e.currentTarget.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.3)';
       }}
     >
+      {/* Top accent bar */}
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '4px', backgroundColor: darkElectricBlue }} />
+      
       {/* Header */}
-      <div style={{ marginBottom: THEME_CONFIG.SPACING.lg }}>
+      <div style={{ marginBottom: THEME_CONFIG.SPACING.lg, marginTop: '8px' }}>
         <div
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: THEME_CONFIG.SPACING.sm,
+            gap: '12px',
             marginBottom: THEME_CONFIG.SPACING.xs
           }}
         >
@@ -96,44 +103,44 @@ const HourlyVisitorsAreaChart = ({ data }) => {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              width: '32px',
-              height: '32px',
-              borderRadius: THEME_CONFIG.BORDER_RADIUS.small,
-              backgroundColor: `${darkElectricBlue}15`
+              width: '44px',
+              height: '44px',
+              borderRadius: '8px',
+              backgroundColor: `${darkElectricBlue}20`,
+              border: `2px solid ${darkElectricBlue}40`
             }}
           >
-            <Activity size={18} style={{ color: darkElectricBlue }} />
+            <Activity size={22} style={{ color: darkElectricBlue }} strokeWidth={2.5} />
           </div>
-          <h3
-            className="card-title"
-            style={{
-              fontFamily: "'Rajdhani', sans-serif",
-              fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.h5,
-              fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
-              color: THEME_CONFIG.COLORS.textPrimary,
-              letterSpacing: '0.5px',
-              margin: 0
-            }}
-          >
-            Hourly Visitor Pattern
-          </h3>
+          <div>
+            <h3
+              style={{
+                fontFamily: "'Rajdhani', sans-serif",
+                fontSize: '16px',
+                fontWeight: 700,
+                color: THEME_CONFIG.COLORS.textPrimary,
+                letterSpacing: '0.5px',
+                textTransform: 'uppercase',
+                margin: 0,
+                marginBottom: '4px'
+              }}
+            >
+              Hourly Visitor Pattern
+            </h3>
+            {peakHour && (
+              <p
+                style={{
+                  fontFamily: "'Rajdhani', sans-serif",
+                  fontSize: '13px',
+                  color: THEME_CONFIG.COLORS.textSecondary,
+                  margin: 0
+                }}
+              >
+                Peak: {peakHour.hour}:00 ({Math.round(peakHour.average_visitors)} visitors)
+              </p>
+            )}
+          </div>
         </div>
-        {peakHour && (
-          <p
-            className="card-title"
-            style={{
-              fontFamily: "'Rajdhani', sans-serif",
-              fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
-              fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.medium,
-              color: THEME_CONFIG.COLORS.textMuted,
-              letterSpacing: '0.5px',
-              margin: 0,
-              marginLeft: '40px'
-            }}
-          >
-            Peak: {peakHour.hour}:00 ({Math.round(peakHour.average_visitors)} visitors)
-          </p>
-        )}
       </div>
 
       {/* Chart */}

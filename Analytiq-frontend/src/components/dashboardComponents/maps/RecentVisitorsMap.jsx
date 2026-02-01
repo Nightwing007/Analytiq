@@ -127,7 +127,7 @@ const RecentVisitorsMap = ({ data }) => {
 
         <div style={{ display: 'flex', alignItems: 'center', gap: THEME_CONFIG.SPACING.sm, backgroundColor: THEME_CONFIG.COLORS.backgroundDark, padding: `${THEME_CONFIG.SPACING.xs} ${THEME_CONFIG.SPACING.sm}`, borderRadius: THEME_CONFIG.BORDER_RADIUS.small, border: `1px solid ${THEME_CONFIG.COLORS.borderPrimary}` }}>
           <span style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall, color: THEME_CONFIG.COLORS.textMuted }}>Pins:</span>
-          <span style={{ fontFamily: "'Orbitron', monospace", color: accentPink }}>{globeData.length}</span>
+          <span style={{ fontFamily: "'JetBrains Mono', monospace", color: accentPink }}>{globeData.length}</span>
         </div>
       </div>
 

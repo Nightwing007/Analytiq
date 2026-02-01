@@ -124,19 +124,6 @@ const dashboardThemeCSS = `
     transform: translateY(-2px);
   }
 
-  /* Corner accents for cards */
-  .dash-card::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 10px;
-    height: 10px;
-    border-top: 2px solid ${THEME_CONFIG.COLORS.electricBlue};
-    border-left: 2px solid ${THEME_CONFIG.COLORS.electricBlue};
-    opacity: 0.5;
-  }
-
   .dash-card:nth-child(1) { animation-delay: 0.05s; }
   .dash-card:nth-child(2) { animation-delay: 0.1s; }
   .dash-card:nth-child(3) { animation-delay: 0.15s; }
@@ -307,9 +294,50 @@ function Dash() {
         </div>
 
 
-        {/* AI ANALYST */}
+        {/* AI Dashboard CTA (replaces embedded AI block) */}
         <div style={{ marginBottom: '24px', width: '100%' }}>
-          <DashboardAI siteId={siteId} />
+          <div
+            className="dash-card"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '20px',
+              borderRadius: '12px'
+            }}
+          >
+            <div>
+              <h3 style={{
+                fontFamily: "'Rajdhani', sans-serif",
+                color: THEME_CONFIG.COLORS.textPrimary,
+                margin: 0,
+                fontSize: '1.25rem',
+                fontWeight: 600,
+                letterSpacing: '0.5px'
+              }}>AI Analyst</h3>
+              <p style={{
+                color: THEME_CONFIG.COLORS.textSecondary,
+                marginTop: '8px'
+              }}>Open the dedicated AI workspace for deeper, RAG-powered insights and context-aware analysis for this site.</p>
+            </div>
+
+            <Link to={`/dash/${siteId}/ai`} style={{ textDecoration: 'none' }}>
+              <button
+                className="neon-border-btn"
+                style={{
+                  padding: '12px 18px',
+                  border: `2px solid ${darkElectricBlue}`,
+                  borderRadius: THEME_CONFIG.BORDER_RADIUS.small,
+                  backgroundColor: darkElectricBlue,
+                  color: '#FFFFFF',
+                  fontWeight: 700,
+                  cursor: 'pointer'
+                }}
+              >
+                Open AI Dashboard
+              </button>
+            </Link>
+          </div>
         </div>
 
         {/* METRIC DEEP DIVE */}

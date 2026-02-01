@@ -240,7 +240,7 @@ const ClickScrollHeatmap = ({ data }) => {
                       </td>
                       <td style={{
                         padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
-                        fontFamily: "'Orbitron', monospace",
+                        fontFamily: "'JetBrains Mono', monospace",
                         fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
                         fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
                         color: darkElectricBlue,
@@ -414,7 +414,7 @@ const ClickScrollHeatmap = ({ data }) => {
                       </td>
                       <td style={{
                         padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
-                        fontFamily: "'Orbitron', monospace",
+                        fontFamily: "'JetBrains Mono', monospace",
                         fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
                         fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
                         color: lighterElectricBlue,
@@ -424,7 +424,7 @@ const ClickScrollHeatmap = ({ data }) => {
                       </td>
                       <td style={{
                         padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
-                        fontFamily: "'Orbitron', monospace",
+                        fontFamily: "'JetBrains Mono', monospace",
                         fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
                         fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
                         color: lighterElectricBlue,
