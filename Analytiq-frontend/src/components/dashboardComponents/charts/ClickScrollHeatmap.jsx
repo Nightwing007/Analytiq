@@ -59,16 +59,34 @@ const ClickScrollHeatmap = ({ data }) => {
     });
   }
 
-  // Parse scroll_analysis into a flat array for table display
+  // Parse scroll_analysis into a flat array for table display, with fallbacks
   const scrollRows = [];
-  if (data.scroll_analysis && typeof data.scroll_analysis === 'object') {
-    Object.entries(data.scroll_analysis).forEach(([page, stats]) => {
-      scrollRows.push({
-        page,
-        avg: stats.avg_scroll_depth,
-        max: stats.max_scroll_depth,
-      });
+
+  const addRow = function (page, avg, max) {
+    if (avg === undefined && max === undefined) return;
+    scrollRows.push({ page: page || 'All Pages', avg: avg, max: max });
+  };
+
+  // Preferred shape: object keyed by page
+  if (data.scroll_analysis && typeof data.scroll_analysis === 'object' && !Array.isArray(data.scroll_analysis)) {
+    Object.entries(data.scroll_analysis).forEach(function ([page, stats]) {
+      addRow(page, stats?.avg_scroll_depth, stats?.max_scroll_depth);
     });
+  }
+
+  // Alternate shape: array of records
+  if (scrollRows.length === 0 && Array.isArray(data.scroll_analysis)) {
+    data.scroll_analysis.forEach(function (entry) {
+      addRow(entry.page, entry.avg_scroll_depth, entry.max_scroll_depth);
+    });
+  }
+
+  // Fallback: use overall engagement summary if per-page data missing
+  if (scrollRows.length === 0 && data.engagement_summary) {
+    var avg = data.engagement_summary.avg_scroll_depth_percent;
+    if (avg !== undefined && avg !== null) {
+      addRow('All Pages', avg, avg);
+    }
   }
 
   const displayClickRows = showAllClicks ? clickRows : clickRows.slice(0, 5);
@@ -313,189 +331,174 @@ const ClickScrollHeatmap = ({ data }) => {
         )}
       </div>
 
-      {/* Scroll Analysis Section */}
-      <div>
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: THEME_CONFIG.SPACING.xs,
-          marginBottom: THEME_CONFIG.SPACING.md
-        }}>
-          <ArrowDown size={16} style={{ color: lighterElectricBlue }} />
-          <h4
-            className="card-title"
-            style={{
-              fontFamily: "'Rajdhani', sans-serif",
-              fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.body,
-              fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
-              color: lighterElectricBlue,
-              letterSpacing: '0.5px',
-              textTransform: 'uppercase',
-              margin: 0
-            }}
-          >
-            Scroll Analysis {scrollRows.length > 0 && `(${scrollRows.length})`}
-          </h4>
-        </div>
-
-        {scrollRows.length > 0 ? (
-          <>
-            <div style={{ overflowX: 'auto', marginBottom: THEME_CONFIG.SPACING.md }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                <thead>
-                  <tr>
-                    <th style={{
-                      padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
-                      backgroundColor: THEME_CONFIG.COLORS.backgroundDark,
-                      color: THEME_CONFIG.COLORS.textSecondary,
-                      borderBottom: `2px solid ${lighterElectricBlue}`,
-                      fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
-                      fontFamily: "'Rajdhani', sans-serif",
-                      fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
-                      textAlign: 'left',
-                      letterSpacing: '0.5px',
-                      textTransform: 'uppercase'
-                    }}>
-                      Page
-                    </th>
-                    <th style={{
-                      padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
-                      backgroundColor: THEME_CONFIG.COLORS.backgroundDark,
-                      color: THEME_CONFIG.COLORS.textSecondary,
-                      borderBottom: `2px solid ${lighterElectricBlue}`,
-                      fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
-                      fontFamily: "'Rajdhani', sans-serif",
-                      fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
-                      textAlign: 'left',
-                      letterSpacing: '0.5px',
-                      textTransform: 'uppercase'
-                    }}>
-                      Avg Depth
-                    </th>
-                    <th style={{
-                      padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
-                      backgroundColor: THEME_CONFIG.COLORS.backgroundDark,
-                      color: THEME_CONFIG.COLORS.textSecondary,
-                      borderBottom: `2px solid ${lighterElectricBlue}`,
-                      fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
-                      fontFamily: "'Rajdhani', sans-serif",
-                      fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
-                      textAlign: 'left',
-                      letterSpacing: '0.5px',
-                      textTransform: 'uppercase'
-                    }}>
-                      Max Depth
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {displayScrollRows.map((row, idx) => (
-                    <tr
-                      key={idx}
-                      style={{
-                        backgroundColor: idx % 2 === 0 ? 'transparent' : `${THEME_CONFIG.COLORS.backgroundDark}40`,
-                        borderBottom: `1px solid ${THEME_CONFIG.COLORS.borderPrimary}`,
-                        transition: 'background-color 200ms ease'
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = `${lighterElectricBlue}08`;
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = idx % 2 === 0 ? 'transparent' : `${THEME_CONFIG.COLORS.backgroundDark}40`;
-                      }}
-                    >
-                      <td style={{
-                        padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
-                        fontFamily: "'Rajdhani', sans-serif",
-                        fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
-                        color: THEME_CONFIG.COLORS.textSecondary
-                      }}>
-                        {row.page}
-                      </td>
-                      <td style={{
-                        padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
-                        fontFamily: "'Orbitron', monospace",
-                        fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
-                        fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
-                        color: lighterElectricBlue,
-                        letterSpacing: '0.5px'
-                      }}>
-                        {row.avg != null ? `${row.avg}%` : '--'}
-                      </td>
-                      <td style={{
-                        padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
-                        fontFamily: "'Orbitron', monospace",
-                        fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
-                        fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
-                        color: lighterElectricBlue,
-                        letterSpacing: '0.5px'
-                      }}>
-                        {row.max != null ? `${row.max}%` : '--'}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            {scrollRows.length > 5 && (
-              <div style={{ textAlign: 'center' }}>
-                <button
-                  onClick={() => setShowAllScrolls(!showAllScrolls)}
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    padding: `${THEME_CONFIG.SPACING.xs} ${THEME_CONFIG.SPACING.sm}`,
-                    border: `1px solid ${lighterElectricBlue}`,
-                    borderRadius: THEME_CONFIG.BORDER_RADIUS.small,
-                    backgroundColor: 'transparent',
-                    color: lighterElectricBlue,
-                    fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
-                    fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.medium,
-                    fontFamily: "'Rajdhani', sans-serif",
-                    cursor: 'pointer',
-                    transition: 'all 200ms ease'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = `${lighterElectricBlue}15`;
-                    e.currentTarget.style.borderColor = darkElectricBlue;
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = 'transparent';
-                    e.currentTarget.style.borderColor = lighterElectricBlue;
-                  }}
-                >
-                  {showAllScrolls ? (
-                    <>
-                      <ChevronUp size={12} />
-                      Show Less
-                    </>
-                  ) : (
-                    <>
-                      <ChevronDown size={12} />
-                      Show {scrollRows.length - 5} More
-                    </>
-                  )}
-                </button>
-              </div>
-            )}
-          </>
-        ) : (
+      {/* Scroll Analysis Section (hidden when no data) */}
+      {scrollRows.length > 0 && (
+        <div>
           <div style={{
-            padding: THEME_CONFIG.SPACING.lg,
-            textAlign: 'center',
-            color: THEME_CONFIG.COLORS.textMuted,
-            fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
-            fontFamily: "'Rajdhani', sans-serif",
-            backgroundColor: THEME_CONFIG.COLORS.backgroundDark,
-            borderRadius: THEME_CONFIG.BORDER_RADIUS.small,
-            border: `1px solid ${THEME_CONFIG.COLORS.borderPrimary}`
+            display: 'flex',
+            alignItems: 'center',
+            gap: THEME_CONFIG.SPACING.xs,
+            marginBottom: THEME_CONFIG.SPACING.md
           }}>
-            No scroll data available
+            <ArrowDown size={16} style={{ color: lighterElectricBlue }} />
+            <h4
+              className="card-title"
+              style={{
+                fontFamily: "'Rajdhani', sans-serif",
+                fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.body,
+                fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
+                color: lighterElectricBlue,
+                letterSpacing: '0.5px',
+                textTransform: 'uppercase',
+                margin: 0
+              }}
+            >
+              Scroll Analysis {`(${scrollRows.length})`}
+            </h4>
           </div>
-        )}
-      </div>
+
+          <div style={{ overflowX: 'auto', marginBottom: THEME_CONFIG.SPACING.md }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <thead>
+                <tr>
+                  <th style={{
+                    padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
+                    backgroundColor: THEME_CONFIG.COLORS.backgroundDark,
+                    color: THEME_CONFIG.COLORS.textSecondary,
+                    borderBottom: `2px solid ${lighterElectricBlue}`,
+                    fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
+                    fontFamily: "'Rajdhani', sans-serif",
+                    fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
+                    textAlign: 'left',
+                    letterSpacing: '0.5px',
+                    textTransform: 'uppercase'
+                  }}>
+                    Page
+                  </th>
+                  <th style={{
+                    padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
+                    backgroundColor: THEME_CONFIG.COLORS.backgroundDark,
+                    color: THEME_CONFIG.COLORS.textSecondary,
+                    borderBottom: `2px solid ${lighterElectricBlue}`,
+                    fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
+                    fontFamily: "'Rajdhani', sans-serif",
+                    fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
+                    textAlign: 'left',
+                    letterSpacing: '0.5px',
+                    textTransform: 'uppercase'
+                  }}>
+                    Avg Depth
+                  </th>
+                  <th style={{
+                    padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
+                    backgroundColor: THEME_CONFIG.COLORS.backgroundDark,
+                    color: THEME_CONFIG.COLORS.textSecondary,
+                    borderBottom: `2px solid ${lighterElectricBlue}`,
+                    fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
+                    fontFamily: "'Rajdhani', sans-serif",
+                    fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
+                    textAlign: 'left',
+                    letterSpacing: '0.5px',
+                    textTransform: 'uppercase'
+                  }}>
+                    Max Depth
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {displayScrollRows.map((row, idx) => (
+                  <tr
+                    key={idx}
+                    style={{
+                      backgroundColor: idx % 2 === 0 ? 'transparent' : `${THEME_CONFIG.COLORS.backgroundDark}40`,
+                      borderBottom: `1px solid ${THEME_CONFIG.COLORS.borderPrimary}`,
+                      transition: 'background-color 200ms ease'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = `${lighterElectricBlue}08`;
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = idx % 2 === 0 ? 'transparent' : `${THEME_CONFIG.COLORS.backgroundDark}40`;
+                    }}
+                  >
+                    <td style={{
+                      padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
+                      fontFamily: "'Rajdhani', sans-serif",
+                      fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
+                      color: THEME_CONFIG.COLORS.textSecondary
+                    }}>
+                      {row.page}
+                    </td>
+                    <td style={{
+                      padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
+                      fontFamily: "'Orbitron', monospace",
+                      fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
+                      fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
+                      color: lighterElectricBlue,
+                      letterSpacing: '0.5px'
+                    }}>
+                      {row.avg != null ? `${row.avg}%` : '--'}
+                    </td>
+                    <td style={{
+                      padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
+                      fontFamily: "'Orbitron', monospace",
+                      fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
+                      fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
+                      color: lighterElectricBlue,
+                      letterSpacing: '0.5px'
+                    }}>
+                      {row.max != null ? `${row.max}%` : '--'}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {scrollRows.length > 5 && (
+            <div style={{ textAlign: 'center' }}>
+              <button
+                onClick={() => setShowAllScrolls(!showAllScrolls)}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: `${THEME_CONFIG.SPACING.xs} ${THEME_CONFIG.SPACING.sm}`,
+                  border: `1px solid ${lighterElectricBlue}`,
+                  borderRadius: THEME_CONFIG.BORDER_RADIUS.small,
+                  backgroundColor: 'transparent',
+                  color: lighterElectricBlue,
+                  fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
+                  fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.medium,
+                  fontFamily: "'Rajdhani', sans-serif",
+                  cursor: 'pointer',
+                  transition: 'all 200ms ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = `${lighterElectricBlue}15`;
+                  e.currentTarget.style.borderColor = darkElectricBlue;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                  e.currentTarget.style.borderColor = lighterElectricBlue;
+                }}
+              >
+                {showAllScrolls ? (
+                  <>
+                    <ChevronUp size={12} />
+                    Show Less
+                  </>
+                ) : (
+                  <>
+                    <ChevronDown size={12} />
+                    Show {scrollRows.length - 5} More
+                  </>
+                )}
+              </button>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

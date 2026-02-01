@@ -546,11 +546,12 @@ def aggregate_daily(site_id):
 			pages[path]['views'] += 1
 			pages[path]['visitors'].add(visitor_id)
 			
-			# Track load performance
+			# Track load performance (validate positive values only)
 			if payload.get('load_event'):
 				load_time = payload['load_event']
-				pages[path]['load_times'].append(load_time)
-				load_performance[path].append(load_time)
+				if isinstance(load_time, (int, float)) and load_time > 0:
+					pages[path]['load_times'].append(load_time)
+					load_performance[path].append(load_time)
 			
 			# Track page as entry/exit point (will be refined later in session analysis)
 			if len(user_journeys[visitor_id]) == 1:
@@ -696,12 +697,14 @@ def aggregate_daily(site_id):
 			url = pe[5] if len(pe) > 5 else None
 			if url:
 				path = normalize_path(urlparse(url).path)
-				# prefer server_response_time, fallback to load_event_end
+				# prefer server_response_time, fallback to load_event_end (validate positive values)
 				load_time = None
 				if len(pe) > 15 and pe[15] is not None:
-					load_time = pe[15]
+					if isinstance(pe[15], (int, float)) and pe[15] > 0:
+						load_time = pe[15]
 				elif len(pe) > 14 and pe[14] is not None:
-					load_time = pe[14]
+					if isinstance(pe[14], (int, float)) and pe[14] > 0:
+						load_time = pe[14]
 				if load_time is not None:
 					pages[path]['load_times'].append(load_time)
 		except Exception:
