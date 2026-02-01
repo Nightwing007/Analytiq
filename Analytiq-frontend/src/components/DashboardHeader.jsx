@@ -70,15 +70,15 @@ export default function DashboardHeader({
       >
         {/* Left Section - Site Info */}
         <div style={{ flex: 1, minWidth: 0 }}>
-          {/* Website Name - Orbitron Font */}
+          {/* Website Name - Rajdhani Font */}
           <h1
             className="cool-title"
             style={{
-              fontFamily: "'Orbitron', monospace",
+              fontFamily: "'Rajdhani', sans-serif",
               fontSize: '2rem',
-              fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.bold,
+              fontWeight: 700,
               color: THEME_CONFIG.COLORS.textPrimary,
-              letterSpacing: '1px',
+              letterSpacing: '0.5px',
               textShadow: `0 0 20px ${darkElectricBlue}33`,
               marginBottom: THEME_CONFIG.SPACING.sm,
               lineHeight: '1.2',
@@ -227,8 +227,8 @@ export default function DashboardHeader({
                 backgroundColor: 'transparent',
                 color: THEME_CONFIG.COLORS.electricBlue,
                 fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.caption,
-                fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.bold,
-                fontFamily: "'Orbitron', sans-serif",
+                fontWeight: 600,
+                fontFamily: "'Rajdhani', sans-serif",
                 cursor: refreshing ? 'not-allowed' : 'pointer',
                 opacity: refreshing ? 0.6 : 1,
                 transition: 'all 300ms ease',

@@ -100,6 +100,49 @@ const neonBorderCSS = `
     }
   }
 
+  @keyframes statusPulse {
+    0%, 100% {
+      box-shadow: 0 0 8px ${darkElectricBlue}, 0 0 16px ${darkElectricBlue}44;
+      transform: scale(1);
+    }
+    50% {
+      box-shadow: 0 0 12px ${darkElectricBlue}, 0 0 24px ${darkElectricBlue}66;
+      transform: scale(1.1);
+    }
+  }
+
+  @keyframes slideInRight {
+    from {
+      opacity: 0;
+      transform: translateX(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes floatIcon {
+    0%, 100% {
+      transform: translateY(0px) rotate(0deg);
+    }
+    25% {
+      transform: translateY(-3px) rotate(-5deg);
+    }
+    75% {
+      transform: translateY(-3px) rotate(5deg);
+    }
+  }
+
+  @keyframes expandWidth {
+    from {
+      width: 0%;
+    }
+    to {
+      width: 100%;
+    }
+  }
+
   .neon-border-btn {
     position: relative;
     transition: all 300ms ease;
@@ -176,6 +219,18 @@ const neonBorderCSS = `
   .card-title {
     font-family: 'Rajdhani', sans-serif;
     letter-spacing: 0.5px;
+  }
+
+  .icon-container:hover .globe-icon {
+    animation: floatIcon 0.6s ease-in-out;
+  }
+
+  .url-container:hover .url-icon {
+    transform: rotate(360deg);
+  }
+
+  .card-hover-effect:hover .accent-bar {
+    animation: expandWidth 0.5s ease-out;
   }
 `;
 
@@ -337,35 +392,6 @@ function Manage() {
             }}>
             Welcome, {user?.email || 'User'}
           </span>
-          <Link to="/auth-test" style={{ textDecoration: 'none' }}>
-            <button
-              className="transition-all duration-300"
-              style={{
-                padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
-                border: `2px solid ${darkElectricBlue}`,
-                borderRadius: THEME_CONFIG.BORDER_RADIUS.small,
-                backgroundColor: 'transparent',
-                color: darkElectricBlue,
-                fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
-                fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.medium,
-                fontFamily: THEME_CONFIG.TYPOGRAPHY.fontFamily.primary,
-                cursor: 'pointer',
-                minHeight: '36px'
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.borderColor = darkerElectricBlue;
-                e.target.style.color = darkerElectricBlue;
-                e.target.style.backgroundColor = buttonBackground;
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.borderColor = darkElectricBlue;
-                e.target.style.color = darkElectricBlue;
-                e.target.style.backgroundColor = 'transparent';
-              }}
-            >
-              Auth Test
-            </button>
-          </Link>
           <button
             onClick={logout}
             className="transition-all duration-300"
@@ -743,134 +769,224 @@ function Manage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {sites.map((site, index) => (
               <div key={site.site_id}
-                className="card-hover-effect card-glide-animation border transition-all duration-300"
+                className="card-hover-effect card-glide-animation group transition-all duration-500"
                 style={{
-                  borderColor: THEME_CONFIG.COLORS.borderPrimary,
-                  backgroundColor: THEME_CONFIG.COLORS.backgroundSecondary,
-                  borderRadius: THEME_CONFIG.BORDER_RADIUS.medium,
-                  padding: THEME_CONFIG.SPACING.lg,
+                  borderRadius: THEME_CONFIG.BORDER_RADIUS.large,
                   position: 'relative',
-                  overflow: 'hidden'
+                  overflow: 'hidden',
+                  backgroundColor: THEME_CONFIG.COLORS.backgroundSecondary,
+                  border: `2px solid ${THEME_CONFIG.COLORS.borderPrimary}`,
+                  boxShadow: '0 10px 30px rgba(0, 0, 0, 0.5)'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = THEME_CONFIG.COLORS.borderElectric;
+                  e.currentTarget.style.borderColor = darkElectricBlue;
+                  e.currentTarget.style.boxShadow = `0 20px 40px rgba(0, 102, 255, 0.2)`;
+                  e.currentTarget.style.transform = 'translateY(-6px)';
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.borderColor = THEME_CONFIG.COLORS.borderPrimary;
+                  e.currentTarget.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.5)';
+                  e.currentTarget.style.transform = 'translateY(0)';
                 }}>
 
-                {/* Header with title and delete button */}
-                <div className="flex items-start justify-between"
-                  style={{ marginBottom: THEME_CONFIG.SPACING.lg }}>
-                  <div className="flex-1" style={{ marginRight: THEME_CONFIG.SPACING.md }}>
-                    <h3 className="card-title font-semibold"
+                {/* Solid accent bar at top */}
+                <div className="accent-bar group-hover:h-1.5" style={{
+                  height: '4px',
+                  backgroundColor: site.verified ? darkElectricBlue : THEME_CONFIG.COLORS.borderPrimary,
+                  transition: 'all 0.3s ease'
+                }} />
+
+                {/* Card Content */}
+                <div style={{ padding: '24px' }}>
+                  {/* Header Section */}
+                  <div className="flex items-start justify-between" style={{ marginBottom: '20px' }}>
+                    {/* Icon */}
+                    <div className="icon-container flex items-center justify-center transition-all duration-300"
                       style={{
-                        color: THEME_CONFIG.COLORS.textPrimary,
-                        fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.h4,
-                        fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
-                        marginBottom: THEME_CONFIG.SPACING.sm,
-                        lineHeight: '1.4'
+                        width: '48px',
+                        height: '48px',
+                        borderRadius: THEME_CONFIG.BORDER_RADIUS.medium,
+                        backgroundColor: darkElectricBlue + '20',
+                        border: `2px solid ${darkElectricBlue}40`,
+                        color: darkElectricBlue
                       }}>
-                      {site.name}
-                    </h3>
-                    <p className="break-all"
+                      <Globe size={24} strokeWidth={2.5} className="globe-icon" />
+                    </div>
+
+                    {/* Delete Button */}
+                    <button
+                      onClick={() => handleDeleteSite(site.site_id)}
+                      className="flex items-center justify-center transition-all duration-300 opacity-0 group-hover:opacity-100"
                       style={{
+                        width: '32px',
+                        height: '32px',
+                        borderRadius: THEME_CONFIG.BORDER_RADIUS.small,
+                        backgroundColor: THEME_CONFIG.COLORS.backgroundElevated,
+                        border: `1px solid ${THEME_CONFIG.COLORS.borderPrimary}`,
                         color: THEME_CONFIG.COLORS.textSecondary,
-                        fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
-                        lineHeight: '1.4'
+                        cursor: 'pointer'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.target.style.backgroundColor = THEME_CONFIG.COLORS.error + '20';
+                        e.target.style.borderColor = THEME_CONFIG.COLORS.error;
+                        e.target.style.color = THEME_CONFIG.COLORS.error;
+                        e.target.style.transform = 'scale(1.1)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.target.style.backgroundColor = THEME_CONFIG.COLORS.backgroundElevated;
+                        e.target.style.borderColor = THEME_CONFIG.COLORS.borderPrimary;
+                        e.target.style.color = THEME_CONFIG.COLORS.textSecondary;
+                        e.target.style.transform = 'scale(1)';
+                      }}
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  </div>
+
+                  {/* Site Info */}
+                  <div style={{ marginBottom: '20px' }}>
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="status-dot" style={{
+                        width: '6px',
+                        height: '6px',
+                        borderRadius: '50%',
+                        backgroundColor: site.verified ? darkElectricBlue : THEME_CONFIG.COLORS.textMuted,
+                        boxShadow: site.verified ? `0 0 8px ${darkElectricBlue}` : 'none',
+                        animation: site.verified ? 'statusPulse 2s ease-in-out infinite' : 'none'
+                      }} />
+                      <h3 className="card-title font-bold transition-colors duration-300"
+                        style={{
+                          color: THEME_CONFIG.COLORS.textPrimary,
+                          fontSize: '20px',
+                          fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.bold,
+                          lineHeight: '1.3',
+                          letterSpacing: '0.3px',
+                          animation: 'slideInRight 0.5s ease-out'
+                        }}>
+                        {site.name}
+                      </h3>
+                    </div>
+                    <div className="url-container flex items-start gap-2 pl-4"
+                      style={{
+                        padding: '8px 12px',
+                        backgroundColor: THEME_CONFIG.COLORS.backgroundElevated,
+                        borderRadius: THEME_CONFIG.BORDER_RADIUS.small,
+                        border: `1px solid ${THEME_CONFIG.COLORS.borderPrimary}`,
+                        transition: 'all 0.3s ease'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.borderColor = darkElectricBlue + '40';
+                        e.currentTarget.style.backgroundColor = THEME_CONFIG.COLORS.backgroundDark;
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.borderColor = THEME_CONFIG.COLORS.borderPrimary;
+                        e.currentTarget.style.backgroundColor = THEME_CONFIG.COLORS.backgroundElevated;
                       }}>
-                      {site.url}
-                    </p>
+                      <Globe size={14} style={{ 
+                        marginTop: '2px',
+                        color: darkElectricBlue,
+                        flexShrink: 0,
+                        transition: 'transform 0.3s ease'
+                      }} className="url-icon" />
+                      <p className="break-all transition-colors duration-300"
+                        style={{
+                          color: THEME_CONFIG.COLORS.textSecondary,
+                          fontSize: '13px',
+                          lineHeight: '1.5',
+                          fontFamily: 'monospace'
+                        }}>
+                        {site.url}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Verification Badge */}
+                  <div style={{ marginBottom: '24px' }}>
                     {site.verified ? (
-                      <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 mt-2">
-                        <Check size={10} style={{ marginRight: '4px' }} />
+                      <div className="inline-flex items-center px-4 py-2 rounded-lg text-sm font-bold transition-all duration-300"
+                        style={{
+                          backgroundColor: darkElectricBlue,
+                          color: '#FFFFFF',
+                          border: `2px solid ${darkElectricBlue}`,
+                          boxShadow: `0 0 20px ${darkElectricBlue}44`,
+                          fontFamily: THEME_CONFIG.TYPOGRAPHY.fontFamily.primary,
+                          textTransform: 'uppercase',
+                          letterSpacing: '1px',
+                          fontSize: '11px'
+                        }}>
+                        <Check size={14} style={{ marginRight: '6px', strokeWidth: 3 }} />
                         Verified
-                      </span>
+                      </div>
                     ) : (
-                      <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800 mt-2">
-                        Unverified
-                      </span>
+                      <div className="inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300"
+                        style={{
+                          backgroundColor: THEME_CONFIG.COLORS.backgroundElevated,
+                          color: THEME_CONFIG.COLORS.textMuted,
+                          border: `2px solid ${THEME_CONFIG.COLORS.borderPrimary}`,
+                          fontFamily: THEME_CONFIG.TYPOGRAPHY.fontFamily.primary,
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.5px',
+                          fontSize: '11px'
+                        }}>
+                        <div style={{
+                          width: '8px',
+                          height: '8px',
+                          borderRadius: '50%',
+                          backgroundColor: THEME_CONFIG.COLORS.textMuted,
+                          marginRight: '6px',
+                          opacity: 0.6
+                        }} />
+                        Pending
+                      </div>
                     )}
                   </div>
-                  <button
-                    onClick={() => handleDeleteSite(site.site_id)}
-                    className="flex items-center justify-center transition-all duration-300"
-                    style={{
-                      width: '36px',
-                      height: '36px',
-                      borderRadius: THEME_CONFIG.BORDER_RADIUS.small,
-                      backgroundColor: 'transparent',
-                      border: `2px solid ${THEME_CONFIG.COLORS.error}`,
-                      color: THEME_CONFIG.COLORS.error,
-                      cursor: 'pointer'
-                    }}
-                    onMouseEnter={(e) => {
-                      e.target.style.backgroundColor = THEME_CONFIG.COLORS.error + '20';
-                      e.target.style.transform = 'scale(1.1)';
-                      // Add red hover class to parent card
-                      const card = e.target.closest('.card-hover-effect');
-                      if (card) {
-                        card.classList.add('red-hover');
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      e.target.style.backgroundColor = 'transparent';
-                      e.target.style.transform = 'scale(1)';
-                      // Remove red hover class from parent card
-                      const card = e.target.closest('.card-hover-effect');
-                      if (card) {
-                        card.classList.remove('red-hover');
-                      }
-                    }}
-                  >
-                    <Trash2 size={16} />
-                  </button>
-                </div>
 
-                {/* Action button with neon border animation */}
-                <Link to={`/dash/${site.site_id}`} style={{ textDecoration: 'none' }}>
-                  <button
-                    className="neon-border-btn w-full flex items-center justify-center transition-all duration-300"
-                    style={{
-                      padding: `${THEME_CONFIG.SPACING.md} ${THEME_CONFIG.SPACING.lg}`,
-                      border: `2px solid ${THEME_CONFIG.COLORS.textPrimary}`,
-                      borderRadius: THEME_CONFIG.BORDER_RADIUS.small,
-                      backgroundColor: 'transparent',
-                      color: THEME_CONFIG.COLORS.textPrimary,
-                      fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.body,
-                      fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
-                      fontFamily: THEME_CONFIG.TYPOGRAPHY.fontFamily.primary,
-                      cursor: 'pointer',
-                      minHeight: '44px',
-                      position: 'relative',
-                      zIndex: 1
-                    }}
-                    onMouseEnter={(e) => {
-                      // Add blue hover class to parent card
-                      const card = e.target.closest('.card-hover-effect');
-                      if (card) {
-                        card.classList.add('blue-hover');
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      // Reset to original colors when not hovering
-                      e.target.style.borderColor = THEME_CONFIG.COLORS.textPrimary;
-                      e.target.style.color = THEME_CONFIG.COLORS.textPrimary;
-                      e.target.style.boxShadow = 'none';
-                      e.target.style.transform = 'translateY(0px)';
-                      // Remove blue hover class from parent card
-                      const card = e.target.closest('.card-hover-effect');
-                      if (card) {
-                        card.classList.remove('blue-hover');
-                      }
-                    }}
-                  >
-                    <span style={{ position: 'relative', zIndex: 2, display: 'flex', alignItems: 'center' }}>
-                      <BarChart3 size={18} style={{ marginRight: '8px' }} />
-                      View Dashboard
-                    </span>
-                  </button>
-                </Link>
+                  {/* Divider */}
+                  <div style={{
+                    height: '1px',
+                    backgroundColor: THEME_CONFIG.COLORS.borderPrimary,
+                    marginBottom: '20px',
+                    opacity: 0.5
+                  }} />
+
+                  {/* Action Button */}
+                  <Link to={`/dash/${site.site_id}`} style={{ textDecoration: 'none' }}>
+                    <button
+                      className="neon-border-btn w-full flex items-center justify-center transition-all duration-300"
+                      style={{
+                        padding: '14px 20px',
+                        border: `2px solid ${THEME_CONFIG.COLORS.borderPrimary}`,
+                        borderRadius: THEME_CONFIG.BORDER_RADIUS.medium,
+                        backgroundColor: THEME_CONFIG.COLORS.backgroundElevated,
+                        color: THEME_CONFIG.COLORS.textPrimary,
+                        fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.body,
+                        fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.bold,
+                        fontFamily: THEME_CONFIG.TYPOGRAPHY.fontFamily.primary,
+                        cursor: 'pointer',
+                        position: 'relative',
+                        overflow: 'hidden',
+                        letterSpacing: '0.5px'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.target.style.backgroundColor = darkElectricBlue;
+                        e.target.style.borderColor = darkElectricBlue;
+                        e.target.style.color = '#FFFFFF';
+                        e.target.style.boxShadow = `0 0 20px ${darkElectricBlue}66`;
+                        e.target.style.transform = 'translateY(-2px)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.target.style.backgroundColor = THEME_CONFIG.COLORS.backgroundElevated;
+                        e.target.style.borderColor = THEME_CONFIG.COLORS.borderPrimary;
+                        e.target.style.color = THEME_CONFIG.COLORS.textPrimary;
+                        e.target.style.boxShadow = 'none';
+                        e.target.style.transform = 'translateY(0)';
+                      }}
+                    >
+                      <BarChart3 size={18} style={{ marginRight: '10px' }} strokeWidth={2.5} />
+                      <span>View Analytics</span>
+                    </button>
+                  </Link>
+                </div>
 
               </div>
             ))}

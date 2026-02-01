@@ -75,7 +75,7 @@ export default function DateRangePicker({ startDate, endDate, onApply }) {
                     border: `1px solid ${THEME_CONFIG.COLORS.electricBlue}${isOpen ? '88' : '33'}`,
                     borderRadius: '4px',
                     color: THEME_CONFIG.COLORS.textPrimary,
-                    fontFamily: "'Orbitron', sans-serif",
+                    fontFamily: "'Rajdhani', sans-serif",
                     fontSize: '0.75rem',
                     fontWeight: 600,
                     letterSpacing: '1px',
@@ -126,7 +126,7 @@ export default function DateRangePicker({ startDate, endDate, onApply }) {
                             fontSize: '0.65rem',
                             color: THEME_CONFIG.COLORS.textMuted,
                             letterSpacing: '2px',
-                            fontFamily: "'Orbitron', sans-serif",
+                            fontFamily: "'Rajdhani', sans-serif",
                             marginBottom: '12px'
                         }}>
                             QUICK SELECT
@@ -143,7 +143,7 @@ export default function DateRangePicker({ startDate, endDate, onApply }) {
                                         borderRadius: '2px',
                                         color: THEME_CONFIG.COLORS.textSecondary,
                                         fontSize: '0.65rem',
-                                        fontFamily: "'Orbitron', sans-serif",
+                                        fontFamily: "'Rajdhani', sans-serif",
                                         fontWeight: 600,
                                         cursor: 'pointer',
                                         transition: 'all 0.2s ease',
@@ -171,7 +171,7 @@ export default function DateRangePicker({ startDate, endDate, onApply }) {
                             fontSize: '0.65rem',
                             color: THEME_CONFIG.COLORS.textMuted,
                             letterSpacing: '2px',
-                            fontFamily: "'Orbitron', sans-serif",
+                            fontFamily: "'Rajdhani', sans-serif",
                             marginBottom: '12px'
                         }}>
                             CUSTOM RANGE
@@ -226,7 +226,7 @@ export default function DateRangePicker({ startDate, endDate, onApply }) {
                             border: 'none',
                             borderRadius: '2px',
                             color: THEME_CONFIG.COLORS.backgroundDark,
-                            fontFamily: "'Orbitron', sans-serif",
+                            fontFamily: "'Rajdhani', sans-serif",
                             fontSize: '0.75rem',
                             fontWeight: 800,
                             letterSpacing: '1px',

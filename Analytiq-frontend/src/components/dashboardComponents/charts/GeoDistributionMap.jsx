@@ -217,7 +217,7 @@ const GeoDistributionMap = ({ data }) => {
             Locations:
           </span>
           <span style={{
-            fontFamily: "'Orbitron', monospace",
+            fontFamily: "'JetBrains Mono', monospace",
             fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.body,
             fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.bold,
             color: darkElectricBlue,
@@ -337,7 +337,7 @@ const GeoDistributionMap = ({ data }) => {
                   {name}
                 </span>
                 <span style={{
-                  fontFamily: "'Orbitron', monospace",
+                  fontFamily: "'JetBrains Mono', monospace",
                   fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
                   fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
                   color: darkElectricBlue,

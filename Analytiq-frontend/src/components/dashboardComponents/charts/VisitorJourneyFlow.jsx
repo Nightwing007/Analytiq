@@ -184,7 +184,7 @@ const VisitorJourneyFlow = ({ data }) => {
                     className="cool-title"
                     style={{
                       color: darkElectricBlue,
-                      fontFamily: "'Orbitron', monospace",
+                      fontFamily: "'JetBrains Mono', monospace",
                       fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
                       fontSize: '0.75rem',
                       flexShrink: 0
@@ -266,7 +266,7 @@ const VisitorJourneyFlow = ({ data }) => {
                     className="cool-title"
                     style={{
                       color: darkerElectricBlue,
-                      fontFamily: "'Orbitron', monospace",
+                      fontFamily: "'JetBrains Mono', monospace",
                       fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
                       fontSize: '0.75rem',
                       flexShrink: 0
@@ -396,7 +396,7 @@ const VisitorJourneyFlow = ({ data }) => {
                   >
                     <td style={{
                       padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
-                      fontFamily: "'Orbitron', monospace",
+                      fontFamily: "'JetBrains Mono', monospace",
                       fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
                       fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
                       color: darkElectricBlue,
@@ -427,7 +427,7 @@ const VisitorJourneyFlow = ({ data }) => {
                     </td>
                     <td style={{
                       padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
-                      fontFamily: "'Orbitron', monospace",
+                      fontFamily: "'JetBrains Mono', monospace",
                       fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
                       color: THEME_CONFIG.COLORS.textMuted,
                       letterSpacing: '0.5px'

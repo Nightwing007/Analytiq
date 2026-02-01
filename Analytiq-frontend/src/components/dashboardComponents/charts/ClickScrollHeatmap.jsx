@@ -258,7 +258,7 @@ const ClickScrollHeatmap = ({ data }) => {
                       </td>
                       <td style={{
                         padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
-                        fontFamily: "'Orbitron', monospace",
+                        fontFamily: "'JetBrains Mono', monospace",
                         fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
                         fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
                         color: darkElectricBlue,
@@ -331,7 +331,7 @@ const ClickScrollHeatmap = ({ data }) => {
         )}
       </div>
 
-      {/* Scroll Analysis Section (hidden when no data) */}
+      {/* Scroll Analysis Section - only show if we have data */}
       {scrollRows.length > 0 && (
         <div>
           <div style={{
@@ -353,7 +353,7 @@ const ClickScrollHeatmap = ({ data }) => {
                 margin: 0
               }}
             >
-              Scroll Analysis {`(${scrollRows.length})`}
+              Scroll Analysis ({scrollRows.length})
             </h4>
           </div>
 
@@ -431,7 +431,7 @@ const ClickScrollHeatmap = ({ data }) => {
                     </td>
                     <td style={{
                       padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
-                      fontFamily: "'Orbitron', monospace",
+                      fontFamily: "'JetBrains Mono', monospace",
                       fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
                       fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
                       color: lighterElectricBlue,
@@ -441,7 +441,7 @@ const ClickScrollHeatmap = ({ data }) => {
                     </td>
                     <td style={{
                       padding: `${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md}`,
-                      fontFamily: "'Orbitron', monospace",
+                      fontFamily: "'JetBrains Mono', monospace",
                       fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
                       fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
                       color: lighterElectricBlue,

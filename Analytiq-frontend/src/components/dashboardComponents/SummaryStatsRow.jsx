@@ -25,31 +25,31 @@ function SummaryStatCard({ icon: Icon, label, value, unit, delay = 0 }) {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        border: `1px solid ${THEME_CONFIG.COLORS.electricBlue}33`,
+        border: `2px solid ${THEME_CONFIG.COLORS.borderPrimary}`,
         backgroundColor: THEME_CONFIG.COLORS.backgroundSecondary,
-        borderRadius: '4px',
-        padding: THEME_CONFIG.SPACING.md,
+        borderRadius: '12px',
+        padding: '24px',
         transition: 'all 300ms ease',
-        minHeight: '120px',
+        minHeight: '140px',
         textAlign: 'center',
         position: 'relative',
         overflow: 'hidden',
-        animationDelay: `${delay}s`
+        animationDelay: `${delay}s`,
+        boxShadow: '0 4px 15px rgba(0, 0, 0, 0.3)'
       }}
       onMouseEnter={(e) => {
         e.currentTarget.style.borderColor = darkElectricBlue;
-        e.currentTarget.style.transform = 'translateY(-3px)';
-        e.currentTarget.style.boxShadow = `0 0 20px ${darkElectricBlue}33, 0 6px 25px ${darkerElectricBlue}22`;
+        e.currentTarget.style.transform = 'translateY(-4px)';
+        e.currentTarget.style.boxShadow = `0 8px 30px rgba(0, 102, 255, 0.2)`;
       }}
       onMouseLeave={(e) => {
         e.currentTarget.style.borderColor = THEME_CONFIG.COLORS.borderPrimary;
         e.currentTarget.style.transform = 'translateY(0)';
-        e.currentTarget.style.boxShadow = 'none';
+        e.currentTarget.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.3)';
       }}
     >
-      {/* Corner accents */}
-      <div style={{ position: 'absolute', top: 0, left: 0, width: '8px', height: '8px', borderTop: `2px solid ${THEME_CONFIG.COLORS.electricBlue}`, borderLeft: `2px solid ${THEME_CONFIG.COLORS.electricBlue}`, opacity: 0.4 }} />
-      <div style={{ position: 'absolute', bottom: 0, right: 0, width: '8px', height: '8px', borderBottom: `2px solid ${THEME_CONFIG.COLORS.electricBlue}`, borderRight: `2px solid ${THEME_CONFIG.COLORS.electricBlue}`, opacity: 0.1 }} />
+      {/* Top accent bar */}
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '4px', backgroundColor: darkElectricBlue }} />
 
       {/* Icon */}
       <div
@@ -57,26 +57,27 @@ function SummaryStatCard({ icon: Icon, label, value, unit, delay = 0 }) {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          width: '40px',
-          height: '40px',
-          borderRadius: THEME_CONFIG.BORDER_RADIUS.small,
-          backgroundColor: `${darkElectricBlue}15`,
+          width: '44px',
+          height: '44px',
+          borderRadius: '8px',
+          backgroundColor: `${darkElectricBlue}20`,
+          border: `2px solid ${darkElectricBlue}40`,
           marginBottom: THEME_CONFIG.SPACING.sm,
           transition: 'all 300ms ease'
         }}
       >
-        <Icon size={20} style={{ color: darkElectricBlue }} />
+        <Icon size={22} style={{ color: darkElectricBlue }} strokeWidth={2.5} />
       </div>
 
       {/* Label */}
       <div
         className="dash-card-title"
         style={{
-          fontFamily: "'Orbitron', sans-serif",
-          fontSize: '0.7rem',
-          fontWeight: 600,
-          color: THEME_CONFIG.COLORS.textMuted,
-          letterSpacing: '1px',
+          fontFamily: "'Rajdhani', sans-serif",
+          fontSize: '13px',
+          fontWeight: 700,
+          color: THEME_CONFIG.COLORS.textSecondary,
+          letterSpacing: '0.5px',
           textTransform: 'uppercase',
           marginBottom: THEME_CONFIG.SPACING.xs
         }}

@@ -77,29 +77,36 @@ const BrowsersBarChart = ({ data }) => {
       style={{
         border: `2px solid ${THEME_CONFIG.COLORS.borderPrimary}`,
         backgroundColor: THEME_CONFIG.COLORS.backgroundSecondary,
-        borderRadius: THEME_CONFIG.BORDER_RADIUS.medium,
-        padding: THEME_CONFIG.SPACING.xl,
+        borderRadius: '12px',
+        padding: '24px',
         transition: 'all 300ms ease',
-        minHeight: '400px'
+        minHeight: '450px',
+        position: 'relative',
+        overflow: 'hidden',
+        boxShadow: '0 4px 15px rgba(0, 0, 0, 0.3)'
       }}
       onMouseEnter={(e) => {
         e.currentTarget.style.borderColor = darkElectricBlue;
-        e.currentTarget.style.transform = 'translateY(-2px)';
-        e.currentTarget.style.boxShadow = `0 0 20px ${darkElectricBlue}33, 0 4px 30px ${darkerElectricBlue}22`;
+        e.currentTarget.style.transform = 'translateY(-4px)';
+        e.currentTarget.style.boxShadow = `0 8px 30px rgba(0, 102, 255, 0.2)`;
       }}
       onMouseLeave={(e) => {
         e.currentTarget.style.borderColor = THEME_CONFIG.COLORS.borderPrimary;
         e.currentTarget.style.transform = 'translateY(0)';
-        e.currentTarget.style.boxShadow = 'none';
+        e.currentTarget.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.3)';
       }}
     >
+      {/* Top accent bar */}
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '4px', backgroundColor: darkElectricBlue }} />
+      
       {/* Header */}
       <div
         style={{
           display: 'flex',
           alignItems: 'center',
-          gap: THEME_CONFIG.SPACING.sm,
-          marginBottom: THEME_CONFIG.SPACING.lg
+          gap: '12px',
+          marginBottom: THEME_CONFIG.SPACING.lg,
+          marginTop: '8px'
         }}
       >
         <div
@@ -107,27 +114,39 @@ const BrowsersBarChart = ({ data }) => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            width: '32px',
-            height: '32px',
-            borderRadius: THEME_CONFIG.BORDER_RADIUS.small,
-            backgroundColor: `${darkElectricBlue}15`
+            width: '44px',
+            height: '44px',
+            borderRadius: '8px',
+            backgroundColor: `${darkElectricBlue}20`,
+            border: `2px solid ${darkElectricBlue}40`
           }}
         >
-          <Globe size={18} style={{ color: darkElectricBlue }} />
+          <Globe size={22} style={{ color: darkElectricBlue }} strokeWidth={2.5} />
         </div>
-        <h3
-          className="card-title"
-          style={{
+        <div>
+          <h3
+            style={{
+              fontFamily: "'Rajdhani', sans-serif",
+              fontSize: '16px',
+              fontWeight: 700,
+              color: THEME_CONFIG.COLORS.textPrimary,
+              letterSpacing: '0.5px',
+              textTransform: 'uppercase',
+              margin: 0,
+              marginBottom: '4px'
+            }}
+          >
+            Browsers
+          </h3>
+          <p style={{
             fontFamily: "'Rajdhani', sans-serif",
-            fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.h5,
-            fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
-            color: THEME_CONFIG.COLORS.textPrimary,
-            letterSpacing: '0.5px',
+            fontSize: '13px',
+            color: THEME_CONFIG.COLORS.textSecondary,
             margin: 0
-          }}
-        >
-          Browsers
-        </h3>
+          }}>
+            Browser Usage Statistics
+          </p>
+        </div>
       </div>
 
       {/* Chart - VERTICAL BARS */}

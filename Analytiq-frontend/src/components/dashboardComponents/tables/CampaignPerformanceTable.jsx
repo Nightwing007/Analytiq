@@ -219,7 +219,7 @@ const CampaignPerformanceTable = ({ data }) => {
                     key={col.key}
                     style={{
                       padding: `${THEME_CONFIG.SPACING.md}`,
-                      fontFamily: col.key === 'campaign' ? "'Rajdhani', sans-serif" : "'Orbitron', monospace",
+                      fontFamily: col.key === 'campaign' ? "'Rajdhani', sans-serif" : "'JetBrains Mono', monospace",
                       fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.body,
                       fontWeight: col.key === 'campaign' ? THEME_CONFIG.TYPOGRAPHY.fontWeight.medium : THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
                       color: col.key === 'campaign' ? THEME_CONFIG.COLORS.textPrimary : THEME_CONFIG.COLORS.textSecondary,

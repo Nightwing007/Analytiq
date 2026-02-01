@@ -21,24 +21,26 @@ const TrafficSourcesPieChart = ({ data, totalVisitors: globalTotal = 0 }) => {
   if (!data || !Array.isArray(data) || data.length === 0) {
     return (
       <div
+        className="dash-card"
         style={{
-          border: `1px solid ${THEME_CONFIG.COLORS.electricBlue}33`,
+          border: `2px solid ${THEME_CONFIG.COLORS.borderPrimary}`,
           backgroundColor: THEME_CONFIG.COLORS.backgroundSecondary,
-          borderRadius: '4px',
-          padding: THEME_CONFIG.SPACING.xl,
-          minHeight: '400px',
+          borderRadius: '12px',
+          padding: '24px',
+          minHeight: '450px',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          textAlign: 'center'
+          textAlign: 'center',
+          transition: 'all 0.3s ease'
         }}
       >
         <AlertCircle
           size={48}
           style={{
             color: THEME_CONFIG.COLORS.textMuted,
-            marginBottom: THEME_CONFIG.SPACING.md
+            marginBottom: '16px'
           }}
         />
         <p
@@ -68,67 +70,119 @@ const TrafficSourcesPieChart = ({ data, totalVisitors: globalTotal = 0 }) => {
 
   return (
     <div
+      className="dash-card"
       style={{
-        border: `1px solid ${THEME_CONFIG.COLORS.electricBlue}33`,
+        border: `2px solid ${THEME_CONFIG.COLORS.borderPrimary}`,
         backgroundColor: THEME_CONFIG.COLORS.backgroundSecondary,
-        borderRadius: '4px',
-        padding: THEME_CONFIG.SPACING.xl,
-        transition: 'all 300ms ease',
-        minHeight: '400px',
+        borderRadius: '12px',
+        padding: '24px',
+        transition: 'all 0.4s ease',
+        minHeight: '450px',
         position: 'relative',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        boxShadow: '0 4px 15px rgba(0, 0, 0, 0.3)'
       }}
       onMouseEnter={(e) => {
         e.currentTarget.style.borderColor = darkElectricBlue;
-        e.currentTarget.style.transform = 'translateY(-2px)';
-        e.currentTarget.style.boxShadow = `0 0 20px ${darkElectricBlue}33, 0 4px 30px ${darkerElectricBlue}22`;
+        e.currentTarget.style.transform = 'translateY(-4px)';
+        e.currentTarget.style.boxShadow = `0 8px 30px rgba(0, 102, 255, 0.2)`;
       }}
       onMouseLeave={(e) => {
-        e.currentTarget.style.borderColor = `${THEME_CONFIG.COLORS.electricBlue}33`;
+        e.currentTarget.style.borderColor = THEME_CONFIG.COLORS.borderPrimary;
         e.currentTarget.style.transform = 'translateY(0)';
-        e.currentTarget.style.boxShadow = 'none';
+        e.currentTarget.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.3)';
       }}
     >
-      {/* Corner accents */}
-      <div style={{ position: 'absolute', top: 0, left: 0, width: '10px', height: '10px', borderTop: `2px solid ${darkElectricBlue}`, borderLeft: `2px solid ${darkElectricBlue}`, opacity: 0.4 }} />
-      <div style={{ position: 'absolute', bottom: 0, right: 0, width: '10px', height: '10px', borderBottom: `2px solid ${darkElectricBlue}`, borderRight: `2px solid ${darkElectricBlue}`, opacity: 0.4 }} />
+      {/* Accent bar at top */}
+      <div style={{ 
+        position: 'absolute', 
+        top: 0, 
+        left: 0, 
+        right: 0, 
+        height: '4px', 
+        backgroundColor: darkElectricBlue,
+        transition: 'height 0.3s ease'
+      }} className="accent-bar" />
 
       {/* Header */}
       <div
         style={{
           display: 'flex',
           alignItems: 'center',
-          gap: THEME_CONFIG.SPACING.sm,
-          marginBottom: THEME_CONFIG.SPACING.lg
+          justifyContent: 'space-between',
+          marginBottom: '24px',
+          marginTop: '8px'
         }}
       >
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '32px',
-            height: '32px',
-            borderRadius: '4px',
-            backgroundColor: `${darkElectricBlue}15`
-          }}
-        >
-          <TrendingUp size={18} style={{ color: darkElectricBlue }} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '44px',
+              height: '44px',
+              borderRadius: '8px',
+              backgroundColor: darkElectricBlue + '20',
+              border: `2px solid ${darkElectricBlue}40`,
+              transition: 'all 0.3s ease'
+            }}
+            className="icon-container"
+          >
+            <TrendingUp size={22} style={{ color: darkElectricBlue }} strokeWidth={2.5} />
+          </div>
+          <div>
+            <h3
+              style={{
+                fontFamily: "'Rajdhani', sans-serif",
+                fontSize: '16px',
+                fontWeight: 700,
+                color: THEME_CONFIG.COLORS.textPrimary,
+                letterSpacing: '0.5px',
+                textTransform: 'uppercase',
+                margin: 0,
+                marginBottom: '4px'
+              }}
+            >
+              Traffic Sources
+            </h3>
+            <p style={{
+              fontFamily: "'Rajdhani', sans-serif",
+              fontSize: '13px',
+              color: THEME_CONFIG.COLORS.textSecondary,
+              margin: 0
+            }}>
+              Visitor Origin Analysis
+            </p>
+          </div>
         </div>
-        <h3
-          className="card-title"
-          style={{
-            fontFamily: "'Orbitron', sans-serif",
-            fontSize: '0.85rem',
+        <div style={{
+          backgroundColor: THEME_CONFIG.COLORS.backgroundElevated,
+          padding: '8px 16px',
+          borderRadius: '8px',
+          border: `1px solid ${THEME_CONFIG.COLORS.borderPrimary}`
+        }}>
+          <p style={{
+            fontFamily: "'JetBrains Mono', monospace",
+            fontSize: '20px',
             fontWeight: 700,
-            color: THEME_CONFIG.COLORS.textSecondary,
-            letterSpacing: '1.5px',
+            color: darkElectricBlue,
+            margin: 0,
+            textShadow: `0 0 10px ${darkElectricBlue}44`
+          }}>
+            {globalTotal.toLocaleString()}
+          </p>
+          <p style={{
+            fontFamily: "'Rajdhani', sans-serif",
+            fontSize: '11px',
+            color: THEME_CONFIG.COLORS.textMuted,
+            margin: 0,
             textTransform: 'uppercase',
-            margin: 0
-          }}
-        >
-          Traffic Sources
-        </h3>
+            letterSpacing: '0.5px'
+          }}>
+            Total Visitors
+          </p>
+        </div>
       </div>
 
       {/* Chart */}
