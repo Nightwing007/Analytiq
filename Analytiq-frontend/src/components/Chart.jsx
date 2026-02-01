@@ -43,7 +43,8 @@ const Chart = ({ type, data, title, dataKey = 'value', timeKey = 'time' }) => {
               }}
             />
             <YAxis tick={{ fontSize: 12 }} />
-            <Tooltip 
+            <Tooltip
+              wrapperStyle={{ outline: 'none' }}
               labelFormatter={(value) => new Date(value).toLocaleString()}
               formatter={(value, name) => [value, name]}
             />
@@ -71,7 +72,8 @@ const Chart = ({ type, data, title, dataKey = 'value', timeKey = 'time' }) => {
               }}
             />
             <YAxis tick={{ fontSize: 12 }} />
-            <Tooltip 
+            <Tooltip
+              wrapperStyle={{ outline: 'none' }}
               labelFormatter={(value) => new Date(value).toLocaleString()}
               formatter={(value, name) => [value, name]}
             />

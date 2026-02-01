@@ -170,6 +170,7 @@ const GeoDistributionBarChart = ({ data }) => {
             width={120}
           />
           <Tooltip
+            wrapperStyle={{ outline: 'none' }}
             contentStyle={{
               backgroundColor: 'rgba(10, 10, 15, 0.95)',
               border: `1px solid ${darkElectricBlue}`,

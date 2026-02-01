@@ -31,33 +31,40 @@ export default function DashboardHeader({
     <div
       style={{
         position: 'relative',
-        border: `1px solid ${THEME_CONFIG.COLORS.electricBlue}33`,
+        border: `2px solid ${THEME_CONFIG.COLORS.borderPrimary}`,
         backgroundColor: THEME_CONFIG.COLORS.backgroundSecondary,
-        borderRadius: '4px',
-        padding: THEME_CONFIG.SPACING.lg,
+        borderRadius: '12px',
+        padding: '24px',
         transition: 'all 300ms ease',
-        overflow: 'visible', // Changed from 'hidden' to allow dropdowns
-        zIndex: 10
+        overflow: 'visible',
+        zIndex: 10,
+        boxShadow: '0 4px 15px rgba(0, 0, 0, 0.3)'
       }}
       onMouseEnter={(e) => {
         e.currentTarget.style.borderColor = darkElectricBlue;
         e.currentTarget.style.transform = 'translateY(-2px)';
-        e.currentTarget.style.boxShadow = `0 0 20px ${darkElectricBlue}33, 0 4px 30px ${darkerElectricBlue}22`;
+        e.currentTarget.style.boxShadow = `0 8px 30px rgba(0, 102, 255, 0.2)`;
       }}
       onMouseLeave={(e) => {
         e.currentTarget.style.borderColor = THEME_CONFIG.COLORS.borderPrimary;
         e.currentTarget.style.transform = 'translateY(0)';
-        e.currentTarget.style.boxShadow = 'none';
+        e.currentTarget.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.3)';
       }}
     >
-      {/* Corner accents */}
-      <div style={{ position: 'absolute', top: 0, left: 0, width: '12px', height: '12px', borderTop: `2px solid ${THEME_CONFIG.COLORS.electricBlue}`, borderLeft: `2px solid ${THEME_CONFIG.COLORS.electricBlue}`, opacity: 0.6 }} />
-      <div style={{ position: 'absolute', top: 0, right: 0, width: '12px', height: '12px', borderTop: `2px solid ${THEME_CONFIG.COLORS.electricBlue}`, borderRight: `2px solid ${THEME_CONFIG.COLORS.electricBlue}`, opacity: 0.2 }} />
-      <div style={{ position: 'absolute', bottom: 0, left: 0, width: '12px', height: '12px', borderBottom: `2px solid ${THEME_CONFIG.COLORS.electricBlue}`, borderLeft: `2px solid ${THEME_CONFIG.COLORS.electricBlue}`, opacity: 0.2 }} />
-      <div style={{ position: 'absolute', bottom: 0, right: 0, width: '12px', height: '12px', borderBottom: `2px solid ${THEME_CONFIG.COLORS.electricBlue}`, borderRight: `2px solid ${THEME_CONFIG.COLORS.electricBlue}`, opacity: 0.2 }} />
+      {/* Top accent bar */}
+      <div style={{ 
+        position: 'absolute', 
+        top: 0, 
+        left: 0, 
+        right: 0, 
+        height: '4px', 
+        backgroundColor: darkElectricBlue,
+        borderRadius: '12px 12px 0 0'
+      }} />
 
       {/* Main Content */}
       <div
+        className="dashboard-header-content"
         style={{
           display: 'flex',
           flexDirection: 'row',
@@ -65,22 +72,23 @@ export default function DashboardHeader({
           justifyContent: 'space-between',
           gap: '24px',
           position: 'relative',
-          zIndex: 1
+          zIndex: 1,
+          marginTop: '8px'
         }}
       >
         {/* Left Section - Site Info */}
         <div style={{ flex: 1, minWidth: 0 }}>
-          {/* Website Name - Rajdhani Font */}
+          {/* Website Name */}
           <h1
             className="cool-title"
             style={{
               fontFamily: "'Rajdhani', sans-serif",
-              fontSize: '2rem',
+              fontSize: 'clamp(1.5rem, 4vw, 2rem)',
               fontWeight: 700,
               color: THEME_CONFIG.COLORS.textPrimary,
               letterSpacing: '0.5px',
               textShadow: `0 0 20px ${darkElectricBlue}33`,
-              marginBottom: THEME_CONFIG.SPACING.sm,
+              marginBottom: '8px',
               lineHeight: '1.2',
               wordBreak: 'break-word'
             }}
@@ -88,13 +96,14 @@ export default function DashboardHeader({
             {websiteName || 'Untitled Site'}
           </h1>
 
-          {/* Website URL - Rajdhani Font */}
+          {/* Website URL */}
           <div
             style={{
               display: 'flex',
               alignItems: 'center',
               gap: '8px',
-              marginBottom: THEME_CONFIG.SPACING.md
+              marginBottom: '12px',
+              flexWrap: 'wrap'
             }}
           >
             <Globe
@@ -111,13 +120,16 @@ export default function DashboardHeader({
               className="metric-value"
               style={{
                 fontFamily: "'Rajdhani', sans-serif",
-                fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.body,
+                fontSize: 'clamp(0.875rem, 2vw, 1rem)',
                 fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.medium,
                 color: THEME_CONFIG.COLORS.textSecondary,
                 letterSpacing: '0.5px',
                 textDecoration: 'none',
                 transition: 'color 300ms ease',
-                wordBreak: 'break-all'
+                wordBreak: 'break-all',
+                maxWidth: '100%',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis'
               }}
               onMouseEnter={(e) => {
                 e.target.style.color = darkElectricBlue;
@@ -130,17 +142,17 @@ export default function DashboardHeader({
             </a>
           </div>
 
-          {/* Last Updated - Moved to Left Side */}
+          {/* Last Updated */}
           {lastUpdated && (
             <div
               style={{
                 textAlign: 'left',
-                marginTop: THEME_CONFIG.SPACING.xs
+                marginTop: '4px'
               }}
             >
               <span
                 style={{
-                  fontSize: '0.65rem',
+                  fontSize: 'clamp(0.625rem, 1.5vw, 0.75rem)',
                   color: THEME_CONFIG.COLORS.textMuted,
                   marginRight: '8px',
                   fontFamily: "'Rajdhani', sans-serif",
@@ -154,7 +166,7 @@ export default function DashboardHeader({
                 className="metric-value"
                 style={{
                   fontFamily: "'Rajdhani', sans-serif",
-                  fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
+                  fontSize: 'clamp(0.75rem, 1.8vw, 0.875rem)',
                   fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.medium,
                   color: THEME_CONFIG.COLORS.textSecondary,
                   letterSpacing: '0.5px'
@@ -166,19 +178,20 @@ export default function DashboardHeader({
           )}
         </div>
 
-        {/* Right Section - Metadata & Actions */}
+        {/* Right Section - Actions */}
         <div
+          className="dashboard-header-actions"
           style={{
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'flex-end',
-            gap: THEME_CONFIG.SPACING.md,
+            gap: '12px',
             minWidth: 'fit-content'
           }}
         >
-          {/* Date Picker or Static Date Range - Moved to Right Section */}
+          {/* Date Picker */}
           {datePicker ? (
-            <div style={{ marginBottom: THEME_CONFIG.SPACING.xs }}>
+            <div style={{ marginBottom: '4px' }}>
               {datePicker}
             </div>
           ) : dateRange && (
@@ -187,11 +200,11 @@ export default function DashboardHeader({
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '6px',
-                padding: `${THEME_CONFIG.SPACING.xs} ${THEME_CONFIG.SPACING.sm}`,
+                padding: '6px 12px',
                 border: `1px solid ${THEME_CONFIG.COLORS.electricBlue}`,
                 borderRadius: '4px',
                 backgroundColor: 'transparent',
-                marginBottom: THEME_CONFIG.SPACING.sm
+                marginBottom: '8px'
               }}
             >
               <Calendar size={14} style={{ color: THEME_CONFIG.COLORS.electricBlue }} />
@@ -199,10 +212,11 @@ export default function DashboardHeader({
                 className="metric-value"
                 style={{
                   fontFamily: "'Rajdhani', sans-serif",
-                  fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
+                  fontSize: 'clamp(0.75rem, 1.8vw, 0.875rem)',
                   fontWeight: THEME_CONFIG.TYPOGRAPHY.fontWeight.semibold,
                   color: THEME_CONFIG.COLORS.electricBlue,
-                  letterSpacing: '0.5px'
+                  letterSpacing: '0.5px',
+                  whiteSpace: 'nowrap'
                 }}
               >
                 {dateRange}
@@ -211,7 +225,7 @@ export default function DashboardHeader({
           )}
 
 
-          {/* Refresh Button (Optional) */}
+          {/* Refresh Button */}
           {onRefresh && (
             <button
               onClick={onRefresh}
@@ -221,12 +235,12 @@ export default function DashboardHeader({
                 display: 'flex',
                 alignItems: 'center',
                 gap: '8px',
-                padding: `${THEME_CONFIG.SPACING.xs} ${THEME_CONFIG.SPACING.md}`,
+                padding: '8px 16px',
                 border: `1px solid ${THEME_CONFIG.COLORS.electricBlue}`,
                 borderRadius: '4px',
                 backgroundColor: 'transparent',
                 color: THEME_CONFIG.COLORS.electricBlue,
-                fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.caption,
+                fontSize: 'clamp(0.7rem, 1.5vw, 0.75rem)',
                 fontWeight: 600,
                 fontFamily: "'Rajdhani', sans-serif",
                 cursor: refreshing ? 'not-allowed' : 'pointer',
@@ -234,7 +248,8 @@ export default function DashboardHeader({
                 transition: 'all 300ms ease',
                 minHeight: '32px',
                 textTransform: 'uppercase',
-                letterSpacing: '1px'
+                letterSpacing: '1px',
+                whiteSpace: 'nowrap'
               }}
               onMouseEnter={(e) => {
                 if (!refreshing) {
@@ -263,11 +278,41 @@ export default function DashboardHeader({
         </div>
       </div>
 
-      {/* Add spin animation for refresh icon */}
+      {/* Add responsive styles and animations */}
       <style>{`
         @keyframes spin {
           from { transform: rotate(0deg); }
           to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+          .dashboard-header-content {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+          }
+
+          .dashboard-header-actions {
+            width: 100% !important;
+            flex-direction: row !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            flex-wrap: wrap !important;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .dashboard-header-actions {
+            flex-direction: column !important;
+            align-items: stretch !important;
+          }
+
+          .dashboard-header-actions > * {
+            width: 100% !important;
+          }
+
+          .neon-border-btn {
+            justify-content: center !important;
+          }
         }
       `}</style>
     </div>

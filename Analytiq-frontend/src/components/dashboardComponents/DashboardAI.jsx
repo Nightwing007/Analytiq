@@ -4,6 +4,8 @@ import { THEME_CONFIG } from '../../config';
 import API from '../API';
 import { useToast } from '../Toast';
 import LoadingSpinner from '../LoadingSpinner';
+import DashboardMetricDeepDive from './DashboardMetricDeepDive.jsx';
+import DashboardAIInsights from './DashboardAIInsights.jsx';
 
 const fadeIn = keyframes`
   from { opacity: 0; transform: translateY(10px); }
@@ -16,15 +18,38 @@ const slideIn = keyframes`
 `;
 
 const Container = styled.div`
-  background-color: ${THEME_CONFIG.COLORS.backgroundSecondary};
-  border: 1px solid ${THEME_CONFIG.COLORS.borderPrimary};
+  background: linear-gradient(135deg, 
+    ${THEME_CONFIG.COLORS.backgroundSecondary} 0%, 
+    rgba(59, 130, 246, 0.05) 100%);
+  border: 2px solid ${THEME_CONFIG.COLORS.accentPrimary};
   border-radius: ${THEME_CONFIG.BORDER_RADIUS.large};
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  height: 500px;
+  height: 400px;
   animation: ${fadeIn} 0.3s ease-out;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 32px rgba(59, 130, 246, 0.2), 
+              0 4px 20px rgba(0, 0, 0, 0.3);
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, 
+      transparent, 
+      ${THEME_CONFIG.COLORS.accentPrimary}, 
+      transparent);
+    animation: shimmer 2s ease-in-out infinite;
+  }
+  
+  @keyframes shimmer {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+  }
 `;
 
 const Header = styled.div`
@@ -73,81 +98,88 @@ const ChatArea = styled.div`
 `;
 
 const MessageBubble = styled.div`
-  max-width: 85%;
   padding: ${THEME_CONFIG.SPACING.md};
   border-radius: ${THEME_CONFIG.BORDER_RADIUS.medium};
-  animation: ${fadeIn} 0.3s ease-out;
-  line-height: 1.5;
-  font-size: ${THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall};
-  
-  ${props => props.isUser ? css`
-    align-self: flex-end;
-    background-color: ${THEME_CONFIG.COLORS.electricBlueDark};
-    color: ${THEME_CONFIG.COLORS.textPrimary};
-    border-bottom-right-radius: 2px;
-  ` : css`
-    align-self: flex-start;
-    background-color: ${THEME_CONFIG.COLORS.backgroundElevated};
-    border: 1px solid ${THEME_CONFIG.COLORS.borderPrimary};
-    color: ${THEME_CONFIG.COLORS.textSecondary};
-    border-bottom-left-radius: 2px;
-  `}
+  max-width: 85%;
+  align-self: ${props => props.isUser ? 'flex-end' : 'flex-start'};
+  background: ${props => props.isUser 
+    ? THEME_CONFIG.COLORS.accentPrimary 
+    : THEME_CONFIG.COLORS.backgroundElevated};
+  color: ${props => props.isUser 
+    ? THEME_CONFIG.COLORS.textPrimary 
+    : THEME_CONFIG.COLORS.textSecondary};
+  border: 1px solid ${THEME_CONFIG.COLORS.borderPrimary};
+  animation: ${slideIn} 0.3s ease-out;
 `;
 
 const AIContent = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: ${THEME_CONFIG.SPACING.md};
+  font-size: ${THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall};
 `;
 
-const SectionTitle = styled.div`
+const SectionTitle = styled.h5`
+  margin: ${THEME_CONFIG.SPACING.sm} 0;
+  color: ${THEME_CONFIG.COLORS.textElectric};
+  font-size: ${THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall};
   font-weight: 600;
-  color: ${THEME_CONFIG.COLORS.electricBlueLight};
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  margin-top: 4px;
 `;
 
 const List = styled.ul`
   margin: 0;
-  padding-left: 16px;
+  padding-left: ${THEME_CONFIG.SPACING.md};
+  
+  li {
+    margin-bottom: ${THEME_CONFIG.SPACING.xs};
+    color: ${THEME_CONFIG.COLORS.textSecondary};
+  }
+`;
+
+const PriorityBadge = styled.span`
+  display: inline-block;
+  margin-left: ${THEME_CONFIG.SPACING.sm};
+  padding: 2px 8px;
+  border-radius: ${THEME_CONFIG.BORDER_RADIUS.small};
+  font-size: ${THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall};
+  font-weight: 600;
+  background: ${props => {
+    switch(props.level?.toLowerCase()) {
+      case 'high': return 'rgba(239, 68, 68, 0.2)';
+      case 'medium': return 'rgba(251, 191, 36, 0.2)';
+      case 'low': return 'rgba(34, 197, 94, 0.2)';
+      default: return THEME_CONFIG.COLORS.borderPrimary;
+    }
+  }};
+  color: ${props => {
+    switch(props.level?.toLowerCase()) {
+      case 'high': return '#ef4444';
+      case 'medium': return '#fbbf24';
+      case 'low': return '#22c55e';
+      default: return THEME_CONFIG.COLORS.textSecondary;
+    }
+  }};
 `;
 
 const InputArea = styled.div`
   padding: ${THEME_CONFIG.SPACING.md};
   border-top: 1px solid ${THEME_CONFIG.COLORS.borderPrimary};
-  background-color: ${THEME_CONFIG.COLORS.backgroundElevated};
   display: flex;
   gap: ${THEME_CONFIG.SPACING.sm};
 `;
 
 const Input = styled.input`
   flex: 1;
-  background-color: ${THEME_CONFIG.COLORS.backgroundSecondary};
+  padding: ${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.md};
+  background: ${THEME_CONFIG.COLORS.backgroundPrimary};
   border: 1px solid ${THEME_CONFIG.COLORS.borderPrimary};
   border-radius: ${THEME_CONFIG.BORDER_RADIUS.medium};
-  padding: 10px;
   color: ${THEME_CONFIG.COLORS.textPrimary};
-  font-family: inherit;
+  font-size: ${THEME_CONFIG.TYPOGRAPHY.fontSize.body};
   
   &:focus {
     outline: none;
-    border-color: ${THEME_CONFIG.COLORS.electricBlue};
-  }
-`;
-
-const SendButton = styled.button`
-  background-color: ${THEME_CONFIG.COLORS.electricBlue};
-  color: ${THEME_CONFIG.COLORS.backgroundDark};
-  border: none;
-  border-radius: ${THEME_CONFIG.BORDER_RADIUS.medium};
-  padding: 0 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-  
-  &:hover {
-    background-color: ${THEME_CONFIG.COLORS.electricBlueLight};
+    border-color: ${THEME_CONFIG.COLORS.accentPrimary};
   }
   
   &:disabled {
@@ -156,36 +188,34 @@ const SendButton = styled.button`
   }
 `;
 
-const PriorityBadge = styled.span`
-  display: inline-block;
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-size: 10px;
-  font-weight: bold;
-  text-transform: uppercase;
-  margin-left: 8px;
+const SendButton = styled.button`
+  padding: ${THEME_CONFIG.SPACING.sm} ${THEME_CONFIG.SPACING.lg};
+  background: ${THEME_CONFIG.COLORS.accentPrimary};
+  border: none;
+  border-radius: ${THEME_CONFIG.BORDER_RADIUS.medium};
+  color: ${THEME_CONFIG.COLORS.textPrimary};
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
   
-  ${props => {
-    switch (props.level) {
-      case 'high': return `background: ${THEME_CONFIG.COLORS.error}; color: white;`;
-      case 'medium': return `background: ${THEME_CONFIG.COLORS.warning}; color: black;`;
-      case 'low': return `background: ${THEME_CONFIG.COLORS.success}; color: white;`;
-      default: return `background: ${THEME_CONFIG.COLORS.borderPrimary}; color: ${THEME_CONFIG.COLORS.textMuted};`;
-    }
-  }}
+  &:hover:not(:disabled) {
+    background: ${THEME_CONFIG.COLORS.accentSecondary};
+    transform: translateY(-1px);
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 `;
 
 const DashboardAI = ({ siteId }) => {
-  const [messages, setMessages] = useState([
-    {
-      role: 'ai',
-      content: { summary: "Hello! I'm your AI Analyst. Ask me anything about your website traffic, metrics, or SEO." }
-    }
-  ]);
+  const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [toolsOpen, setToolsOpen] = useState(false);
   const scrollRef = useRef(null);
-  const { toast } = useToast();
+  const toast = useToast();
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -194,9 +224,9 @@ const DashboardAI = ({ siteId }) => {
   }, [messages]);
 
   const handleSend = async () => {
-    if (!input.trim()) return;
-
-    const userMsg = input;
+    if (!input.trim() || loading) return;
+    
+    const userMsg = input.trim();
     setInput('');
     setMessages(prev => [...prev, { role: 'user', content: userMsg }]);
     setLoading(true);
@@ -257,37 +287,107 @@ const DashboardAI = ({ siteId }) => {
   };
 
   return (
-    <Container>
-      <Header>
-        <Title>Analytiq AI</Title>
-      </Header>
+    <>
+      <Container>
+        <Header>
+          <Title>Analytiq AI</Title>
+          <button
+            onClick={() => setToolsOpen(true)}
+            style={{
+              border: `1px solid ${THEME_CONFIG.COLORS.borderPrimary}`,
+              borderRadius: THEME_CONFIG.BORDER_RADIUS.medium,
+              padding: '6px 14px',
+              background: 'transparent',
+              color: THEME_CONFIG.COLORS.textSecondary,
+              fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall,
+              cursor: 'pointer'
+            }}
+          >
+            Open AI Tools
+          </button>
+        </Header>
 
-      <ChatArea ref={scrollRef}>
-        {messages.map((msg, index) => (
-          <MessageBubble key={index} isUser={msg.role === 'user'}>
-            {msg.role === 'user' ? msg.content : renderAIResponse(msg.content)}
-          </MessageBubble>
-        ))}
-        {loading && (
-          <div style={{ alignSelf: 'center', padding: '10px' }}>
-            <LoadingSpinner size={20} />
+        <ChatArea ref={scrollRef}>
+          {messages.map((msg, index) => (
+            <MessageBubble key={index} isUser={msg.role === 'user'}>
+              {msg.role === 'user' ? msg.content : renderAIResponse(msg.content)}
+            </MessageBubble>
+          ))}
+          {loading && (
+            <div style={{ alignSelf: 'center', padding: '10px' }}>
+              <LoadingSpinner size={20} />
+            </div>
+          )}
+        </ChatArea>
+
+        <InputArea>
+          <Input
+            placeholder="Ask about your metrics..."
+            value={input}
+            onChange={e => setInput(e.target.value)}
+            onKeyPress={handleKeyPress}
+            disabled={loading}
+          />
+          <SendButton onClick={handleSend} disabled={loading || !input.trim()}>
+            SEND
+          </SendButton>
+        </InputArea>
+      </Container>
+      {toolsOpen && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            backgroundColor: 'rgba(0,0,0,0.7)',
+            backdropFilter: 'blur(6px)',
+            zIndex: 1300,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '24px'
+          }}
+        >
+          <div
+            style={{
+              width: 'min(960px, 100%)',
+              maxHeight: '85vh',
+              background: THEME_CONFIG.COLORS.backgroundElevated,
+              borderRadius: THEME_CONFIG.BORDER_RADIUS.xlarge,
+              border: `2px solid ${THEME_CONFIG.COLORS.borderPrimary}`,
+              padding: THEME_CONFIG.SPACING.lg,
+              boxShadow: '0 30px 60px rgba(0, 0, 0, 0.6)',
+              overflowY: 'auto'
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: THEME_CONFIG.SPACING.md
+              }}
+            >
+              <h4 style={{ margin: 0, color: THEME_CONFIG.COLORS.textPrimary }}>AI Insights & Deep Dive</h4>
+              <button
+                onClick={() => setToolsOpen(false)}
+                style={{
+                  border: 'none',
+                  background: 'transparent',
+                  color: THEME_CONFIG.COLORS.textSecondary,
+                  cursor: 'pointer'
+                }}
+              >
+                Close
+              </button>
+            </div>
+            <div style={{ display: 'grid', gap: THEME_CONFIG.SPACING.lg }}>
+              <DashboardMetricDeepDive siteId={siteId} />
+              <DashboardAIInsights siteId={siteId} />
+            </div>
           </div>
-        )}
-      </ChatArea>
-
-      <InputArea>
-        <Input
-          placeholder="Ask about your metrics..."
-          value={input}
-          onChange={e => setInput(e.target.value)}
-          onKeyPress={handleKeyPress}
-          disabled={loading}
-        />
-        <SendButton onClick={handleSend} disabled={loading || !input.trim()}>
-          SEND
-        </SendButton>
-      </InputArea>
-    </Container>
+        </div>
+      )}
+    </>
   );
 };
 

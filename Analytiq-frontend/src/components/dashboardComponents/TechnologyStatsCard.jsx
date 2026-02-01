@@ -337,6 +337,7 @@ const TechnologyStatsCard = ({ data }) => {
                   stroke={THEME_CONFIG.COLORS.borderPrimary}
                 />
                 <Tooltip
+                  wrapperStyle={{ outline: 'none' }}
                   contentStyle={{
                     backgroundColor: THEME_CONFIG.COLORS.backgroundElevated,
                     border: `2px solid ${darkElectricBlue}`,

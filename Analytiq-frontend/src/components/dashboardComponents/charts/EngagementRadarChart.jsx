@@ -250,6 +250,7 @@ const EngagementRadarChart = ({ data }) => {
           />
 
           <Tooltip
+            wrapperStyle={{ outline: 'none' }}
             contentStyle={{
               backgroundColor: THEME_CONFIG.COLORS.backgroundElevated,
               border: `2px solid ${darkElectricBlue}`,

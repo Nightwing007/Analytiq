@@ -8,7 +8,6 @@ import { THEME_CONFIG } from '../../../config.js';
  * @param {Array} data - last_24h_visitors_geo array: [{ lat, long, country, city, timestamp }, ...]
  */
 const darkElectricBlue = '#0066FF';
-const accentPink = '#FF00E0';
 
 const RecentVisitorsMap = ({ data }) => {
   const globeEl = useRef();
@@ -50,8 +49,8 @@ const RecentVisitorsMap = ({ data }) => {
       return {
         lat,
         lng,
-        size: 0.3,
-        color: accentPink,
+        size: 1.2,
+        color: darkElectricBlue,
         city: item.city || '',
         country: item.country || '',
         ts: item.timestamp || ''
@@ -127,7 +126,7 @@ const RecentVisitorsMap = ({ data }) => {
 
         <div style={{ display: 'flex', alignItems: 'center', gap: THEME_CONFIG.SPACING.sm, backgroundColor: THEME_CONFIG.COLORS.backgroundDark, padding: `${THEME_CONFIG.SPACING.xs} ${THEME_CONFIG.SPACING.sm}`, borderRadius: THEME_CONFIG.BORDER_RADIUS.small, border: `1px solid ${THEME_CONFIG.COLORS.borderPrimary}` }}>
           <span style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: THEME_CONFIG.TYPOGRAPHY.fontSize.bodySmall, color: THEME_CONFIG.COLORS.textMuted }}>Pins:</span>
-          <span style={{ fontFamily: "'JetBrains Mono', monospace", color: accentPink }}>{globeData.length}</span>
+          <span style={{ fontFamily: "'JetBrains Mono', monospace", color: darkElectricBlue }}>{globeData.length}</span>
         </div>
       </div>
 
@@ -139,9 +138,10 @@ const RecentVisitorsMap = ({ data }) => {
           globeImageUrl="//unpkg.com/three-globe/example/img/earth-night.jpg"
           backgroundImageUrl={null}
           pointsData={globeData}
-          pointAltitude="size"
-          pointRadius={0.5}
+          pointAltitude={0.10}
+          pointRadius={0.25}
           pointColor="color"
+          pointResolution={24}
           pointLabel={d => `
             <div style="background: ${THEME_CONFIG.COLORS.backgroundElevated}; border: 2px solid ${darkElectricBlue}; border-radius: ${THEME_CONFIG.BORDER_RADIUS.small}; padding: ${THEME_CONFIG.SPACING.sm}; font-family: 'Rajdhani', sans-serif; color: ${THEME_CONFIG.COLORS.textPrimary};">
               <div style="font-weight: 600; color: ${darkElectricBlue};">${d.city || d.country || 'Unknown'}</div>
