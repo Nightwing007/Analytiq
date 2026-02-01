@@ -23,7 +23,7 @@ import UserBehaviorStatsCard from '../components/dashboardComponents/UserBehavio
 import OperatingSystemsBarChart from '../components/dashboardComponents/charts/OperatingSystemsBarChart.jsx';
 import BrowsersBarChart from '../components/dashboardComponents/charts/BrowsersBarChart.jsx';
 import PerformanceMetricsGauges from '../components/dashboardComponents/charts/PerformanceMetricsGauges.jsx';
-import GeoDistributionMap from '../components/dashboardComponents/charts/GeoDistributionMap.jsx';
+import WorldHeatmap from '../components/dashboardComponents/charts/WorldHeatmap.jsx';
 import RecentVisitorsMap from '../components/dashboardComponents/maps/RecentVisitorsMap.jsx';
 import PageAnalyticsTable from '../components/dashboardComponents/tables/PageAnalyticsTable.jsx';
 import CampaignPerformanceTable from '../components/dashboardComponents/tables/CampaignPerformanceTable.jsx';
@@ -309,7 +309,7 @@ function Dash() {
           <PerformanceMetricsGauges data={reportData?.performance_metrics} />
         </div>
 
-        {/* GEOGRAPHIC ANALYSIS - 1:1 Ratio (equal split) */}
+        {/* GEOGRAPHIC ANALYSIS - World Heatmap & Recent Visitors */}
         <div
           className="dash-grid-geo"
           style={{
@@ -320,7 +320,7 @@ function Dash() {
             width: '100%'
           }}
         >
-          <GeoDistributionMap data={reportData?.geo_distribution} />
+          <WorldHeatmap data={reportData?.geo_distribution} />
           <RecentVisitorsMap data={reportData?.last_24h_visitors_geo} />
         </div>
 
